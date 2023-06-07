@@ -1,4 +1,4 @@
-<img src="/Arquivos/Conteudo/img/0.webp" alt="" width="180">
+<img src="/Arquivos/Conteudo/img/0.webp" alt="" width="200">
 
 # Dio-Banco_Pan-Java_developer
 Curso de desenvolvimento Java com 114 horas de conteúdo.
@@ -14,8 +14,6 @@ Curso de desenvolvimento Java com 114 horas de conteúdo.
 [Introdução ao Git]() <br>
 [Trabalho com equipes ágeis]()
 
-<br>
-
 ### Conhecendo a linguagem Java
 [Dominando IDE’s Java]() <br>
 [Aprendendo a sintaxe Java]() <br>
@@ -24,16 +22,12 @@ Curso de desenvolvimento Java com 114 horas de conteúdo.
 [Estrutura de dados em Java]() <br>
 [Métodos em Java]()
 
-<br>
-
 ### Dominando algoritmos básicos com desafios de código Java
 [Desafio: Fábrica de carros]() <br>
 [Desafio: Imprimindo positivos e média]() <br>
 [Desafio: Soma de H com N Termos]() <br>
 [Desafio: Dragão]() <br>
 [Desafio: Fibonacci (fácil, não tão fácil quanto disseram)]()
-
-<br>
 
 ### Programação orientada a objetos
 [Programação orientada a objetos com Java]() <br>
@@ -44,14 +38,10 @@ Curso de desenvolvimento Java com 114 horas de conteúdo.
 [Testes unitários com JUnit]() <br>
 [Desafio POO]()
 
-<br>
-
 ### Trabalhando com bando de dados SQL e NoSQL
 [Primeiros passos com SQL]() <br>
 [Intrudução ao MongoDB (Banco de dados NoSQL)]() <br>
 [Desafio: Boas práticas DynamoDb]()
-
-<br>
 
 ### Ganhando produtividade com Spring framework
 [Principais protocolos de comunicação da internet]() <br>
@@ -61,8 +51,6 @@ Curso de desenvolvimento Java com 114 horas de conteúdo.
 [Criando API REST conectada ao Amazon RDS com Java]() <br>
 [Projeto: Conhecendo o Spring Data JPA na prática com Java]() <br>
 [Projeto: Explorando Padrões de Projetos na Prática com Java]()
-
-<br>
 
 ### Desafios: Dominando algoritmos intermediários com desafios de código Java
 [Desafio: animal]() <br>
