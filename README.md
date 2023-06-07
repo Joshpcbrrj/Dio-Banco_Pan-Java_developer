@@ -14,8 +14,6 @@ Curso de desenvolvimento Java com 114 horas de conteúdo.
 [Introdução ao Git]() <br>
 [Trabalho com equipes ágeis]()
 
-<br>
-
 ### Conhecendo a linguagem Java
 [Dominando IDE’s Java]() <br>
 [Aprendendo a sintaxe Java]() <br>
