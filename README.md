@@ -1,7 +1,8 @@
 <img src="/Arquivos/Conteudo/img/0.webp" alt="" width="200">
 
-# Dio-Banco_Pan-Java_developer
-Curso de desenvolvimento Java com 114 horas de conteúdo.
+# Dio - Banco Pan Java developer
+
+> Curso de desenvolvimento Java com 114 horas de conteúdo.
 
 ### Certificado
 [Certificado](/Arquivos/Certificado/Certificado.pdf)
@@ -11,8 +12,8 @@ Curso de desenvolvimento Java com 114 horas de conteúdo.
 ## Conteúdo do curso:
 
 ### Princípios de desenvolvimento de Software
-[Introdução ao Git]() <br>
-[Trabalho com equipes ágeis]()
+[Introdução ao Git](/Arquivos/Conteudo/1%20-%20Principio%20de%20desenvolvimento%20de%20software/1.1%20Introducao%20ao%20git.md) <br>
+[Trabalho com equipes ágeis](/Arquivos/Conteudo/1%20-%20Principio%20de%20desenvolvimento%20de%20software/1.2%20Trabalho%20com%20equipes%20ageis.md)
 
 ### Conhecendo a linguagem Java
 [Dominando IDE’s Java]() <br>
