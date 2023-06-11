@@ -16,19 +16,19 @@
 [Trabalho com equipes ágeis](/Arquivos/Conteudo/1%20-%20Principio%20de%20desenvolvimento%20de%20software/1.2%20Trabalho%20com%20equipes%20ageis.md)
 
 ### Conhecendo a linguagem Java
-[Dominando IDE’s Java]() <br>
-[Aprendendo a sintaxe Java]() <br>
-[Lógica condicional e controle de fluxos em Java]() <br>
-[Estruturas de repetição e arrays em Java]() <br>
-[Estrutura de dados em Java]() <br>
-[Métodos em Java]()
+[Dominando IDE’s Java](/Arquivos/Conteudo/2%20-%20Conhecendo%20a%20linguagem%20Java/2.1%20Dominando%20ide.md) <br>
+[Aprendendo a sintaxe Java](/Arquivos/Conteudo/2%20-%20Conhecendo%20a%20linguagem%20Java/2.2%20Aprendendo%20a%20sintaxe%20java.md) <br>
+[Lógica condicional e controle de fluxos em Java](/Arquivos/Conteudo/2%20-%20Conhecendo%20a%20linguagem%20Java/2.3%20Logica%20condicional%20e%20controle%20de%20fluxo%20java.md) <br>
+[Estruturas de repetição e arrays em Java](/Arquivos/Conteudo/2%20-%20Conhecendo%20a%20linguagem%20Java/2.4%20Estruturas%20de%20repeticao%20e%20arrays%20em%20java.md) <br>
+[Estrutura de dados em Java](/Arquivos/Conteudo/2%20-%20Conhecendo%20a%20linguagem%20Java/2.5%20Estrutura%20de%20dados%20em%20java.md) <br>
+[Métodos em Java](/Arquivos/Conteudo/2%20-%20Conhecendo%20a%20linguagem%20Java/2.6%20Metodos%20em%20java.md)
 
 ### Dominando algoritmos básicos com desafios de código Java
-[Desafio: Fábrica de carros]() <br>
-[Desafio: Imprimindo positivos e média]() <br>
-[Desafio: Soma de H com N Termos]() <br>
-[Desafio: Dragão]() <br>
-[Desafio: Fibonacci (fácil, não tão fácil quanto disseram)]()
+[Desafio: Fábrica de carros](/Arquivos/Conteudo/3%20-%20Dominando%20algoritmos%20basicos%20com%20desafios%20de%20c%C3%B3digo%20Java/3.1%20Desafio%20fabrica%20de%20carros.md) <br>
+[Desafio: Imprimindo positivos e média](/Arquivos/Conteudo/3%20-%20Dominando%20algoritmos%20basicos%20com%20desafios%20de%20c%C3%B3digo%20Java/3.2%20Desafio%20imprimindo%20positivos%20e%20media.md) <br>
+[Desafio: Soma de H com N Termos](/Arquivos/Conteudo/3%20-%20Dominando%20algoritmos%20basicos%20com%20desafios%20de%20c%C3%B3digo%20Java/3.3%20Desafios%20soma%20de%20h%20com%20n%20termos.md) <br>
+[Desafio: Dragão](/Arquivos/Conteudo/3%20-%20Dominando%20algoritmos%20basicos%20com%20desafios%20de%20c%C3%B3digo%20Java/3.4%20Desafio%20dragao.md) <br>
+[Desafio: Fibonacci (fácil, não tão fácil quanto disseram)](/Arquivos/Conteudo/3%20-%20Dominando%20algoritmos%20basicos%20com%20desafios%20de%20c%C3%B3digo%20Java/3.5%20Desafio%20fibonacci.md)
 
 ### Programação orientada a objetos
 [Programação orientada a objetos com Java]() <br>
