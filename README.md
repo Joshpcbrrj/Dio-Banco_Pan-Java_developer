@@ -54,8 +54,8 @@
 [Projeto: Explorando Padrões de Projetos na Prática com Java]()
 
 ### Desafios: Dominando algoritmos intermediários com desafios de código Java
-[Desafio: animal]() <br>
-[Desafio: Quitanda do seu Zé]() <br>
-[Desafio: Triângulo]() <br>
-[Desafio: Conta Espaços e Vogais]() <br>
-[Desafio: Taxa de Imposto de Renda]()
+[Desafio: Animal](/Arquivos/Conteudo/7%20-%20Dominando%20algoritmos%20intermediarios%20com%20java/7.1%20Desafio%20animal.md) <br>
+[Desafio: Quitanda do seu Zé](/Arquivos/Conteudo/7%20-%20Dominando%20algoritmos%20intermediarios%20com%20java/7.2%20Desafio%20quitanda%20do%20seu%20ze.md) <br>
+[Desafio: Triângulo](/Arquivos/Conteudo/7%20-%20Dominando%20algoritmos%20intermediarios%20com%20java/7.3%20Desafio%20triangulo.md) <br>
+[Desafio: Conta Espaços e Vogais](/Arquivos/Conteudo/7%20-%20Dominando%20algoritmos%20intermediarios%20com%20java/7.4%20Desafio%20conta%20espacos%20e%20vogais.md) <br>
+[Desafio: Taxa de Imposto de Renda](/Arquivos/Conteudo/7%20-%20Dominando%20algoritmos%20intermediarios%20com%20java/7.5%20Desafio%20taxa%20de%20imposto%20de%20renda.md)
