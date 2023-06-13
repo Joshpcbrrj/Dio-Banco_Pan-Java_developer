@@ -1,0 +1,85 @@
+{
+    "Music": [
+        {
+            "PutRequest": {
+                "Item": {
+                  "Artist": {"S": "Megadeath"},
+                  "SongTitle": {"S": "Wake Up Dead"},
+                  "AlbumTitle": {"S": "Peace sells"},
+                  "SongYear": {"S": "1985"}
+                }
+            }
+        },
+        {
+
+	 	 "PutRequest": {
+                "Item": {
+                  "Artist": {"S": "Megadeath"},
+                  "SongTitle": {"S": "The Conjuring"},
+                  "AlbumTitle": {"S": "Peace sells"},
+                  "SongYear": {"S": "1985"}
+                }
+            }
+        },
+        {
+            "PutRequest": {
+                "Item": {
+                  "Artist": {"S": "Megadeath"},
+                  "SongTitle": {"S": "Peace Sells"},
+                  "AlbumTitle": {"S": "Peace sells"},
+                  "SongYear": {"S": "1985"}
+                }
+            }
+        },
+	{
+            "PutRequest": {
+                "Item": {
+                  "Artist": {"S": "Megadeath"},
+                  "SongTitle": {"S": "Devil's Island"},
+                  "AlbumTitle": {"S": "Peace sells"},
+                  "SongYear": {"S": "1985"}
+                }
+            }
+        },
+	{
+            "PutRequest": {
+                "Item": {
+                  "Artist": {"S": "Megadeath"},
+                  "SongTitle": {"S": "Good Mourning/Black Friday"},
+                  "AlbumTitle": {"S": "Peace sells"},
+                  "SongYear": {"S": "1985"}
+                }
+            }
+        },
+	{
+            "PutRequest": {
+                "Item": {
+                  "Artist": {"S": "Megadeath"},
+                  "SongTitle": {"S": "Bad Omen"},
+                  "AlbumTitle": {"S": "Peace sells"},
+                  "SongYear": {"S": "1985"}
+                }
+            }
+        },
+	{
+            "PutRequest": {
+                "Item": {
+                  "Artist": {"S": "Megadeath"},
+                  "SongTitle": {"S": "I Ain't Superstitious"},
+                  "AlbumTitle": {"S": "Peace sells"},
+                  "SongYear": {"S": "1985"}
+                }
+            }
+        },
+	{
+            "PutRequest": {
+                "Item": {
+                  "Artist": {"S": "Megadeath"},
+                  "SongTitle": {"S": "My Last Words"},
+                  "AlbumTitle": {"S": "Peace sells"},
+                  "SongYear": {"S": "1985"}
+                }
+            }
+        }
+      ]
+}

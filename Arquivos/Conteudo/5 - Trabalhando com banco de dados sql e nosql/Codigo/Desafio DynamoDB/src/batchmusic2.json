@@ -1,0 +1,115 @@
+{
+    "Music": [
+        {
+            "PutRequest": {
+                "Item": {
+                  "Artist": {"S": "Silverchair"},
+                  "SongTitle": {"S": "Cicada"},
+                  "AlbumTitle": {"S": "Frogstomp"},
+                  "SongYear": {"S": "1992"}
+                }
+            }
+        },
+        {
+
+	    "PutRequest": {
+                "Item": {
+                  "Artist": {"S": "Silverchair"},
+                  "SongTitle": {"S": "Faultline"},
+                  "AlbumTitle": {"S": "Frogstomp"},
+                  "SongYear": {"S": "1992"}
+                }
+            }
+        },
+        {
+            "PutRequest": {
+                "Item": {
+                  "Artist": {"S": "Silverchair"},
+                  "SongTitle": {"S": "Leave me out"},
+                  "AlbumTitle": {"S": "Frogstomp"},
+                  "SongYear": {"S": "1992"}
+                }
+            }
+        },
+	{
+            "PutRequest": {
+                "Item": {
+                  "Artist": {"S": "Silverchair"},
+                  "SongTitle": {"S": "Suicidal dream"},
+                  "AlbumTitle": {"S": "Frogstomp"},
+                  "SongYear": {"S": "1992"}
+                }
+            }
+        },
+	{
+            "PutRequest": {
+                "Item": {
+                  "Artist": {"S": "Silverchair"},
+                  "SongTitle": {"S": "Shade"},
+                  "AlbumTitle": {"S": "Frogstomp"},
+                  "SongYear": {"S": "1992"}
+                }
+            }
+        },
+	{
+            "PutRequest": {
+                "Item": {
+                  "Artist": {"S": "Silverchair"},
+                  "SongTitle": {"S": "Tomorrow"},
+                  "AlbumTitle": {"S": "Frogstomp"},
+                  "SongYear": {"S": "1992"}
+                }
+            }
+        },
+	{
+            "PutRequest": {
+                "Item": {
+                  "Artist": {"S": "Silverchair"},
+                  "SongTitle": {"S": "Israel's song"},
+                  "AlbumTitle": {"S": "Frogstomp"},
+                  "SongYear": {"S": "1992"}
+                }
+            }
+        },
+	{
+            "PutRequest": {
+                "Item": {
+                  "Artist": {"S": "Silverchair"},
+                  "SongTitle": {"S": "Findaway"},
+                  "AlbumTitle": {"S": "Frogstomp"},
+                  "SongYear": {"S": "1992"}
+                }
+            }
+        },
+	{
+            "PutRequest": {
+                "Item": {
+                  "Artist": {"S": "Silverchair"},
+                  "SongTitle": {"S": "Madman"},
+                  "AlbumTitle": {"S": "Frogstompr"},
+                  "SongYear": {"S": "1992"}
+                }
+            }
+        },
+	{
+            "PutRequest": {
+                "Item": {
+                  "Artist": {"S": "Silverchair"},
+                  "SongTitle": {"S": "Undecided"},
+                  "AlbumTitle": {"S": "Frogstomp"},
+                  "SongYear": {"S": "1992"}
+                }
+            }
+        },
+	{
+            "PutRequest": {
+                "Item": {
+                  "Artist": {"S": "Silverchair"},
+                  "SongTitle": {"S": "Pure massacre"},
+                  "AlbumTitle": {"S": "Frogstomp"},
+                  "SongYear": {"S": "1992"}
+                }
+            }
+        }
+      ]
+}
