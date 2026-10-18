@@ -1,116 +1,162 @@
-# Tipos e variáveis
+# 2.4 · Tipos de dados, variáveis e constantes
 
-No Java, existem algumas palavras reservadas para a representação dos tipos de dados básicos que precisam ser manipulados para a construção de programas. Estes tipos de dados são conhecidos como tipos primitivos (Primitive Types).
+> **Em uma frase:** uma variável é uma "caixa com etiqueta" que guarda um valor de um **tipo** definido; o Java tem 8 tipos primitivos (como `int`, `double` e `boolean`) e você não pode guardar um tipo na caixa de outro.
 
+## 📦 Variáveis
 
-> 💡 **Os oito tipos primitivos em Java são**: int, byte, short, long, float, double, boolean e char – esses tipos não são considerados objetos, e portanto representam valores brutos. Eles são armazenados diretamente na pilha de memória. (Memory stack)
+Toda variável tem **tipo + nome + (opcionalmente) valor**:
 
-### Tabela de Tipos Primitivos e seus valores:
-
-| Tipos | Memória | Valor mínimo | Valor máximo |
-| --- | --- | --- | --- |
-| byte | 1 byte | -128 | 127 |
-| short | 2 bytes | -32.768 | 32.768 |
-| int | 4 bytes | -2.147.483.648 | 2.147.483.648 |
-| long | 8 byes | -9.223.372.036.854.775.808 | 9.223.372.036.854.775.808 |
-
-<br>
-
-### Os tipos primitivos que podem conter partes fracionárias podem ser representados por dois tipos:
-
-| Tipos | Memória | Valor mínimo | Valor máximo | Precisão |
-| --- | --- | --- | --- | --- |
-| float | 4 bytes | -3,4028E + 38 | 3,4028E + 38 | 6 a 7 dígitos |
-| double | 8 bytes | -1,7976E + 308 | 1,7976E + 308 | 15 dígitos |
-
-- Apesar de o tipo **float** ocupar metade da memória consumida do que um tipo double, ele é menos utilizado. Ele sofre de uma limitação que compromete seu uso em determinadas situações: somente mantém uma precisão decimal entre 6 e 7 dígitos.
-  
-- Atualmente, com os computadores modernos, se tornou desnecessário utilizar os tipos `short` e `byte`, pois não precisamos nos preocupar tanto assim com o espaço de memória reduzido.
-  
-- Da mesma forma, dificilmente utilizaremos o tipo `long`, pois não é tão comum trabalharmos com valores tão grandes.
-- Portanto, para representar números, na grande maioria das vezes utilizaremos o tipo `int` para representar números inteiros ou `double` para representar números fracionados.
-
->💡 O ponto mais relevante em compreender a definição dos tipos de dados é o momento da definição do tipo para uma variável. **Qual tipo de dados eu utilizaria para determinar a idade de uma pessoa ou o salário de um funcionário?**
-
-<br>
-
-## Declaração de Variáveis
-Variável é uma identificação de um espaço em memória utilizado pelo nosso programa. Seguindo as convenções em linguagem de programação, toda variável é composta por: tipo de dados + identificação + valor atribuído.
-
-- A estrutura padrão para se declarar uma variável sempre é:
-  ```java
-    <Tipo> <nomeVariavel> <atribuicaoDeValorOpcional>
-
-    //Exemplos da prática abaixo:
-    int idade; //Tipo "int", nome "idade", com nenhum valor atribuído. 
-    int anoFabricacao = 2021; //tipo "int", nome "anoFabricacao", com valor 2021.
-    double salarioMinimo = 2.500; //tipo "double", nome "salarioMinimo", valor 2.500.
-    ```
-
-  - 💡 Atenção: existe algumas peculiaridades a trabalhar com alguns tipos específicos. Observe no exemplo abaixo:
-
-    ```java
-    public class TipoDados {
-        public static void main(String[] args) {
-            byte idade = 123;
-            short ano = 2021;
-            int cep = 21070333; // se começar com zero, talvez tenha que ser outro tipo
-            long cpf = 98765432109L; // se começar com zero, talvez tenha que ser outro tipo
-            float pi = 3.14F;
-            double salario = 1275.33;
-        }
-    }
-    /* Observe que o tipo long precisa terminar com L, o tipo float precisa terminar 
-    com F e alguns cenários do dia-a-dia podem estimular uma alteração de tipos 
-    de dados convencional */
-    ```
-
-    > Lembrando: Java é fortemente "tipado”.
-
-<br>
-
-### Variáveis e Constantes
-
-- Uma **variável** é uma área de memória, associada a um nome, que pode armazenar valores de um determinado tipo. Um tipo de dado define um conjunto de valores e um conjunto de operações. **Java** é uma linguagem com rigidez de tipos, diferente de linguagens como JavaScript, onde declarar o tipo da variável não é obrigatório.
-
-- No Java utilizamos identificadores que representam uma referência (ponteiro) a um valor em memória, e esta referência pode ser redirecionada a outro valor, sendo portanto esta a causa do nome "variável", pois o valor pode variar.
-
-- Já as **Constantes** são valores armazenados em memória que não podem ser modificados depois de declarados. Em Java, esses valores são representados pela palavra reservada `final`, seguida do tipo. Por convenção, **Constantes** são sempre escritas em CAIXA ALTA.
-
-#### Abaixo temos um exemplo explicativo sobre uso de variáveis e constantes:
 ```java
-public class ExemploVariavel {
-	public static void main(String[] args) {
-		/*
-		 * esta linha é considerada como declaração de variável iniciamos a existência
-		 * variavel numero com valor 5 regra: tipo + nome + valor
-		 */
-		int numero = 5;
+int idade;                    // declarada, ainda sem valor
+int anoFabricacao = 2024;     // declarada e inicializada
+double salario = 2500.00;     // atenção: 2500.00, e não 2.500 (que seria 2,5!)
+idade = 30;                   // atribuindo depois
+```
 
-		/*
-		 * na linha abaixo iremos alterar o valor do varíavel para 10 observe que o tipo
-		 * não é mais necessário, pois a variável já foi declarada anteriormente
-		 */
-		numero = 10;
+> [!WARNING]
+> No Java o separador decimal é o **ponto**. `2.500` significa "dois vírgula cinco", não "dois mil e quinhentos". Para facilitar a leitura de números grandes, use underline: `int populacao = 214_000_000;`
 
-		System.out.print(numero);
-		
-		/*
-		 * ao usar a palavra reservada final, você determina que jamais
-		 * esta variavel poderá obter outro valor;
-		 * logo a linha 25 vai apresentar um erro de compilação
-		 * isso é considerado uma CONSTANTE na linguagem Java
-		 */
-		final double VALOR_DE_PI = 3.14;
-		
-		VALOR_DE_PI=3.15; //Esta linha vai apresentar erro de compilação!
-	}
+O Java é **fortemente tipado**: depois de declarar `int idade`, você não pode guardar um texto nela. O compilador avisa o erro antes de rodar.
+
+### `var`: inferência de tipo (Java 10+)
+
+Dentro de métodos, você pode deixar o compilador descobrir o tipo pelo valor:
+
+```java
+var nome = "Ana";       // o compilador entende que é String
+var total = 10;         // int
+```
+
+O tipo continua fixo; o `var` só evita repeti-lo. Use quando o tipo for óbvio pelo lado direito.
+
+## 🔢 Os 8 tipos primitivos
+
+| Tipo | Tamanho | Guarda | Faixa / exemplo |
+| --- | --- | --- | --- |
+| `byte` | 8 bits | inteiro | -128 a 127 |
+| `short` | 16 bits | inteiro | -32.768 a 32.767 |
+| `int` | 32 bits | inteiro | -2.147.483.648 a 2.147.483.647 |
+| `long` | 64 bits | inteiro | cerca de ±9,2 quintilhões · `long cpf = 12345678901L;` |
+| `float` | 32 bits | decimal | ~6 a 7 dígitos de precisão · `float pi = 3.14F;` |
+| `double` | 64 bits | decimal | ~15 dígitos de precisão · `double peso = 72.5;` |
+| `char` | 16 bits | 1 caractere Unicode | `char letra = 'A';` (aspas simples) |
+| `boolean` | — | verdadeiro/falso | `boolean ativo = true;` |
+
+- No dia a dia, use **`int`** para inteiros e **`double`** para decimais.
+- Use `long` para valores que passam de 2 bilhões (e termine o literal com `L`).
+- `float` exige o sufixo `F` e é pouco usado.
+- **Texto** não é primitivo: é o tipo `String` (com S maiúsculo e aspas duplas): `String nome = "Ana";`.
+
+> [!CAUTION]
+> **Nunca use `double` ou `float` para dinheiro.** Eles guardam valores em binário e geram imprecisões: `0.1 + 0.2` dá `0.30000000000000004`. Para valores monetários, use `BigDecimal`:
+>
+> ```java
+> BigDecimal preco = new BigDecimal("19.90");
+> BigDecimal total = preco.multiply(new BigDecimal("3"));   // 59.70 exato
+> ```
+
+> [!TIP]
+> Dados que **começam com zero** ou que não são usados em contas (CEP, CPF, telefone) devem ser `String`. Um literal numérico que começa com `0` é lido em **base 8** (octal): `int cep = 01310100;` compila, mas vira outro número, e `int cep = 08010000;` nem compila.
+
+### Primitivos × tipos por referência
+
+- **Primitivos** guardam o próprio valor (`int idade = 30`).
+- **Referências** (objetos, como `String`, arrays e as classes que você criar) guardam o **endereço** de onde o objeto está na memória.
+- Cada primitivo tem uma classe "embrulho" (*wrapper*): `Integer`, `Double`, `Boolean`, `Character`... Elas são necessárias em coleções como `List<Integer>`, e o Java converte automaticamente entre um e outro (*autoboxing*).
+
+## 🔒 Constantes
+
+Uma constante é uma variável que **não pode mudar** depois de receber valor. Use `final` e escreva o nome em maiúsculas:
+
+```java
+public class Exemplo {
+    public static void main(String[] args) {
+        int numero = 5;
+        numero = 10;                     // ✅ variável pode mudar
+
+        final double VALOR_DE_PI = 3.14;
+        VALOR_DE_PI = 3.15;              // ❌ erro de compilação: é final
+    }
 }
 ```
 
-<br>
+> [!NOTE]
+> Constantes de verdade, compartilhadas pela classe toda, costumam ser declaradas como `public static final` fora dos métodos: `public static final int MAIORIDADE = 18;`
 
-<br>
+## 🔄 Conversões entre tipos (*casting*)
 
-[Voltar a Aprendendo a sintaxe Java](/Arquivos/Conteudo/2%20-%20Conhecendo%20a%20linguagem%20Java/2.2%20Aprendendo%20a%20sintaxe%20java.md)<br>
-[Voltar ao inicio](/README.md)
+```java
+int inteiro = 10;
+double decimal = inteiro;          // ✅ automático (int cabe em double)
+
+double preco = 9.99;
+int truncado = (int) preco;        // ⚠️ casting explícito: vira 9 (corta a parte decimal)
+
+String texto = "42";
+int convertido = Integer.parseInt(texto);   // String → int
+String deVolta = String.valueOf(convertido); // int → String
+```
+
+## 📌 Resumindo
+
+- Variável = tipo + nome + valor; Java é fortemente tipado.
+- 8 primitivos: `byte`, `short`, `int`, `long`, `float`, `double`, `char`, `boolean`.
+- Use `int` e `double` no dia a dia, `String` para textos e **`BigDecimal` para dinheiro**.
+- `final` cria constantes; `var` infere o tipo dentro de métodos.
+
+## 🏋️ Mão na massa
+
+**1.** Qual tipo você usaria para: idade, salário, CPF, se a pessoa é doadora de órgãos e a população mundial?
+
+<details>
+<summary>Ver resposta</summary>
+
+Idade: `int`. Salário: `BigDecimal` (dinheiro). CPF: `String` (pode começar com zero e não entra em contas). Doadora: `boolean`. População mundial (mais de 8 bilhões): `long`.
+
+</details>
+
+**2.** O que este código imprime e por quê?
+
+```java
+double total = 0.1 + 0.2;
+System.out.println(total);
+int nota = (int) 9.8;
+System.out.println(nota);
+```
+
+<details>
+<summary>Ver resposta</summary>
+
+Imprime `0.30000000000000004` (imprecisão do `double` em binário) e `9` (o casting para `int` **corta** a parte decimal, não arredonda).
+
+</details>
+
+**3.** No `treino-java`, crie variáveis para os dados de um produto (nome, preço, quantidade em estoque e se está ativo) e imprima-as.
+
+<details>
+<summary>Ver resposta</summary>
+
+```java
+import java.math.BigDecimal;
+
+public class Produto {
+    public static void main(String[] args) {
+        String nome = "Teclado";
+        BigDecimal preco = new BigDecimal("149.90");
+        int estoque = 25;
+        boolean ativo = true;
+
+        System.out.println(nome + " | R$ " + preco + " | estoque: " + estoque + " | ativo: " + ativo);
+    }
+}
+```
+
+</details>
+
+---
+
+<div align="center">
+
+[⬅️ 2.3 Anatomia de uma classe e convenções de nomes](./03-anatomia-das-classes.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [2.5 Operadores ➡️](./05-operadores.md)
+
+</div>

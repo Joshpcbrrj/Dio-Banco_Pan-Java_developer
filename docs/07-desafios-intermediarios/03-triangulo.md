@@ -1,107 +1,92 @@
-# Desafio triângulo
+# 7.3 · Desafio: Triângulo
 
-## Desafio
-Leia 3 valores reais (A, B e C) e verifique se eles formam ou não um 
-triângulo. Em caso positivo, calcule o perímetro do triângulo (soma de 
-todos os lados) e apresente a mensagem:
+> **Em uma frase:** verificar se três medidas formam um triângulo; se formarem, mostrar o perímetro; se não, mostrar a área do trapézio com bases A e B e altura C.
 
-**Perimetro = XX.X**
+## 📋 Enunciado
 
-Em caso negativo, calcule a área do trapézio que tem A e B como base e C como altura, mostrando a mensagem:
+Leia três valores reais A, B e C.
 
-**Area = XX.X**
+- Se formarem um triângulo, imprima `Perimetro = XX.X` (soma dos lados).
+- Caso contrário, imprima `Area = XX.X`, com a área do trapézio: `((A + B) × C) / 2`.
 
-*Fórmula da área de um trapézio: AREA = ((A + B) x C) / 2*
-
-<br>
-
-### Entrada
-
-A entrada contém três valores reais.
-
-### Saída
-
-O resultado deve ser apresentado com uma casa decimal.
-
-| Exemplo de Entrada | Exemplo de Saída |
+| Entrada | Saída |
 | --- | --- |
-| 6.0 4.0 2.0 | Area = 10.0 |
-| 6.0 4.0 2.1 | Perimetro = 12.1 |
+| `6.0 4.0 2.0` | `Area = 10.0` |
+| `6.0 4.0 2.1` | `Perimetro = 12.1` |
 
-| 6.0 4.0 2.1 | Perimetro = 12.1 |
-| --- | --- |
+## 🧠 Como pensar
 
-<br>
+Três medidas formam um triângulo quando **cada lado é menor que a soma dos outros dois** (a desigualdade triangular):
 
-### Dicas para resolução
-Para resolver esse problema, precisamos verificar se os três valores A, B e C formam ou não um triângulo. Para isso, podemos utilizar a seguinte regra: para que os valores formem um triângulo, a soma dos dois lados menores deve ser maior que o lado maior.
+```text
+A < B + C   e   B < A + C   e   C < A + B
+```
 
-Se a condição acima for verdadeira, então podemos calcular o perímetro do triângulo, que é a soma de todos os lados. Caso contrário, podemos calcular a área do trapézio com base A e B e altura C.
-
-Em resumo: 
-
-Este código lê três valores reais (A, B e C) e verifica se eles formam ou não um triângulo. Em caso positivo, ele encontra o maior valor entre os três e calcula o perímetro do triângulo, em caso negativo, ele calcula a área do trapézio com base A e B e altura C. Aqui estão os comentários explicando cada parte do código:
-
----
+No primeiro exemplo, `6 < 4 + 2` é falso (6 não é menor que 6): os lados "deitam" uns sobre os outros e não fecham um triângulo.
 
 <details>
-<summary>Código com a resolução</summary>
+<summary>Ver resposta</summary>
 
 ```java
-// Para ler e escrever dados em Java, aqui na DIO padronizamos da seguinte forma:
-// - new Scanner(System.in): cria um leitor de Entradas, com métodos úteis com prefixo "next";
-// - System.out.println:.imprime um texto de Saída (Output) e pulando uma linha.
-
-import java.io.IOException;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        Scanner leitor = new Scanner(System.in);
-        double A = leitor.nextDouble();
-        double B = leitor.nextDouble();
-        double C = leitor.nextDouble();
-        double maior;
-        double soma;
-        boolean triangulo;
+        Scanner entrada = new Scanner(System.in).useLocale(Locale.US);   // lê "6.0" com ponto
+        double a = entrada.nextDouble();
+        double b = entrada.nextDouble();
+        double c = entrada.nextDouble();
 
-        //TODO: Implemente a condição necessária para o cálculo do triângulo:
-        //Dica: Você pode utilizar o String.format() na formatação do texto
+        boolean ehTriangulo = a < b + c && b < a + c && c < a + b;
 
-        // Verifica se os valores lidos formam um triângulo
-        if ((A < B+C) && (B < A+C) && (C < A+B)) {
-            triangulo = true;
-
-            // Encontra o maior valor entre A, B e C
-            if (A >= B && A >= C) {
-                maior = A;
-            } else if (B >= A && B >= C) {
-                maior = B;
-            } else {
-                maior = C;
-            }
-
-            // Calcula o perímetro do triângulo
-            soma = A + B + C;
-            System.out.println(String.format("Perimetro = %.1f", soma));
-
+        if (ehTriangulo) {
+            System.out.printf(Locale.US, "Perimetro = %.1f%n", a + b + c);
         } else {
-            triangulo = false;
-
-            // Calcula a área do trapézio com base A e B e altura C
-            soma = ((A + B) * C) / 2;
-            System.out.println(String.format("Area = %.1f", soma));
+            System.out.printf(Locale.US, "Area = %.1f%n", (a + b) * c / 2);
         }
     }
 }
 ```
 
+A versão do curso também calculava o **maior lado**, mas esse valor não era usado: com as três comparações acima, ele é desnecessário.
+
 </details>
 
-<br>
+> [!TIP]
+> O `Locale.US` garante o **ponto** como separador decimal, tanto na leitura (`6.0`) quanto na escrita (`12.1`). Sem ele, num computador em português, o `Scanner` esperaria `6,0` e o `printf` escreveria `12,1`.
 
-<br>
+## 🏋️ Mão na massa
 
-<br>
+**1.** `3 4 5` formam um triângulo? Qual a saída?
 
-[Voltar ao inicio](/README.md)
+<details>
+<summary>Ver resposta</summary>
+
+Sim (3 < 9, 4 < 8 e 5 < 7). Saída: `Perimetro = 12.0`.
+
+</details>
+
+**2.** Acrescente a classificação do triângulo: equilátero (3 lados iguais), isósceles (2 iguais) ou escaleno (todos diferentes).
+
+<details>
+<summary>Ver resposta</summary>
+
+```java
+String tipo;
+if (a == b && b == c) tipo = "equilátero";
+else if (a == b || b == c || a == c) tipo = "isósceles";
+else tipo = "escaleno";
+```
+
+(Com valores `double`, em casos reais compare com uma pequena tolerância, como `Math.abs(a - b) < 0.0001`.)
+
+</details>
+
+---
+
+<div align="center">
+
+[⬅️ 7.2 Quitanda do Seu Zé](./02-quitanda.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [7.4 Contar espaços e vogais ➡️](./04-espacos-e-vogais.md)
+
+</div>

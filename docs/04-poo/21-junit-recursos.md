@@ -1,153 +1,186 @@
-# Aprofundando nos recursos
+# 4.21 · JUnit a fundo: assertions, assumptions e ciclo de vida
 
-[Mvn repository JUnit](https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine/5.9.2)
+> **Em uma frase:** *assertions* verificam o resultado (e fazem o teste falhar se estiver errado), *assumptions* pulam o teste se uma condição prévia não for atendida, e `@BeforeEach`/`@AfterEach`/`@BeforeAll`/`@AfterAll` preparam e limpam o ambiente.
 
-### Recomendações:
-- Os testes são escritos dentro da pasta test d o projeto.
-- Nome das classes devem ser iniciados por letra maiúscula.
+📦 Referência usada no curso: [willyancaetano/junit5-exemplos](https://github.com/willyancaetano/junit5-exemplos).
 
-<br>
+> [!TIP]
+> Convenções: classes de teste terminam com `Test` (`ContaTest`), ficam em `src/test/java` no **mesmo pacote** da classe testada, e os métodos têm nomes que descrevem o comportamento (`deveRecusarSaqueSemSaldo`).
 
-## Assertions/ Assumptions
+## ✅ Assertions
 
-### Assertions
-
-`Assertions` (afirmações) são um recurso fundamental em testes unitários. Elas são usadas para validar se um resultado esperado é igual ao resultado real. Se a afirmação for verdadeira, o teste passa. Se for falsa, o teste falha.
-
-O JUnit fornece uma série de métodos de asserção para comparar valores e verificar se eles são iguais, maiores ou menores, verdadeiros ou falsos, nulos ou não nulos, entre outros. Alguns exemplos desses métodos são assertEquals, assertTrue, assertFalse, assertNotNull e assertNull.
-
-
-### Assumptions
-
-**`Assumptions`** (suposições) são semelhantes às afirmações, mas são usadas para verificar condições prévias antes de executar um teste. Se a suposição for verdadeira, o teste é executado normalmente. Se for falsa, o teste é ignorado.
-
-As suposições são úteis quando os testes dependem de recursos externos que podem não estar disponíveis em todas as plataformas ou ambientes de teste. Por exemplo, você pode ter um teste que depende de uma conexão de rede, um sistema de arquivos ou uma variável de ambiente.
-
-O JUnit fornece uma série de métodos de suposição, como **`assumeTrue`**, **`assumeFalse`**, **`assumeNotNull`** e **`assumeThat`**. Esses métodos são semelhantes aos métodos de asserção, mas não falham imediatamente se a condição não for atendida. Em vez disso, eles simplesmente ignoram o teste e o marcam como "ignorado" ou "não executado".
-
-<details>
-<summary>Código exemplo:</summary>
+| Método | Verifica que... |
+| --- | --- |
+| `assertEquals(esperado, atual)` | os valores são iguais |
+| `assertNotEquals(a, b)` | são diferentes |
+| `assertTrue(cond)` / `assertFalse(cond)` | a condição é verdadeira / falsa |
+| `assertNull(obj)` / `assertNotNull(obj)` | é / não é `null` |
+| `assertSame(a, b)` | são o **mesmo** objeto |
+| `assertArrayEquals(a, b)` | os arrays têm o mesmo conteúdo |
+| `assertThrows(Tipo.class, () -> ...)` | o código lança aquela exceção |
+| `assertAll(...)` | várias verificações, reportando todas as que falharem |
+| `assertTimeout(Duration, () -> ...)` | termina dentro do tempo |
 
 ```java
-import org.junit.jupiter.api.Assumptions;
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+@Test
+void deveRecusarSaqueSemSaldo() {
+    Conta conta = new Conta(100);
+    var erro = assertThrows(SaldoInsuficienteException.class, () -> conta.sacar(500));
+    assertTrue(erro.getMessage().contains("Saldo insuficiente"));
+}
 
-public class ExemploTest {
-
-    @Test
-    public void testarResultado() {
-        // Verifica se o resultado da soma é igual a 15
-        int resultado = 10 + 5;
-        assertEquals(15, resultado);
-    }
-
-    @Test
-    public void testarCondicao() {
-        // Verifica se a condição é verdadeira
-        boolean condicao = true;
-        assertTrue(condicao);
-    }
-
-    @Test
-    public void testarSuposicao() {
-        // Verifica se o sistema operacional é Windows
-        Assumptions.assumeTrue(System.getProperty("os.name").startsWith("Windows"));
-        // Se a suposição for verdadeira, verifica se o caminho do arquivo não é nulo
-        String caminhoArquivo = "C:\\arquivo.txt";
-        assertNotNull(caminhoArquivo);
-    }
+@Test
+void deveCriarPessoaComDadosCorretos() {
+    Pessoa p = new Pessoa("Ana", 30);
+    assertAll(
+        () -> assertEquals("Ana", p.getNome()),
+        () -> assertEquals(30, p.getIdade())
+    );
 }
 ```
 
-</details>
+> [!NOTE]
+> A ordem é `assertEquals(ESPERADO, ATUAL)`. Invertê-la não muda se o teste passa, mas deixa a mensagem de erro confusa.
 
-<br>
+## ⏭️ Assumptions
 
-## Métodos beforeAll e afterAll
-que são executados antes e depois de todos os testes na classe de teste, respectivamente.
-
-### **Método beforeAll**
-
-O método **`beforeAll`** é um método estático que é executado uma vez antes de todos os testes na classe de teste. É usado para configurar objetos que serão usados em todos os testes da classe. Por exemplo, você pode usar o método **`beforeAll`** para configurar uma conexão de banco de dados, para que todos os testes usem a mesma conexão. O método **`beforeAll`** deve ser anotado com **`@BeforeAll`** para que o JUnit saiba que ele deve ser executado antes de todos os testes na classe.
-
-### **Método afterAll**
-
-O método **`afterAll`** é um método estático que é executado uma vez depois de todos os testes na classe de teste. É usado para limpar os recursos que foram criados durante a configuração do teste. Por exemplo, se você usou o método **`beforeAll`** para configurar uma conexão de banco de dados, pode usar o método **`afterAll`** para fechar a conexão depois que todos os testes forem executados. O método **`afterAll`** deve ser anotado com **`@AfterAll`** para que o JUnit saiba que ele deve ser executado depois de todos os testes na classe.
-
-#### Considerações
-
-Em resumo, os métodos **`beforeAll`** e **`afterAll`** são úteis quando você precisa executar uma configuração antes ou depois de todos os testes em uma classe de teste. Eles são executados apenas uma vez antes ou depois de todos os testes na classe e podem ser usados para configurar e limpar recursos que serão usados em todos os testes. Certifique-se de que seus métodos **`beforeAll`** e **`afterAll`** sejam estáticos e anotados com **`@BeforeAll`** e **`@AfterAll`**, respectivamente, para que o JUnit os reconheça como métodos de configuração.
-
-<br>
-
-## Métodos beforeEach e afterEach
-
-- **`beforeEach`**: é um método que é executado antes de cada teste da classe. É usado para configurar o ambiente de teste para cada método de teste individualmente.
-- **`afterEach`**: é um método que é executado após cada teste da classe. É usado para restaurar o ambiente de teste para o estado original após cada método de teste individualmente.
-
-<details>
-<summary>Exemplo em código:</summary>
+Se a suposição for falsa, o teste é **pulado** (aparece como *skipped*), em vez de falhar:
 
 ```java
-import org.junit.jupiter.api.*;
+@Test
+void soRodaNoWindows() {
+    assumeTrue(System.getProperty("os.name").startsWith("Windows"));
+    // ... verificações que só fazem sentido no Windows
+}
+```
 
-public class ExemploTeste {
-    
-    private static ConexaoBancoDeDados conexao;
-    
-    @BeforeAll
-    public static void configurarConexao() {
-        conexao = new ConexaoBancoDeDados("localhost", "5432", "usuario", "senha");
-        conexao.conectar();
-    }
-    
-    @AfterAll
-    public static void fecharConexao() {
-        conexao.desconectar();
-    }
-    
+Use para testes que dependem do ambiente (sistema operacional, variável de ambiente, serviço externo disponível). Também existem anotações prontas, como `@EnabledOnOs(OS.WINDOWS)` e `@EnabledIfEnvironmentVariable`.
+
+## 🔁 Ciclo de vida
+
+```mermaid
+sequenceDiagram
+    participant J as JUnit
+    J->>J: @BeforeAll (uma vez, static)
+    loop para cada @Test
+        J->>J: @BeforeEach
+        J->>J: @Test
+        J->>J: @AfterEach
+    end
+    J->>J: @AfterAll (uma vez, static)
+```
+
+| Anotação | Quando roda | Uso típico |
+| --- | --- | --- |
+| `@BeforeAll` | Uma vez, antes de todos (método `static`) | Abrir conexão, subir um servidor de teste |
+| `@BeforeEach` | Antes de **cada** teste | Criar objetos "limpos" para o teste |
+| `@AfterEach` | Depois de **cada** teste | Desfazer alterações (ex.: *rollback*) |
+| `@AfterAll` | Uma vez, depois de todos (método `static`) | Fechar conexões |
+
+```java
+class ContaTest {
+
+    private Conta conta;
+
     @BeforeEach
-    public void antesDeCadaTeste() {
-        conexao.iniciarTransacao(); // Inicia uma nova transação antes de cada teste
+    void prepararConta() {
+        conta = new Conta(100);      // cada teste começa com uma conta nova
     }
-    
-    @AfterEach
-    public void depoisDeCadaTeste() {
-        conexao.rollbackTransacao(); // Faz rollback da transação depois de cada teste
-    }
-    
+
     @Test
-    public void testeUm() {
-        // Usa a conexão de banco de dados configurada no método beforeAll
-        // e a transação iniciada no método beforeEach
+    void deveDepositar() {
+        conta.depositar(50);
+        assertEquals(150, conta.getSaldo());
     }
-    
+
     @Test
-    public void testeDois() {
-        // Usa a conexão de banco de dados configurada no método beforeAll
-        // e a transação iniciada no método beforeEach
+    void deveSacar() {
+        conta.sacar(30);
+        assertEquals(70, conta.getSaldo());   // não é afetado pelo teste de depósito
     }
-    
-    // Outros métodos de teste...
-    
+}
+```
+
+> [!IMPORTANT]
+> Cada teste deve ser **independente**: não pode depender da ordem nem do resultado de outro. O `@BeforeEach` ajuda a garantir isso.
+
+## 🧰 Outros recursos úteis
+
+```java
+@DisplayName("Conta corrente")             // nome amigável no relatório
+@Disabled("Aguardando correção do bug #42") // desliga um teste temporariamente
+
+@ParameterizedTest                          // o mesmo teste com vários dados
+@ValueSource(ints = {18, 30, 65})
+void deveSerMaiorDeIdade(int idade) {
+    assertTrue(new Pessoa("X", idade).ehMaiorDeIdade());
+}
+
+@ParameterizedTest
+@CsvSource({"2, 3, 5", "10, -4, 6", "0, 0, 0"})
+void deveSomar(int a, int b, int esperado) {
+    assertEquals(esperado, Calculadora.somar(a, b));
+}
+```
+
+> [!TIP]
+> Para testar uma classe que depende de outras (um serviço que usa um banco de dados, por exemplo), use **Mockito** para criar "dublês" (*mocks*) dessas dependências. Ele já vem no `spring-boot-starter-test`.
+
+📂 Projeto de exemplo do curso: [`projetos/04-testes-junit`](../../projetos/04-testes-junit/).
+
+## 📌 Resumindo
+
+- Assertions verificam resultados; `assertThrows` testa exceções; `assertAll` agrupa verificações.
+- Assumptions pulam o teste quando o ambiente não é adequado.
+- `@BeforeEach`/`@AfterEach` (cada teste) e `@BeforeAll`/`@AfterAll` (uma vez, `static`).
+- `@ParameterizedTest` roda o mesmo teste com vários dados.
+
+## 🏋️ Mão na massa
+
+**1.** Escreva um teste que verifique que `Integer.parseInt("abc")` lança `NumberFormatException`.
+
+<details>
+<summary>Ver resposta</summary>
+
+```java
+@Test
+void deveFalharAoConverterTexto() {
+    assertThrows(NumberFormatException.class, () -> Integer.parseInt("abc"));
 }
 ```
 
 </details>
 
-<br>
+**2.** Reescreva três testes de soma em um único teste parametrizado.
+
+<details>
+<summary>Ver resposta</summary>
+
+```java
+@ParameterizedTest
+@CsvSource({"1, 1, 2", "2, 3, 5", "-1, 1, 0"})
+void deveSomar(int a, int b, int esperado) {
+    assertEquals(esperado, Calculadora.somar(a, b));
+}
+```
+
+(Precisa da dependência `junit-jupiter-params`, que já vem dentro do `junit-jupiter`.)
+
+</details>
+
+**3.** Um teste passa quando roda sozinho, mas falha quando roda com os outros. Qual a causa provável?
+
+<details>
+<summary>Ver resposta</summary>
+
+Os testes estão **compartilhando estado** (por exemplo, um atributo `static` ou um objeto criado uma vez só e alterado por vários testes). A solução é recriar os objetos no `@BeforeEach` e não depender da ordem de execução.
+
+</details>
 
 ---
 
-## Projeto simples de testes com o Maven
-[Arquivos do projeto](/Arquivos/Conteudo/4%20-%20Programa%C3%A7%C3%A3o%20orientada%20a%20objetos/C%C3%B3digo/testjunity/)
+<div align="center">
 
-<br>
+[⬅️ 4.20 Testes unitários e JUnit](./20-testes-unitarios.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [4.22 Boas práticas de testes e TDD ➡️](./22-testes-boas-praticas.md)
 
-<br>
-
-<br>
-
-[Voltar a Testes unitários com JUnit](/Arquivos/Conteudo/4%20-%20Programa%C3%A7%C3%A3o%20orientada%20a%20objetos/4.6%20Teste%20unitarios%20com%20junit.md)<br>
-[Voltar ao inicio](/README.md)
+</div>

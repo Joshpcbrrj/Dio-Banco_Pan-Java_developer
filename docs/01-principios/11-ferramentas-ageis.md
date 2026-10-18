@@ -1,25 +1,62 @@
-# Algumas ferramentas Ágeis 
+# 1.11 · Ferramentas para times ágeis
 
-### Ferramentas all in one 
-[Clickup](https://clickup.com)<br>
-[Notion](https://www.notion.so)<br>
-[Innos note](https://innos.io/login)<br>
-[Miro](https://miro.com/apps)
+> **Em uma frase:** existem ferramentas para organizar backlog, quadros e documentação; o mais importante não é a ferramenta, e sim que todo o time use a mesma de forma consistente.
 
+## 🧰 Principais opções
 
-### Ferramentas de gerenciamento
-[Trello](https://trello.com/)<br>
-[Jira](https://www.atlassian.com/br/software/jira?gclid=e87adfd0736f19874e46bc2d4d14cae6&gclsrc=3p.ds&&aceid={aceid}&adposition=&adgroup=1301822203954486&campaign=470096443&creative=&device=c&keyword=jira&matchtype=e&network=o&placement=&ds_kids=p74752042282&ds_e=MICROSOFT&ds_eid=700000001738795&ds_e1=GOOGLE&msclkid=e87adfd0736f19874e46bc2d4d14cae6)<br>
-[Monday](https://monday.com/lp/comp/alternative/remote/asana?utm_medium=cpc&utm_source=binglocals&utm_campaign=br-pt-prm-workos-work_mgmt-comp1-h-search-desktop-exp-bing&utm_adgroup=asana-en&utm_content=asana&utm_keyword=asana&utm_match_type=e&utm_bid_match_type=be&cluster=&subcluster=&ati=&msclkid=9539fc3c3ccd19ca09a19fc102468426)<br>
-[Osana](https://asana.com/pt)<br>
-[Team retro](https://www.teamretro.com/easyretro-alternative?msclkid=f24129c7859c1c816c714a3abb2ff06d)<br>
-[Automatize](https://www.teamretro.com/easyretro-alternative?msclkid=f24129c7859c1c816c714a3abb2ff06d)
+| Ferramenta | Melhor para | Observação |
+| --- | --- | --- |
+| [Jira](https://www.atlassian.com/br/software/jira) | Scrum e Kanban em empresas | A mais usada no mercado; muito configurável. |
+| [Trello](https://trello.com/) | Quadros Kanban simples | Ótimo para começar e para uso pessoal. |
+| [GitHub Projects](https://docs.github.com/pt/issues/planning-and-tracking-with-projects) | Times que já usam GitHub | Liga cartões a issues e pull requests. |
+| [Azure Boards](https://azure.microsoft.com/pt-br/products/devops/boards) | Empresas no ecossistema Microsoft | Parte do Azure DevOps. |
+| [Asana](https://asana.com/pt) · [Monday](https://monday.com/) · [ClickUp](https://clickup.com/) | Gestão de tarefas e projetos em geral | Também atendem áreas fora de TI. |
+| [Notion](https://www.notion.so/) | Documentação + quadros | "Tudo em um": wiki, banco de dados e Kanban. |
+| [Miro](https://miro.com/) | Quadros brancos colaborativos | Retrospectivas, brainstorming e diagramas. |
+| [EasyRetro](https://easyretro.io/) · [TeamRetro](https://www.teamretro.com/) | Retrospectivas | Templates prontos para a cerimônia. |
 
-<br>
+> [!TIP]
+> Para estudar sozinho, o **GitHub Projects** é uma ótima escolha: além de grátis, mostra no seu perfil que você sabe organizar trabalho como um time de verdade.
 
-<br>
+## 📌 Resumindo
 
-<br>
+- Jira é o padrão em empresas; Trello e GitHub Projects são ótimos para começar.
+- Notion e Miro ajudam em documentação e dinâmicas do time.
+- A ferramenta serve ao processo, e não o contrário.
 
-[Voltar a trabalho com equipes ágeis](/Arquivos/Conteudo/1%20-%20Principio%20de%20desenvolvimento%20de%20software/1.2%20Trabalho%20com%20equipes%20ageis.md)<br>
-[Voltar para inicio](/README.md)
+## 🏋️ Mão na massa
+
+**1.** Crie um projeto no GitHub Projects (ou no Trello) com as colunas *A fazer*, *Fazendo* e *Feito* para acompanhar este curso.
+
+<details>
+<summary>Ver resposta</summary>
+
+No GitHub, vá em **seu perfil → Projects → New project → Board**. Crie um item por módulo deste material e mova conforme avançar.
+
+</details>
+
+**2.** Qual ferramenta você usaria para uma retrospectiva remota? Por quê?
+
+<details>
+<summary>Ver resposta</summary>
+
+Algo como **Miro** ou **EasyRetro**, porque permitem que todos escrevam post-its ao mesmo tempo, votem e agrupem ideias, simulando um quadro físico.
+
+</details>
+
+**3.** Um time usa Jira para tarefas, uma planilha para bugs e o WhatsApp para prioridades. Qual o problema?
+
+<details>
+<summary>Ver resposta</summary>
+
+A informação fica espalhada e ninguém tem a visão completa, o que fere o pilar da **transparência**. O ideal é concentrar backlog, bugs e prioridades em um só lugar.
+
+</details>
+
+---
+
+<div align="center">
+
+[⬅️ 1.10 OKR (Objetivos e Resultados-Chave)](./10-okr.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [2.1 História do Java, JVM, JRE e JDK ➡️](../02-java/01-historia-e-plataforma.md)
+
+</div>

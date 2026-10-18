@@ -1,45 +1,161 @@
-# Exception handlers
+# 6.17 · Tratamento de erros na API: `@RestControllerAdvice`
 
-Em uma aplicação, erros podem acontecer por diversos motivos, como por exemplo, falha de comunicação com bancos de dados, problemas de conexão com serviços externos, entrada de dados inválidos pelo usuário, entre outros.
+> **Em uma frase:** em vez de espalhar `try/catch` pelos controllers, você cria **uma** classe `@RestControllerAdvice` com métodos `@ExceptionHandler` que transformam cada exceção numa resposta HTTP clara (status correto + mensagem amigável).
 
-Quando um erro ocorre em uma aplicação, é importante que o usuário receba uma mensagem de erro amigável e que o problema seja tratado de forma adequada pelo sistema. Uma maneira de tratar esses erros é utilizando o conceito de **Exception Handlers**.
+## 🤔 O problema
 
-### **O que são Exception Handlers**
+Sem tratamento, uma exceção vira um `500 Internal Server Error` genérico, às vezes com detalhes internos do sistema (o que é ruim para quem consome a API **e** um risco de segurança).
 
-*Exception handlers* são blocos de código que tratam exceções lançadas por uma aplicação. Esses blocos de código são responsáveis por capturar a exceção lançada, analisar o erro e retornar uma resposta apropriada para o usuário.
+## 🛡️ A solução: um tratador global
 
-<br>
+```mermaid
+sequenceDiagram
+    participant C as Cliente
+    participant RC as UsuarioController
+    participant S as UsuarioService
+    participant H as GlobalExceptionHandler
+    C->>RC: GET /usuarios/102
+    RC->>S: buscar(102)
+    S--xRC: lança UsuarioNaoEncontradoException
+    RC--xH: o Spring procura um @ExceptionHandler
+    H-->>C: 404 { "status": 404, "mensagem": "Usuário 102 não encontrado" }
+```
 
-## Como funcionam os Exception Handlers
+### 1. Exceções de negócio
 
-<img src="./img/37.jpg" alt="" width="600">
+```java
+public class UsuarioNaoEncontradoException extends RuntimeException {
+    public UsuarioNaoEncontradoException(Long id) {
+        super("Usuário " + id + " não encontrado");
+    }
+}
 
-Os **Exception Handlers** funcionam como interceptadores de exceções, capturando as exceções lançadas pela aplicação e retornando uma resposta apropriada para o usuário.
+public class RegraDeNegocioException extends RuntimeException {
+    public RegraDeNegocioException(String mensagem) { super(mensagem); }
+}
+```
 
-Quando uma exceção é lançada, o framework que está sendo utilizado pela aplicação (como o Spring, por exemplo), procura por um **Exception Handler** que seja capaz de lidar com a exceção em questão.
+### 2. O formato da resposta de erro
 
-Se um **Exception Handler** adequado é encontrado, ele é executado e retorna uma resposta apropriada para o usuário. Caso contrário, a exceção é propagada para um **handler** global ou para o servidor de aplicação, que se encarrega de exibir uma mensagem padrão de erro.
+```java
+public record ErroResponse(int status, String mensagem, Instant momento) {
+    public ErroResponse(HttpStatus status, String mensagem) {
+        this(status.value(), mensagem, Instant.now());
+    }
+}
+```
 
-### Como criar um Exception Handler
+### 3. O tratador global
 
-Para criar um **Exception Handler**, é necessário definir um método em uma classe anotada com `@ControllerAdvice`.
+```java
+@RestControllerAdvice
+public class GlobalExceptionHandler {
 
-Essa classe será responsável por tratar as exceções lançadas pela aplicação, e o método deve ser anotado com `@ExceptionHandler` e receber como parâmetro a exceção a ser tratada.
+    @ExceptionHandler(UsuarioNaoEncontradoException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErroResponse naoEncontrado(UsuarioNaoEncontradoException e) {
+        return new ErroResponse(HttpStatus.NOT_FOUND, e.getMessage());
+    }
 
-Dentro desse método, é possível implementar a lógica necessária para lidar com o erro, como por exemplo, retornar uma mensagem de erro personalizada para o usuário ou logar o erro para fins de monitoramento.
+    @ExceptionHandler(RegraDeNegocioException.class)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    public ErroResponse regraDeNegocio(RegraDeNegocioException e) {
+        return new ErroResponse(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+    }
 
-#### Vantagens dos Exception Handlers
+    @ExceptionHandler(MethodArgumentNotValidException.class)    // erros do @Valid
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErroResponse validacao(MethodArgumentNotValidException e) {
+        String campos = e.getBindingResult().getFieldErrors().stream()
+                .map(erro -> erro.getField() + ": " + erro.getDefaultMessage())
+                .collect(Collectors.joining("; "));
+        return new ErroResponse(HttpStatus.BAD_REQUEST, campos);
+    }
 
-- Facilitam o tratamento de exceções em uma aplicação, permitindo que os desenvolvedores capturem e tratem as exceções lançadas de forma centralizada.
-- Permitem que os usuários recebam mensagens de erro mais amigáveis e personalizadas.
-- Ajudam a evitar a exposição de informações sensíveis ou detalhes da implementação para o usuário final.
-- Facilitam o monitoramento de erros e a depuração de problemas na aplicação.
+    @ExceptionHandler(Exception.class)                           // qualquer outra coisa
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErroResponse inesperado(Exception e) {
+        // registre o erro completo no log aqui
+        return new ErroResponse(HttpStatus.INTERNAL_SERVER_ERROR,
+                "Ocorreu um erro inesperado. Tente novamente mais tarde.");
+    }
+}
+```
 
-<br>
+O service só **lança** a exceção; o controller nem precisa saber que ela existe:
 
-<br>
+```java
+public Usuario buscar(Long id) {
+    return repository.findById(id).orElseThrow(() -> new UsuarioNaoEncontradoException(id));
+}
+```
 
-<br>
+> [!TIP]
+> O Spring 6+ suporta o padrão **Problem Details** (RFC 9457), um formato oficial para erros em APIs. Basta retornar `ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, e.getMessage())` no handler, ou ligar `spring.mvc.problemdetails.enabled=true`.
 
-[Voltar a Criando API REST documentada com Spring web e Swagger](/Arquivos/Conteudo/6%20-%20Ganhando%20produtividade%20com%20spring%20framwork/6.3%20Criando%20api%20rest%20documentada%20com%20spring%20web%20e%20swagger.md)<br>
-[Voltar ao inicio](/README.md)
+> [!WARNING]
+> Nunca devolva o *stack trace* ou mensagens internas (como erros de SQL) para o cliente. Registre-os no **log** e responda com uma mensagem genérica.
+
+## ✅ Vantagens
+
+- Tratamento **centralizado**: um lugar só para todas as exceções.
+- Respostas **padronizadas**, com o status HTTP correto.
+- Controllers e services mais limpos.
+- Não expõe detalhes internos.
+
+## 📌 Resumindo
+
+- `@RestControllerAdvice` + `@ExceptionHandler(Tipo.class)` tratam exceções de toda a API.
+- Cada exceção vira um status HTTP adequado (404, 422, 400, 500...).
+- `MethodArgumentNotValidException` captura os erros do `@Valid`.
+- Considere o formato padrão `ProblemDetail`.
+
+## 🏋️ Mão na massa
+
+**1.** Crie uma exceção `CampoObrigatorioException` e um handler que a transforme em `400 Bad Request`.
+
+<details>
+<summary>Ver resposta</summary>
+
+```java
+public class CampoObrigatorioException extends RuntimeException {
+    public CampoObrigatorioException(String campo) {
+        super("O campo '" + campo + "' é obrigatório");
+    }
+}
+
+// dentro do GlobalExceptionHandler:
+@ExceptionHandler(CampoObrigatorioException.class)
+@ResponseStatus(HttpStatus.BAD_REQUEST)
+public ErroResponse campoObrigatorio(CampoObrigatorioException e) {
+    return new ErroResponse(HttpStatus.BAD_REQUEST, e.getMessage());
+}
+```
+
+</details>
+
+**2.** Por que o handler de `Exception.class` não devolve `e.getMessage()` para o cliente?
+
+<details>
+<summary>Ver resposta</summary>
+
+Porque uma exceção inesperada pode conter detalhes internos (nomes de tabelas, consultas SQL, caminhos de arquivos), que ajudariam um atacante e confundiriam o usuário. O certo é registrar o erro completo no log e responder algo genérico.
+
+</details>
+
+**3.** Se existirem handlers para `RuntimeException` e para `UsuarioNaoEncontradoException` (filha dela), qual é usado ao lançar a segunda?
+
+<details>
+<summary>Ver resposta</summary>
+
+O **mais específico**: o de `UsuarioNaoEncontradoException`. O Spring escolhe o handler cujo tipo é o mais próximo da exceção lançada.
+
+</details>
+
+---
+
+<div align="center">
+
+[⬅️ 6.16 Documentando a API com OpenAPI e Swagger](./16-openapi-swagger.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [6.18 Minha primeira API REST documentada ➡️](./18-projeto-rest-api.md)
+
+</div>

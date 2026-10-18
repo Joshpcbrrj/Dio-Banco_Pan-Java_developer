@@ -1,142 +1,142 @@
-# O que é apache Maven ?
+# 4.14 · O que é o Apache Maven
 
-[Wikipidia - Explicando funcionamento do Maven](https://en.wikipedia.org/wiki/Apache_Maven)
+> **Em uma frase:** o Maven é a ferramenta que **baixa as bibliotecas** que seu projeto usa e **automatiza o build** (compilar, testar, empacotar), tudo configurado em um arquivo chamado `pom.xml`.
 
-## O que é o Apache Maven?
-O Apache Maven é uma ferramenta de automação de construção de projetos de software baseada em Java. Ele fornece um formato padrão para o gerenciamento de dependências, construção de projetos, criação de artefatos, publicação e documentação de projetos Java.
+## 🤔 Por que usar?
 
-### Quando foi criado?
-O Apache Maven foi criado em 2004 por Jason van Zyl, como um substituto do antigo projeto Jakarta Turbine, que não atendia às necessidades de gerenciamento de dependências e construção de projetos de software.
+Sem o Maven, você precisaria baixar cada `.jar` de biblioteca na mão, colocar no projeto, descobrir de quais outras bibliotecas ela depende, e montar o comando de compilação do zero. Com o Maven, basta declarar "quero a biblioteca X na versão Y" e rodar `mvn package`.
 
-### Para que serve?
-O Apache Maven é utilizado para facilitar a criação e gerenciamento de projetos Java, automatizando processos repetitivos, como a compilação, empacotamento e distribuição de artefatos. Algumas das principais funções do Maven incluem:
+| Função | O que faz |
+| --- | --- |
+| **Gerenciar dependências** | Baixa as bibliotecas (e as dependências delas) de repositórios. |
+| **Padronizar o projeto** | Toda aplicação Maven tem a mesma estrutura de pastas. |
+| **Automatizar o build** | Compila, roda os testes e empacota (`.jar`, `.war`). |
+| **Publicar artefatos** | Envia o pacote para um repositório, para outros projetos usarem. |
+| **Gerar documentação** | Relatórios e Javadoc. |
 
-- Gerenciamento de dependências: o Maven permite declarar as dependências do projeto em um arquivo XML (pom.xml), que é baixado automaticamente a partir dos repositórios Maven.
-- Construção de projetos: o Maven usa convenções para estruturar os diretórios de código-fonte, permitindo uma construção mais eficiente e padronizada.
-- Criação de artefatos: o Maven empacota o código-fonte em um ou mais formatos, como JAR, WAR ou ZIP, tornando mais fácil distribuir o projeto.
-- Publicação de artefatos: o Maven permite a publicação de artefatos em um ou mais repositórios remotos, facilitando o compartilhamento do código-fonte.
-- Documentação de projetos: o Maven pode gerar documentação a partir do código-fonte do projeto, facilitando o entendimento do funcionamento do software.
+> [!NOTE]
+> O Maven nasceu por volta de 2002, dentro do projeto Jakarta Turbine da Apache, criado por Jason van Zyl; a versão 1.0 saiu em 2004. A principal alternativa hoje é o **Gradle** (usado, por exemplo, no Android). O Spring Initializr permite escolher qualquer um dos dois.
 
-Em resumo, o Apache Maven é uma ferramenta essencial para o desenvolvimento de projetos Java, permitindo uma gestão mais eficiente de dependências e automatização de tarefas repetitivas, tornando o processo de construção de projetos mais fácil e padronizado.
+## 📁 Estrutura padrão (convenção sobre configuração)
 
-<br>
+```text
+meu-projeto/
+├── pom.xml                  ← configuração do projeto
+├── src/
+│   ├── main/
+│   │   ├── java/            ← código da aplicação
+│   │   └── resources/       ← arquivos de configuração (ex.: application.properties)
+│   └── test/
+│       └── java/            ← testes
+└── target/                  ← gerado pelo build (não vai para o Git)
+```
 
-## Arquivo POM (Project Object Model)
-
-O arquivo POM (Project Object Model) é um arquivo XML utilizado pelo Apache Maven para gerenciar projetos de software. Ele contém informações sobre o projeto, como as dependências, plugins, configurações de compilação e testes, informações de distribuição, entre outras.
-
-**Algumas das informações contidas no arquivo POM incluem:**
-
-- groupId: o identificador do grupo de artefatos do projeto
-- artifactId: o identificador único do projeto dentro do grupo
-- version: a versão do projeto
-- dependencies: as dependências do projeto, com seus identificadores e versões
-- plugins: os plugins do Maven que serão utilizados no projeto
-- profiles: perfis de configuração do Maven que podem ser utilizados para diferentes ambientes
-
-O arquivo POM é criado pelo desenvolvedor do projeto e é utilizado pelo Maven para realizar diversas tarefas, como compilação, testes, empacotamento, distribuição e publicação de artefatos. Ele pode ser modificado conforme necessário para atender às necessidades específicas do projeto.
-
-<details>
-<summary>Exemplo arquivo POM</summary>
+## 📄 O `pom.xml` (*Project Object Model*)
 
 ```xml
-<!-- Informações gerais sobre o projeto -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
+<project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
-                             http://maven.apache.org/xsd/maven-4.0.0.xsd">
-                             
-    <!-- Versão do formato do arquivo POM -->
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    
-    <!-- Informações sobre o projeto -->
-    <groupId>com.example</groupId> <!-- ID do grupo do projeto -->
-    <artifactId>my-project</artifactId> <!-- ID do artefato do projeto -->
-    <version>1.0-SNAPSHOT</version> <!-- Versão do projeto -->
-    
-    <!-- Dependências do projeto -->
+
+    <!-- Coordenadas: identificam o projeto de forma única -->
+    <groupId>br.com.treino</groupId>          <!-- organização (domínio invertido) -->
+    <artifactId>calculadora</artifactId>      <!-- nome do projeto -->
+    <version>1.0.0-SNAPSHOT</version>         <!-- SNAPSHOT = em desenvolvimento -->
+
+    <properties>
+        <maven.compiler.release>21</maven.compiler.release>   <!-- versão do Java -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
     <dependencies>
         <dependency>
-            <groupId>junit</groupId> <!-- ID do grupo da dependência -->
-            <artifactId>junit</artifactId> <!-- ID do artefato da dependência -->
-            <version>4.12</version> <!-- Versão da dependência -->
-            <scope>test</scope> <!-- Escopo da dependência -->
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.13.4</version>
+            <scope>test</scope>              <!-- só para os testes -->
         </dependency>
     </dependencies>
-    
-    <!-- Build do projeto -->
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId> <!-- ID do grupo do plugin -->
-                <artifactId>maven-compiler-plugin</artifactId> <!-- ID do artefato do plugin -->
-                <version>3.8.1</version> <!-- Versão do plugin -->
-                <configuration>
-                    <source>1.8</source> <!-- Versão do compilador -->
-                    <target>1.8</target> <!-- Versão do bytecode gerado -->
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-    
 </project>
 ```
 
-</details>
+> [!TIP]
+> As três "coordenadas" `groupId:artifactId:version` (o famoso **GAV**) identificam qualquer biblioteca do mundo Maven. Encontre-as em [mvnrepository.com](https://mvnrepository.com/) ou no [Maven Central](https://central.sonatype.com/).
 
-<br>
+> [!NOTE]
+> As versões nos exemplos são as estáveis na época em que este material foi escrito. Sempre confira a versão mais recente no Maven Central.
 
-## Super Pom
+### O Super POM
 
-#### Representação:
-<img src="./img/11.jpg" alt="" width="400">
+Todo `pom.xml` herda, sem você ver, de um **Super POM** padrão do Maven. É ele que define as convenções (as pastas `src/main/java`, `target` etc.) e o repositório central. Para ver o POM completo, já com tudo o que foi herdado, rode `mvn help:effective-pom`.
 
-O Super POM (Project Object Model) é o arquivo POM padrão do Apache Maven, que define as configurações e dependências padrão para todos os projetos Maven. Ele é um modelo que serve como uma base para todos os projetos Maven e é incluído automaticamente em todos os projetos Maven como um pai.
+## 🗄️ Repositórios
 
-O Super POM contém informações sobre a versão do Maven, as configurações padrão de compilação, empacotamento, testes, entre outras informações. Ele também possui informações sobre as dependências padrão, que incluem bibliotecas comuns, como o JUnit, que é frequentemente utilizado para testes.
+```mermaid
+flowchart LR
+    M["mvn compile"] --> L[("Repositório local<br/>~/.m2/repository")]
+    L -- "não tem? baixa de" --> C[("Maven Central<br/>ou repositório da empresa")]
+    C --> L
+```
 
-Os desenvolvedores podem substituir as configurações padrão do Super POM em seus próprios arquivos POM para atender às necessidades específicas de seus projetos.
+- **Local**: a pasta `.m2/repository` no seu usuário (`C:\Users\<voce>\.m2` no Windows, `~/.m2` no Linux/macOS). Funciona como um cache.
+- **Remoto**: o **Maven Central** (público) ou repositórios privados da empresa (Nexus, Artifactory), configurados no `pom.xml` ou no `~/.m2/settings.xml`.
 
-<br>
+O Maven procura primeiro no local; se não achar, baixa do remoto e guarda no local para as próximas vezes.
 
-### Repositórios
-<img src="./img/12.jpg" alt="" width="500">
+## 💻 Instalando
 
-Em Maven, um repositório é um diretório onde são armazenados os artefatos, que podem ser dependências ou plugins, necessários para construir um projeto. O Maven utiliza esses repositórios para gerenciar as dependências do projeto e para recuperar os plugins necessários durante a fase de build.
+1. Baixe em [maven.apache.org/download.cgi](https://maven.apache.org/download.cgi) e descompacte.
+2. Adicione a pasta `bin` ao `PATH` (e tenha a variável `JAVA_HOME` apontando para o JDK).
+3. Confira:
 
-Existem dois tipos principais de repositórios do Maven: o repositório local e os repositórios remotos.
-
-- Repositório local: é um diretório no computador do desenvolvedor onde o Maven armazena os artefatos baixados de repositórios remotos. O repositório local é criado automaticamente pelo Maven e está localizado na pasta ".m2" do diretório do usuário.
-    - No windows o caminho é: C:\Users<nome_do_usuario>.m2
-    - No Linux: /home/<nome_do_usuario>/.m2
-- Repositórios remotos: são repositórios de artefatos que estão localizados em servidores remotos. Esses repositórios podem ser públicos ou privados e o Maven pode acessá-los por meio de URLs configuradas no arquivo settings.xml ou no POM.xml do projeto. Dependências remotas ficam no Maven central. Também podemos configurar para acessar repositórios remotos exclusivos.
-
-Ao construir um projeto, o Maven primeiro verifica se as dependências necessárias estão disponíveis no repositório local. Se a dependência não estiver presente no repositório local, o Maven a procurará nos repositórios remotos configurados no arquivo de configuração. Se a dependência for encontrada, ela será baixada e armazenada no repositório local para uso futuro.
-
-<br>
-
-## Como instalar o Maven
-
-### Link úteis:
-[Maven download official](https://maven.apache.org/download.cgi)
-[Dicas de programação - Como instalar o Maven](https://dicasdeprogramacao.com.br/como-instalar-o-maven-no-windows/)
-[TreinaWeb - Instalação do Maven no windows](https://www.youtube.com/watch?v=Wejymb4AmzA&ab_channel=TreinaWeb)
-
-### Confirmar instalação com o comando: 
 ```bash
-#No terminal vamos digitar:
 mvn --version
 ```
 
-#### A resposta fica algo como:
+> [!TIP]
+> Você nem sempre precisa instalar o Maven: projetos criados pelo Spring Initializr trazem o **Maven Wrapper** (`mvnw` / `mvnw.cmd`), que baixa a versão certa automaticamente. Use `./mvnw package` (Linux/macOS) ou `mvnw.cmd package` (Windows). O IntelliJ também já vem com um Maven embutido.
 
-<img src="./img/13.jpg" alt="" width="700">
+## 📌 Resumindo
 
-<br>
+- Maven = gerenciador de dependências + automação de build.
+- Tudo é configurado no `pom.xml`; bibliotecas são identificadas por `groupId:artifactId:version`.
+- Estrutura padrão: `src/main/java`, `src/test/java`, `target`.
+- Bibliotecas vêm do Maven Central e ficam em cache em `~/.m2`.
 
-<br>
+## 🏋️ Mão na massa
 
-<br>
+**1.** Quais são as coordenadas (GAV) da biblioteca Apache Commons Lang 3 na versão 3.18.0?
 
-[Voltar a Gerenciamento de dependências e build em Java com Maven](/Arquivos/Conteudo/4%20-%20Programa%C3%A7%C3%A3o%20orientada%20a%20objetos/4.5%20Gerenciamento%20de%20dependencias%20e%20build%20em%20java%20com%20maven.md)<br>
-[Voltar ao inicio](/README.md)
+<details>
+<summary>Ver resposta</summary>
+
+`org.apache.commons:commons-lang3:3.18.0`, ou seja, `groupId` = `org.apache.commons`, `artifactId` = `commons-lang3`, `version` = `3.18.0`.
+
+</details>
+
+**2.** Onde fica o seu repositório Maven local e para que ele serve?
+
+<details>
+<summary>Ver resposta</summary>
+
+Na pasta `.m2/repository` dentro do seu usuário. Ele guarda as bibliotecas já baixadas, para não baixá-las de novo a cada build.
+
+</details>
+
+**3.** Instale o Maven (ou use o embutido do IntelliJ) e rode `mvn --version`. O que a saída mostra?
+
+<details>
+<summary>Ver resposta</summary>
+
+A versão do Maven, a pasta onde ele está instalado, a versão do Java que ele está usando (e onde está o JDK), além do sistema operacional. Se aparecer um erro sobre `JAVA_HOME`, configure essa variável apontando para o JDK.
+
+</details>
+
+---
+
+<div align="center">
+
+[⬅️ 4.13 Tratamento de exceções](./13-excecoes.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [4.15 Criando projetos e comandos do Maven ➡️](./15-maven-comandos.md)
+
+</div>

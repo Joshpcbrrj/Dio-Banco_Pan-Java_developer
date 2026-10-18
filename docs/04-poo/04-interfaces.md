@@ -1,69 +1,174 @@
-# Interface
+# 4.4 · Interfaces
 
-Uma interface é uma especificação de um conjunto de métodos e constantes que uma classe deve implementar. É uma forma de definir um contrato que outras classes podem seguir. Em Java, uma interface é definida usando a palavra-chave interface e os métodos são definidos sem implementação. As classes que implementam uma interface devem fornecer uma implementação para todos os métodos da interface.
+> **Em uma frase:** uma interface é um **contrato**: ela diz **o que** uma classe deve saber fazer, sem dizer **como**; qualquer classe que assine o contrato (`implements`) pode ser usada no lugar dela.
 
-### Comparação entre interface e herança:
-Tanto interface quanto herança são recursos da programação orientada a objetos que permitem a reutilização de código. No entanto, existem algumas diferenças importantes entre eles.
-
-- A herança permite que uma classe herde características (métodos e atributos) de outra classe, permitindo a criação de uma hierarquia de classes. A classe filha pode herdar tudo ou parte do comportamento da classe pai e ainda adicionar novos comportamentos.
-
-- Uma interface é um conjunto de métodos que uma classe deve implementar. Uma classe pode implementar várias interfaces, permitindo a adição de vários comportamentos diferentes. As interfaces não têm implementação de métodos, portanto, a implementação deve ser fornecida pela classe que as implementa.
-
-Resumindo, a herança é usada para estabelecer uma relação "é um" entre duas classes, enquanto a interface é usada para estabelecer uma relação "pode fazer". A herança é uma relação mais forte e mais restrita do que a interface, pois a classe filha precisa herdar todos os atributos e métodos da classe pai, enquanto a interface permite que a classe que a implementa escolha quais métodos implementar.
-
-<br>
-
-## Exemplo prático de uso de interface
-
-<details>
-<summary>Código</summary>
+## 📝 O contrato
 
 ```java
-public class Main {
-    public static void main(String[] args) {
-        Jogo xbox = new Xbox();
-        xbox.jogar();
-
-        Jogo playStation = new PlayStation();
-        playStation.jogar();
-    }
+public interface Console {
+    void jogar();                    // o que todo console deve saber fazer
 }
 ```
 
 ```java
-public interface Jogo {
-    void jogar();
-}
-```
-
-```java
-public class Xbox implements Jogo {
-	
-		@Override
+public class Xbox implements Console {
+    @Override
     public void jogar() {
         System.out.println("Jogando no Xbox...");
     }
 }
-```
 
-```java
-public class PlayStation implements Jogo {
-
-		@Override
+public class PlayStation implements Console {
+    @Override
     public void jogar() {
         System.out.println("Jogando no PlayStation...");
     }
 }
 ```
 
+```java
+List<Console> consoles = List.of(new Xbox(), new PlayStation());
+for (Console c : consoles) {
+    c.jogar();     // polimorfismo por interface
+}
+```
+
+```mermaid
+classDiagram
+    class Console {
+        <<interface>>
+        +jogar() void
+    }
+    Console <|.. Xbox
+    Console <|.. PlayStation
+```
+
+> [!TIP]
+> **Analogia:** a tomada da parede é uma interface. Ela define o formato do encaixe; não importa se o que você liga é um carregador, uma TV ou um secador, desde que siga o padrão.
+
+## 🧰 O que uma interface pode ter
+
+| Elemento | Desde | Observação |
+| --- | --- | --- |
+| Métodos abstratos | sempre | Sem corpo; quem implementa é obrigado a escrever |
+| Constantes | sempre | Implicitamente `public static final` |
+| Métodos `default` | Java 8 | Têm corpo; quem implementa **pode** sobrescrever |
+| Métodos `static` | Java 8 | Utilitários ligados à interface |
+| Métodos `private` | Java 9 | Ajudam a organizar os `default` |
+
+```java
+public interface Notificador {
+    void enviar(String mensagem);                 // abstrato
+
+    default void enviarUrgente(String mensagem) { // comportamento padrão
+        enviar("[URGENTE] " + mensagem);
+    }
+}
+```
+
+> [!NOTE]
+> Ao contrário do que muitos materiais antigos dizem, interfaces **podem** ter código (métodos `default` e `static`). O que elas não têm é **estado**: não existem atributos de instância.
+
+## ⚖️ Herança × interface
+
+| | Herança (`extends`) | Interface (`implements`) |
+| --- | --- | --- |
+| Relação | "**é um**" | "**sabe fazer**" / "**pode**" |
+| Quantas por classe | Só **uma** classe pai | **Várias** interfaces |
+| Herda estado (atributos)? | Sim | Não |
+| Herda implementação? | Sim | Só dos métodos `default` |
+
+Uma classe pode fazer os dois ao mesmo tempo:
+
+```java
+public class Pato extends Animal implements Nadador, Voador { ... }
+```
+
+> [!IMPORTANT]
+> Quem implementa uma interface precisa implementar **todos** os métodos abstratos dela (ou ser declarada `abstract`).
+
+### Classe abstrata × interface
+
+Uma **classe abstrata** (`abstract class`) fica no meio do caminho: não pode ser instanciada, pode ter métodos abstratos **e** atributos e construtores. Use-a quando várias classes compartilham **estado e código**; use interface quando compartilham só um **contrato**.
+
+## 💡 Por que interfaces são tão usadas
+
+Elas permitem **trocar a implementação** sem mudar quem usa. No Spring (Módulo 6), você vai escrever coisas como:
+
+```java
+public interface ClienteRepository { ... }   // o contrato
+// o Spring cria a implementação; seu código depende só da interface
+```
+
+Isso é o princípio de **programar para interfaces, não para implementações**.
+
+## 📌 Resumindo
+
+- Interface = contrato do que fazer; a classe implementa o como.
+- Uma classe estende **uma** classe e pode implementar **várias** interfaces.
+- Interfaces podem ter métodos `default`, `static` e `private`, mas não estado.
+- Programar para interfaces deixa o código flexível e fácil de testar.
+
+## 🏋️ Mão na massa
+
+**1.** Crie a interface `FormaGeometrica` com o método `double area()` e implemente-a em `Quadrado` e `Circulo`.
+
+<details>
+<summary>Ver resposta</summary>
+
+```java
+public interface FormaGeometrica {
+    double area();
+}
+
+public class Quadrado implements FormaGeometrica {
+    private final double lado;
+    public Quadrado(double lado) { this.lado = lado; }
+    @Override public double area() { return lado * lado; }
+}
+
+public class Circulo implements FormaGeometrica {
+    private final double raio;
+    public Circulo(double raio) { this.raio = raio; }
+    @Override public double area() { return Math.PI * raio * raio; }
+}
+```
 
 </details>
 
-<br>
+**2.** Some as áreas de uma lista de formas sem saber quais tipos ela contém.
 
-<br>
+<details>
+<summary>Ver resposta</summary>
 
-<br>
+```java
+List<FormaGeometrica> formas = List.of(new Quadrado(2), new Circulo(1));
+double total = 0;
+for (FormaGeometrica f : formas) total += f.area();
+System.out.println(total);   // 4 + 3.14159... = 7.14159...
+```
 
-[Voltar a Programação orientada a objetos com Java](/Arquivos/Conteudo/4%20-%20Programa%C3%A7%C3%A3o%20orientada%20a%20objetos/4.1%20Programacao%20orientada%20a%20objetos%20com%20java.md)<br>
-[Voltar ao inicio](/README.md)
+</details>
+
+**3.** Acrescente à `FormaGeometrica` um método `default` que descreva a forma usando a área, sem quebrar as classes existentes.
+
+<details>
+<summary>Ver resposta</summary>
+
+```java
+default String descrever() {
+    return getClass().getSimpleName() + " com área " + String.format("%.2f", area());
+}
+```
+
+Como é `default`, `Quadrado` e `Circulo` ganham o método automaticamente, sem precisar alterá-las.
+
+</details>
+
+---
+
+<div align="center">
+
+[⬅️ 4.3 Associação](./03-associacao.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [4.5 Pacotes ➡️](./05-pacotes.md)
+
+</div>

@@ -1,46 +1,143 @@
-# O que é collection
+# 4.7 · O framework Collections
 
-Collections (Coleções) é um framework (conjunto de classes e interfaces) em Java que fornece uma estrutura de dados para armazenar e manipular grupos de objetos. As classes do framework Collections fornecem implementações para Listas (List), Conjuntos (Set) e Mapas (Map), bem como outras classes de coleção que são úteis em vários contextos de programação. O framework Collections é amplamente utilizado em Java para manipular conjuntos de objetos de forma eficiente e conveniente. Ele oferece muitas funcionalidades úteis, como ordenação, pesquisa, filtragem e transformação de coleções, que simplificam a manipulação de dados em Java.
+> **Em uma frase:** Collections é o conjunto de interfaces e classes do Java para guardar e manipular **grupos de objetos**: listas (`List`), conjuntos (`Set`), filas (`Queue`) e mapas (`Map`).
 
-### Representação da hierarquia de Collections
-<img src="./img/05.jpg" alt="" width="800">
+📦 Referência usada no curso: [cami-la/curso-dio-intro-collections](https://github.com/cami-la/curso-dio-intro-collections).
 
-<br>
+## 🗺️ A hierarquia
 
-#### Exemplo de uso:
-<details>
-<summary>Código</summary>
+```mermaid
+classDiagram
+    class Iterable { <<interface>> }
+    class Collection { <<interface>> }
+    class List { <<interface>> }
+    class Set { <<interface>> }
+    class SortedSet { <<interface>> }
+    class Queue { <<interface>> }
+    class Deque { <<interface>> }
+    class Map { <<interface>> }
+    class SortedMap { <<interface>> }
+
+    Iterable <|-- Collection
+    Collection <|-- List
+    Collection <|-- Set
+    Collection <|-- Queue
+    Set <|-- SortedSet
+    Queue <|-- Deque
+
+    List <|.. ArrayList
+    List <|.. LinkedList
+    Deque <|.. LinkedList
+    Deque <|.. ArrayDeque
+    Queue <|.. PriorityQueue
+    Set <|.. HashSet
+    HashSet <|-- LinkedHashSet
+    SortedSet <|.. TreeSet
+
+    Map <|.. HashMap
+    HashMap <|-- LinkedHashMap
+    Map <|-- SortedMap
+    SortedMap <|.. TreeMap
+```
+
+> [!NOTE]
+> `Map` fica separado: ele **não** herda de `Collection`, porque guarda pares chave → valor em vez de elementos soltos. Mesmo assim, faz parte do framework.
+
+## 🧭 Qual usar?
+
+```mermaid
+flowchart TD
+    A{"Guarda pares<br/>chave → valor?"} -- sim --> M{"Precisa de ordem?"}
+    M -- não --> HM["HashMap"]
+    M -- "de inserção" --> LHM["LinkedHashMap"]
+    M -- "ordenada pela chave" --> TM["TreeMap"]
+    A -- não --> D{"Aceita repetidos?"}
+    D -- não --> S{"Precisa de ordem?"}
+    S -- não --> HS["HashSet"]
+    S -- "de inserção" --> LHS["LinkedHashSet"]
+    S -- ordenada --> TS["TreeSet"]
+    D -- sim --> F{"Fila ou pilha?"}
+    F -- sim --> AD["ArrayDeque<br/>(PriorityQueue para prioridade)"]
+    F -- não --> AL["ArrayList"]
+```
+
+## 🔁 Percorrendo coleções
 
 ```java
-import java.util.ArrayList;
-import java.util.List;
+List<Integer> numeros = new ArrayList<>(List.of(10, 20, 30));
 
-public class ExemploCollections {
-
-   public static void main(String[] args) {
-      // Criando uma lista de números inteiros
-      List<Integer> numeros = new ArrayList<Integer>();
-
-      // Adicionando números à lista
-      numeros.add(10);
-      numeros.add(20);
-      numeros.add(30);
-
-      // Iterando pela lista e imprimindo os valores com for each
-      for (Integer numero : numeros) {
-         System.out.println(numero);
-      }
-   }
+for (Integer n : numeros) {               // for-each: o mais comum
+    System.out.println(n);
 }
+
+numeros.forEach(n -> System.out.println(n));   // com lambda (aula 4.11)
+
+Iterator<Integer> it = numeros.iterator();     // com Iterator: permite remover durante o laço
+while (it.hasNext()) {
+    if (it.next() < 15) it.remove();
+}
+```
+
+> [!CAUTION]
+> Remover elementos de uma coleção **dentro de um for-each** lança `ConcurrentModificationException`. Use o `Iterator` (como acima) ou, mais simples, `numeros.removeIf(n -> n < 15)`.
+
+## 🧰 A classe utilitária `Collections`
+
+Não confunda: `Collection` (interface) × `Collections` (classe com métodos prontos).
+
+```java
+Collections.sort(lista);          // ordena
+Collections.shuffle(lista);       // embaralha
+Collections.max(lista);           // maior
+Collections.min(lista);           // menor
+Collections.reverse(lista);       // inverte
+Collections.unmodifiableList(lista);   // versão somente leitura
+```
+
+## 📌 Resumindo
+
+- `Collection` é a raiz de `List`, `Set` e `Queue`; `Map` é uma hierarquia à parte.
+- Escolha pela pergunta: pares chave-valor? aceita repetidos? precisa de ordem?
+- Para remover durante a iteração, use `Iterator` ou `removeIf`.
+- `Collections` (com "s") tem métodos prontos como `sort`, `max` e `shuffle`.
+
+## 🏋️ Mão na massa
+
+**1.** Qual coleção usar para: (a) os CPFs já cadastrados, para checar duplicidade; (b) o carrinho de compras, na ordem em que os itens foram adicionados; (c) o estoque, consultado pelo código do produto?
+
+<details>
+<summary>Ver resposta</summary>
+
+(a) `HashSet<String>` (sem repetidos, busca rápida); (b) `ArrayList<Item>` (ordem, aceita repetidos); (c) `HashMap<String, Produto>` (consulta pela chave).
+
+</details>
+
+**2.** Qual a diferença entre `Collection` e `Collections`?
+
+<details>
+<summary>Ver resposta</summary>
+
+`Collection` é a **interface** raiz das listas, conjuntos e filas. `Collections` é uma **classe utilitária** com métodos estáticos que operam sobre coleções (`sort`, `max`, `shuffle`...).
+
+</details>
+
+**3.** Remova os números ímpares de uma `List<Integer>` com `[1, 2, 3, 4, 5]` sem causar `ConcurrentModificationException`.
+
+<details>
+<summary>Ver resposta</summary>
+
+```java
+List<Integer> numeros = new ArrayList<>(List.of(1, 2, 3, 4, 5));
+numeros.removeIf(n -> n % 2 != 0);
+System.out.println(numeros);   // [2, 4]
 ```
 
 </details>
 
-<br>
+---
 
-<br>
+<div align="center">
 
-<br>
+[⬅️ 4.6 Modificadores de acesso](./06-modificadores-de-acesso.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [4.8 List ➡️](./08-list.md)
 
-[Voltar a Collections](/Arquivos/Conteudo/4%20-%20Programa%C3%A7%C3%A3o%20orientada%20a%20objetos/4.2%20Collections.md)<br>
-[Voltar ao inicio](/README.md)
+</div>

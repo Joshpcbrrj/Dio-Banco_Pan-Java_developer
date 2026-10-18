@@ -1,74 +1,102 @@
-# Websocket introdução
+# 6.8 · WebSocket
 
-## O que é Web Socket?
+> **Em uma frase:** o WebSocket abre uma conexão **permanente e bidirecional** entre cliente e servidor, permitindo que **os dois** mandem mensagens a qualquer momento, sem precisar de uma nova requisição a cada vez.
 
-<img src="./img/22.jpg" alt="" width="550">
+## 🔄 HTTP × WebSocket
 
-Web Socket é uma tecnologia de comunicação bidirecional, que permite a troca de informações em tempo real entre o cliente (navegador) e o servidor, de forma assíncrona. É uma alternativa ao protocolo HTTP, que é usado para transferência de dados de forma unidirecional, do servidor para o cliente. 
+No HTTP, a conversa é sempre **"pergunta e resposta"**: o servidor só fala quando o cliente pede. Para um chat, o cliente teria de ficar perguntando "tem mensagem nova?" o tempo todo (*polling*). No WebSocket, a "linha telefônica" fica aberta, e o servidor avisa assim que algo acontece.
 
-### Quando foi criado?
-O protocolo Web Socket foi padronizado em 2011, pela IETF (Internet Engineering Task Force), como uma extensão do protocolo HTTP.
+```mermaid
+sequenceDiagram
+    participant C as Cliente
+    participant S as Servidor
+    C->>S: GET /chat (Upgrade: websocket, Sec-WebSocket-Key)
+    S-->>C: 101 Switching Protocols (Sec-WebSocket-Accept)
+    Note over C,S: conexão aberta nos dois sentidos
+    C->>S: "Oi!"
+    S-->>C: "Nova mensagem da Bia"
+    S-->>C: "Bia está digitando..."
+    C->>S: "Tudo bem?"
+```
 
-### Como funciona?
-O funcionamento do Web Socket é baseado em uma conexão TCP/IP persistente, que permite que os dados sejam transmitidos em tempo real, sem a necessidade de uma nova solicitação a cada troca de informação. O fluxo de dados é bidirecional, ou seja, tanto o cliente quanto o servidor podem enviar informações a qualquer momento.
+1. A conexão **começa como HTTP**: o cliente pede um *upgrade* com os cabeçalhos `Upgrade: websocket` e uma chave aleatória (`Sec-WebSocket-Key`).
+2. O servidor responde `101 Switching Protocols` com uma chave derivada da do cliente (`Sec-WebSocket-Accept`), confirmando que entende o protocolo.
+3. A partir daí, a mesma conexão TCP é usada para trocar **mensagens** nos dois sentidos.
 
-O processo de conexão do Web Socket é iniciado com uma solicitação de abertura de conexão, que é feita pelo cliente. Essa solicitação contém informações sobre o protocolo utilizado e um cabeçalho de segurança, que inclui uma chave de conexão gerada pelo cliente.
+Padronizado em **2011** na RFC 6455, usa os esquemas `ws://` e `wss://` (com TLS).
 
-O servidor, por sua vez, responde com um cabeçalho de aceitação, que contém uma chave de conexão gerada pelo servidor. A partir desse momento, a conexão é estabelecida e tanto o cliente quanto o servidor podem enviar informações a qualquer momento, sem a necessidade de uma nova solicitação.
+| | HTTP | WebSocket |
+| --- | --- | --- |
+| Quem inicia | Sempre o cliente | Os dois, depois de conectados |
+| Conexão | Uma requisição/resposta por vez | Permanente |
+| Sobrecarga por mensagem | Cabeçalhos completos a cada requisição | Poucos bytes por mensagem |
+| Latência | Maior (nova requisição a cada atualização) | Muito baixa |
+| Ideal para | Páginas, APIs REST, arquivos | Chats, jogos, cotações, notificações em tempo real |
 
-O Web Socket é suportado pelos principais navegadores modernos, como o Google Chrome, Mozilla Firefox, Microsoft Edge e Safari, e pode ser utilizado em diversas aplicações que requerem comunicação em tempo real, como jogos online, chat em tempo real, sistemas de monitoramento, entre outros.
+## ✅ Vantagens e cuidados
 
-### Vantagens do Web Socket
+| ✅ Vantagens | ⚠️ Cuidados |
+| --- | --- |
+| Comunicação em tempo real nos dois sentidos | Cada conexão aberta consome recursos do servidor |
+| Baixa latência e pouca sobrecarga | Proxies e firewalls antigos podem bloquear |
+| Suportado por todos os navegadores modernos | O servidor precisa suportar o protocolo |
+| | Segurança: use `wss://`, autentique a conexão e valide a origem (`Origin`) para evitar *cross-site WebSocket hijacking* |
 
-Algumas das principais vantagens do uso do Web Socket são:
+> [!NOTE]
+> O WebSocket em si **não** é "criptografia de ponta a ponta": a segurança vem do TLS do `wss://`, igual ao HTTPS.
 
-- Comunicação bidirecional em tempo real: permite que os clientes e servidores troquem informações em tempo real, sem a necessidade de uma nova solicitação a cada troca de informação.
-- Baixa latência: a comunicação em tempo real do Web Socket proporciona uma baixa latência, o que é importante em aplicações que requerem uma rápida resposta, como jogos online.
-- Eficiência de recursos: a comunicação persistente do Web Socket reduz o número de solicitações e respostas HTTP, o que pode reduzir o consumo de recursos do servidor e melhorar a escalabilidade da aplicação.
+> [!TIP]
+> Se só o **servidor** precisa enviar atualizações (como um painel de cotações), o **Server-Sent Events (SSE)** é uma alternativa mais simples, que roda sobre HTTP comum. No Spring, WebSocket é suportado pelo módulo `spring-boot-starter-websocket` (geralmente com o protocolo STOMP).
 
-### Limitações do Web Socket
+### Exemplo no navegador
 
-Algumas limitações do Web Socket incluem:
+```javascript
+const socket = new WebSocket("wss://exemplo.com/chat");
 
-- Suporte limitado em versões mais antigas dos navegadores: o Web Socket é uma tecnologia relativamente nova e não é suportado por versões mais antigas dos navegadores. Isso pode limitar a utilização em alguns contextos, como em empresas com políticas de atualização de navegador mais restritas.
-- Necessidade de implementação do lado do servidor: para que o Web Socket funcione corretamente, é necessário que o servidor tenha suporte para esse protocolo. Isso pode exigir modificações na aplicação ou na infraestrutura do servidor.
-- Questões de segurança: o Web Socket pode apresentar algumas questões de segurança, como a possibilidade de ataques de cross-site scripting (XSS) ou a necessidade de configurações adequadas de firewall.
+socket.onopen = () => socket.send("Olá, servidor!");
+socket.onmessage = (evento) => console.log("Recebido:", evento.data);
+socket.onclose = () => console.log("Conexão encerrada");
+```
 
-#### Exemplos aplicação prática:
+## 📌 Resumindo
 
-Algumas das aplicações mais comuns do Web Socket são:
+- WebSocket = conexão permanente e bidirecional, iniciada com um *upgrade* HTTP (`101`).
+- Ideal para tempo real: chats, jogos, cotações, notificações.
+- Use `wss://`, autentique e valide a origem.
 
-- Jogos online: o Web Socket permite a comunicação em tempo real entre os jogadores e o servidor, o que é essencial em jogos multiplayer.
-- Chat em tempo real: o Web Socket pode ser utilizado para a implementação de chat em tempo real, permitindo que os usuários troquem mensagens sem a necessidade de atualizações de página.
-- Monitoramento em tempo real: o Web Socket pode ser utilizado para enviar informações em tempo real sobre sistemas, como dados de sensores ou métricas de desempenho.
+## 🏋️ Mão na massa
 
-<br>
+**1.** Para quais destes casos o WebSocket é a melhor escolha: (a) baixar um PDF; (b) placar de um jogo ao vivo; (c) cadastrar um cliente; (d) chat de atendimento?
 
-## Diferenças entre HTTP vs WebSocket 
+<details>
+<summary>Ver resposta</summary>
 
-### Comunicação
+(b) e (d), que precisam de atualizações em tempo real. Para (a) e (c), HTTP comum é mais simples e adequado.
 
-- HTTP: O protocolo HTTP é unidirecional, ou seja, o cliente faz uma solicitação ao servidor e o servidor responde com uma resposta. A comunicação é feita por meio de mensagens HTTP, que podem conter informações sobre a solicitação (como a URL e os parâmetros da solicitação) e a resposta (como o código de status HTTP e o corpo da resposta).
-- WebSocket: O protocolo WebSocket é bidirecional, ou seja, tanto o cliente quanto o servidor podem enviar informações a qualquer momento, sem a necessidade de uma nova solicitação. A comunicação é estabelecida por meio de uma conexão persistente entre o cliente e o servidor, que permite a troca de informações em tempo real.
+</details>
 
-### Latência
+**2.** Qual código de status o servidor devolve ao aceitar uma conexão WebSocket?
 
-- HTTP: O protocolo HTTP pode apresentar uma latência relativamente alta, já que a comunicação é feita por meio de solicitações e respostas HTTP, que podem demorar alguns segundos para serem concluídas. Isso pode ser um problema em aplicações que requerem uma resposta rápida do servidor, como jogos online.
-- WebSocket: O protocolo WebSocket apresenta uma latência mais baixa, já que a comunicação é feita em tempo real, sem a necessidade de uma nova solicitação a cada troca de informação. Isso é importante em aplicações que requerem uma resposta rápida, como jogos online.
+<details>
+<summary>Ver resposta</summary>
 
-### Uso
+`101 Switching Protocols`.
 
-- HTTP: O protocolo HTTP é utilizado para transferência de dados unidirecional, do servidor para o cliente. É comumente utilizado para a transferência de arquivos, páginas web, imagens e outros recursos.
-- WebSocket: O protocolo WebSocket é utilizado para comunicação bidirecional em tempo real entre o cliente e o servidor. É comumente utilizado em aplicações que requerem comunicação em tempo real, como jogos online, chat em tempo real e sistemas de monitoramento.
+</details>
 
-### Segurança
+**3.** Abra o DevTools (`F12` → **Network** → filtro **WS**) em um site com chat ou dados ao vivo e observe as mensagens trafegando.
 
-- HTTP: O protocolo HTTP não oferece recursos avançados de segurança, como criptografia de ponta a ponta.
-- WebSocket: O protocolo WebSocket suporta criptografia de ponta a ponta, o que significa que as informações transmitidas entre o cliente e o servidor são criptografadas e só podem ser lidas por essas duas entidades. Isso é importante em aplicações que lidam com informações sensíveis, como dados de pagamento ou informações pessoais.
+<details>
+<summary>Ver resposta</summary>
 
-<br>
+Ao clicar na conexão WebSocket, a aba **Messages** mostra cada mensagem enviada (seta para cima) e recebida (seta para baixo), sem que novas requisições HTTP apareçam na lista.
 
-<br>
+</details>
 
-[Voltar a Principais protocolos de comunicação da internet](/Arquivos/Conteudo/6%20-%20Ganhando%20produtividade%20com%20spring%20framwork/6.1%20Principais%20protocolos%20de%20comunicacao%20na%20internet.md)<br>
-[Voltar ao inicio](/README.md)
+---
+
+<div align="center">
+
+[⬅️ 6.7 SSL e TLS](./07-tls.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [6.9 Conceitos de rede ➡️](./09-conceitos-de-rede.md)
+
+</div>

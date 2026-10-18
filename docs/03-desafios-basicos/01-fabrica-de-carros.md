@@ -1,67 +1,84 @@
-# Desafio Fábrica de carros
+# 3.1 · Desafio: Fábrica de carros
 
-## O que fazer ?
-O custo de um carro novo ao consumidor é a soma do custo de fábrica com a porcentagem do distribuidor e dos impostos (aplicados ao custo de fábrica). O gerente de uma loja de carros gostaria de um programa para calcular o preço de um carro novo para os clientes. Você receberá o custo de fábrica e as porcentagens referentes ao distribuidor e os impostos e deverá escrever programa para ler esses valores e imprimir o valor final do carro.
+> **Em uma frase:** calcular o preço final de um carro somando o custo de fábrica com as porcentagens do distribuidor e dos impostos (ambas aplicadas sobre o custo de fábrica).
 
-### Entrada:
-Você recebera três valores inteiros que representam o custo de fábrica, as porcentagens do distribuidor e os impostos.
+## 📋 Enunciado
 
-### Saida:
-Como saída, teremos o valor final do preço de um carro novo.
+O custo de um carro novo ao consumidor é a soma do **custo de fábrica** com a **porcentagem do distribuidor** e dos **impostos**, as duas aplicadas sobre o custo de fábrica. Escreva um programa que leia esses três valores inteiros e imprima o preço final.
 
-**Exemplo 1**
-| Entrada | Saída |
-| --- | --- |
-| 200002845 | 34600 |
+### Entrada
 
-**Exemplo 2**
-| Entrada | Saída |
-| --- | --- |
-| 300001010 | 36000 |
+Três inteiros: custo de fábrica, porcentagem do distribuidor e porcentagem de impostos.
 
-<br>
+### Saída
+
+O preço final do carro.
+
+| Entrada | Saída | Conta |
+| --- | --- | --- |
+| `20000` `28` `45` | `34600` | 20000 + 28% (5600) + 45% (9000) |
+| `30000` `10` `10` | `36000` | 30000 + 10% (3000) + 10% (3000) |
+
+## 🧠 Como pensar
+
+1. Ler os três valores com o `Scanner`.
+2. Calcular cada porcentagem: `custo * porcentagem / 100`.
+3. Somar tudo e imprimir.
+
+> [!TIP]
+> Multiplique **antes** de dividir: `custo * 28 / 100`. Se dividir primeiro (`28 / 100`), a divisão entre inteiros dá `0` e o resultado sai errado.
 
 <details>
-<summary>Código resposta:</summary>
+<summary>Ver resposta</summary>
 
 ```java
-//Class "main"
-package Fabrica_de_carros;
-
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        //Criando scanner "scan"
-        Scanner scan = new Scanner(System.in);
+        Scanner entrada = new Scanner(System.in);
 
-        //Pedindo o custo de fabrica
-        int custoFabrica = scan.nextInt();
-        //Pedindo a porcentagem de distribuidor
-        int porcentagemDistribuidor = scan.nextInt();
-        //Pedindo a porcentagem de impostos
-        int PercentualImpostos = scan.nextInt();
+        int custoFabrica = entrada.nextInt();
+        int percentualDistribuidor = entrada.nextInt();
+        int percentualImpostos = entrada.nextInt();
 
-        //Calculando custo do consumidor
-        int custoConsumidor;
-        int Distribuidor;
-        int ValorImpostos;
-        Distribuidor = (custoFabrica * porcentagemDistribuidor) / 100;
-        ValorImpostos = (custoFabrica * PercentualImpostos) / 100;
-        custoConsumidor = (custoFabrica + Distribuidor + ValorImpostos);
+        int valorDistribuidor = custoFabrica * percentualDistribuidor / 100;
+        int valorImpostos = custoFabrica * percentualImpostos / 100;
+        int precoFinal = custoFabrica + valorDistribuidor + valorImpostos;
 
-        //Mostrando na tela
-        System.out.println(custoConsumidor);
+        System.out.println(precoFinal);
     }
 }
 ```
 
 </details>
 
-<br>
+## 🏋️ Mão na massa
 
-<br>
+**1.** Qual o preço final para custo `50000`, distribuidor `12` e impostos `30`?
 
-<br>
+<details>
+<summary>Ver resposta</summary>
 
-[Voltar ao inicio](/README.md)
+50000 + 6000 (12%) + 15000 (30%) = **71000**.
+
+</details>
+
+**2.** Reescreva o cálculo em uma única expressão.
+
+<details>
+<summary>Ver resposta</summary>
+
+```java
+int precoFinal = custoFabrica * (100 + percentualDistribuidor + percentualImpostos) / 100;
+```
+
+</details>
+
+---
+
+<div align="center">
+
+[⬅️ 2.33 Exercícios de métodos](../02-java/33-exercicios-metodos.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [3.2 Positivos e média ➡️](./02-positivos-e-media.md)
+
+</div>

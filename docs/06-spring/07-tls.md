@@ -1,40 +1,102 @@
-# Protocolo SSL (Secure socket layer) e TLS (Transport Layer Security)
+# 6.7 · SSL e TLS: o "S" do HTTPS
 
-## Definição e história do SSL
+> **Em uma frase:** o **TLS** (sucessor do antigo SSL) cria um canal seguro entre cliente e servidor: confere o certificado do servidor, combina uma chave secreta e, a partir daí, criptografa tudo; o HTTPS é simplesmente o HTTP rodando dentro do TLS.
 
-<img src="./img/20.png" alt="" width="300">
+## 📖 De SSL para TLS
 
-O SSL (Secure Sockets Layer) é um protocolo de segurança criptográfico utilizado para proteger a comunicação na Internet. Ele foi desenvolvido pela Netscape em 1994 e, posteriormente, foi substituído pelo TLS (Transport Layer Security), que é uma versão mais atualizada e segura do protocolo. O SSL/TLS é utilizado para estabelecer uma conexão segura entre um servidor web e um navegador, por exemplo, para que os dados sejam transmitidos de forma segura e protegida contra interceptações e adulterações. O protocolo é baseado em criptografia de chave pública (assimétrica) e criptografia de chave simétrica.
+| Versão | Ano | Situação |
+| --- | --- | --- |
+| SSL 2.0 / 3.0 | 1995 / 1996 (Netscape) | ❌ Inseguras, proibidas |
+| TLS 1.0 / 1.1 | 1999 / 2006 | ❌ Descontinuadas (2021) |
+| **TLS 1.2** | 2008 | ✅ Ainda muito usada |
+| **TLS 1.3** | 2018 | ✅ Atual: mais rápida e mais segura |
 
-O processo de estabelecimento de uma conexão segura com SSL/TLS envolve os seguintes passos:
+> [!NOTE]
+> Por costume, todo mundo ainda fala "certificado SSL", mas o protocolo usado hoje é sempre o **TLS**.
 
-1. O cliente (navegador) envia uma solicitação de conexão segura ao servidor web.
-2. O servidor responde enviando seu certificado digital, que contém a chave pública do servidor, assinada por uma AC confiável.
-3. O navegador verifica a autenticidade do certificado digital do servidor, verificando a assinatura da AC e outras informações, como a validade do certificado.
-4. Se o certificado for considerado válido, o navegador e o servidor iniciam um processo de negociação para estabelecer uma chave simétrica compartilhada.
-5. Uma vez que a chave simétrica é estabelecida, a comunicação entre o navegador e o servidor é criptografada e protegida contra interceptações e adulterações.
+## 🤝 O *handshake* do TLS (simplificado)
 
-O SSL/TLS é amplamente utilizado na Internet para proteger a comunicação em diversos protocolos, incluindo HTTPS, SMTPS, FTPS, IMAPS, POP3S, entre outros. A utilização de SSL/TLS é uma das principais formas de proteger a privacidade e segurança na Internet.
+```mermaid
+sequenceDiagram
+    participant C as Cliente
+    participant S as Servidor
+    C->>S: ClientHello (versões e algoritmos que aceito + minha parte da chave)
+    S-->>C: ServerHello + certificado + parte da chave do servidor
+    Note over C: confere o certificado (cadeia, domínio, validade)
+    Note over C,S: os dois calculam a MESMA chave simétrica (troca Diffie-Hellman)
+    C->>S: Finished (já criptografado)
+    S-->>C: Finished (já criptografado)
+    C->>S: GET /conta (tudo cifrado com a chave simétrica)
+```
 
-<br>
+1. O cliente diz quais versões e algoritmos aceita.
+2. O servidor escolhe, envia o **certificado** e sua parte da troca de chaves.
+3. O cliente **valida o certificado** (aula [6.6](./06-criptografia-e-certificados.md)).
+4. Os dois derivam a mesma **chave simétrica** sem nunca enviá-la pela rede.
+5. Daí em diante, toda a comunicação é cifrada com essa chave (rápida, simétrica).
 
-## Definição e história do TLS
+O TLS garante três coisas: **confidencialidade** (ninguém lê), **integridade** (ninguém altera sem ser percebido) e **autenticidade** (você está falando com o servidor certo).
 
-<img src="./img/21.jpeg" alt="" width="300">
+> [!TIP]
+> No TLS 1.3, o handshake leva só **uma ida e volta** (contra duas no 1.2), o que deixa o carregamento das páginas mais rápido.
 
-O TLS (Transport Layer Security) é um protocolo de segurança criptográfico que sucedeu o SSL (Secure Sockets Layer) e é utilizado para proteger a comunicação na Internet. Assim como o SSL, o TLS é utilizado para estabelecer uma conexão segura entre um cliente e um servidor, garantindo a privacidade e integridade dos dados transmitidos. O TLS utiliza criptografia de chave pública (assimétrica) e de chave simétrica para proteger a comunicação entre o cliente e o servidor. Ele é composto por várias camadas de protocolos que trabalham em conjunto para garantir a segurança da comunicação. O processo de estabelecimento de uma conexão segura com TLS envolve os seguintes passos:
+## 🔐 Onde o TLS aparece
 
-1. O cliente envia uma solicitação de conexão segura ao servidor.
-2. O servidor responde enviando seu certificado digital, que contém a chave pública do servidor, assinada por uma AC confiável.
-3. O cliente verifica a autenticidade do certificado digital do servidor, verificando a assinatura da AC e outras informações, como a validade do certificado.
-4. O cliente e o servidor iniciam um processo de negociação para estabelecer uma chave simétrica compartilhada. Esse processo envolve a negociação do algoritmo de criptografia a ser utilizado, o tamanho da chave simétrica e outras informações relevantes.
-5. Uma vez que a chave simétrica é estabelecida, a comunicação entre o cliente e o servidor é criptografada e protegida contra interceptações e adulterações.
+| Protocolo | Versão com TLS |
+| --- | --- |
+| HTTP | **HTTPS** (porta 443) |
+| SMTP / IMAP / POP3 (e-mail) | SMTPS / IMAPS / POP3S |
+| FTP | FTPS |
+| WebSocket | **WSS** |
 
-O TLS é utilizado em diversos protocolos, incluindo HTTPS, SMTPS, FTPS, IMAPS, POP3S, entre outros. Ele é uma das principais formas de proteger a privacidade e segurança na Internet e é constantemente atualizado para garantir a segurança e a compatibilidade com as tecnologias mais recentes.
+> [!IMPORTANT]
+> Em produção, **toda** API deve usar HTTPS, especialmente as que trafegam senhas ou tokens. No Spring Boot, o HTTPS costuma ficar a cargo de um proxy (NGINX) ou do balanceador da nuvem, que repassa as requisições para a aplicação.
 
-<br>
+## 📌 Resumindo
 
-<br>
+- SSL é o nome antigo; o protocolo atual é o TLS (use 1.2 ou 1.3).
+- O handshake valida o certificado e combina uma chave simétrica.
+- TLS garante confidencialidade, integridade e autenticidade.
+- HTTPS = HTTP + TLS.
 
-[Voltar a Principais protocolos de comunicação da internet](/Arquivos/Conteudo/6%20-%20Ganhando%20produtividade%20com%20spring%20framwork/6.1%20Principais%20protocolos%20de%20comunicacao%20na%20internet.md)<br>
-[Voltar ao inicio](/README.md)
+## 🏋️ Mão na massa
+
+**1.** Se o TLS usa criptografia assimétrica, por que os dados em si são cifrados com uma chave simétrica?
+
+<details>
+<summary>Ver resposta</summary>
+
+Porque a criptografia simétrica é muito mais **rápida**. A parte assimétrica (e a troca Diffie-Hellman) serve só para autenticar o servidor e combinar a chave simétrica com segurança.
+
+</details>
+
+**2.** O navegador mostra "Sua conexão não é particular" em um site. Cite duas causas possíveis.
+
+<details>
+<summary>Ver resposta</summary>
+
+Certificado **vencido**; certificado emitido para **outro domínio**; certificado **autoassinado** ou de uma AC em que o navegador não confia; ou o relógio do seu computador está errado.
+
+</details>
+
+**3.** Use o terminal para ver qual versão do TLS um site usa.
+
+<details>
+<summary>Ver resposta</summary>
+
+```bash
+curl -v https://www.google.com 2>&1 | grep -i "SSL connection"
+# * SSL connection using TLSv1.3 / TLS_AES_256_GCM_SHA384
+```
+
+No DevTools do navegador, a aba **Security** mostra a mesma informação.
+
+</details>
+
+---
+
+<div align="center">
+
+[⬅️ 6.6 Criptografia e certificados digitais](./06-criptografia-e-certificados.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [6.8 WebSocket ➡️](./08-websocket.md)
+
+</div>

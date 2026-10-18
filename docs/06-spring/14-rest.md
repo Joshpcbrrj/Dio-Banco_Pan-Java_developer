@@ -1,131 +1,153 @@
-# Introdução ao REST e RESTFul
+# 6.14 · REST e APIs RESTful
 
-## O que REST ?
+> **Em uma frase:** REST é um **estilo de arquitetura** para APIs web em que tudo é um **recurso** identificado por uma URL, manipulado pelos **verbos HTTP** (GET, POST, PUT, DELETE) e representado geralmente em **JSON**.
 
-API REST (Representational State Transfer) é um padrão de arquitetura para desenvolvimento de APIs (Application Programming Interfaces) que utiliza o protocolo HTTP (Hypertext Transfer Protocol) para comunicação entre cliente e servidor.
+## 📖 O que é REST
 
-- Uma API RESTful é composta por recursos, que são identificados por URLs únicas (endpoints), e podem ser acessados utilizando os métodos HTTP padrão, como GET, POST, PUT e DELETE, para realizar operações de leitura, criação, atualização e exclusão de dados.
-- Além disso, a API REST geralmente utiliza formatos de representação de dados leves, como JSON (JavaScript Object Notation), para facilitar a interoperabilidade entre diferentes sistemas e plataformas.
-- Uma API REST bem projetada segue os princípios da arquitetura REST, incluindo a separação entre cliente e servidor, a utilização de cache para melhorar a performance, a definição clara dos recursos e suas relações, entre outros
+**REST** (*Representational State Transfer*) foi descrito por **Roy Fielding** em sua tese de doutorado, em **2000**. Uma API que segue esses princípios é chamada de **RESTful**.
 
-### REST vs RESTFUL
+```text
+GET    /clientes          → lista os clientes
+GET    /clientes/42       → busca o cliente 42
+POST   /clientes          → cria um cliente (dados no corpo)
+PUT    /clientes/42       → substitui o cliente 42
+PATCH  /clientes/42       → altera parte do cliente 42
+DELETE /clientes/42       → remove o cliente 42
+```
 
-API REST e API RESTful são termos que muitas vezes são usados de forma intercambiável, mas tecnicamente existem algumas diferenças entre eles.
+### As restrições (*constraints*) do REST
 
-- API REST é uma API que segue os princípios da arquitetura REST, como a utilização de URLs únicas (endpoints) para identificar recursos, o uso de métodos HTTP padrão para operações em recursos, a utilização de representações de dados leves e a separação entre cliente e servidor.
-- API RESTful, por outro lado, é uma API que segue completamente os princípios da arquitetura REST, incluindo a utilização de hypermedia (links) para permitir a descoberta de recursos relacionados e a transição entre estados da aplicação. Essa abordagem pode tornar as APIs mais flexíveis e escaláveis, mas também pode ser mais complexa de implementar.
-
-Em resumo, API REST é uma API que segue os princípios da arquitetura REST, enquanto API RESTful é uma API que segue completamente esses princípios, incluindo a utilização de hypermedia.
-
-#### Princípios para aplicação RESTFUL
-
-1. Arquitetura Cliente-Servidor: A aplicação deve ser dividida em duas partes, cliente e servidor, com responsabilidades claramente separadas.
-2. Protocolo HTTP: A comunicação entre cliente e servidor deve ser feita por meio do protocolo HTTP, utilizando seus verbos padrão (GET, POST, PUT, DELETE, etc.) para operações em recursos.
-3. URL única para cada recurso: Cada recurso na aplicação deve ser identificado por uma URL única, que permite a manipulação do recurso por meio dos verbos HTTP.
-4. Representação dos dados: Os dados da aplicação devem ser representados em um formato universal e leve, como JSON ou XML.
-5. Operações sem estado(Stateless) : Cada operação em um recurso deve ser independente das outras operações e não deve depender do estado anterior da aplicação.
-6. Utilização de Cache: A aplicação deve ser capaz de utilizar a cache do HTTP para melhorar a performance e diminuir a carga no servidor.
-7. Interoperabilidade: A aplicação deve ser capaz de interagir com outras aplicações e sistemas, utilizando padrões universais de comunicação, como HTTP e JSON.
-8. HATEOAS (Hypermedia as the Engine of Application State): O servidor deve enviar links e informações de navegação para o cliente, permitindo que ele descubra novos recursos e possa navegar entre eles.
-9. O princípio das camadas (layers) em uma arquitetura RESTful significa que o sistema é dividido em camadas independentes e que cada camada só pode se comunicar com a camada imediatamente acima ou abaixo dela. Essa abordagem garante que cada camada tenha responsabilidades claramente definidas e que a complexidade do sistema seja gerenciável.
-
-<br>
-
-## Representação nivel de maturidade de uma aplicação rest:
-
-<img src="./img/36.jpg" alt="" width="600">
-
-<br>
-
-<br>
-
-### Nível 0 → Ausência de regras
-
-Esse é considerado o nível mais básico e uma API que implementa apenas esse nível não pode ser considerada REST pois não segue qualquer padrão.
-
-| Verbo HTTP | URL | Operação |
-| --- | --- | --- |
-| Post | /getUsuario | Pesquisar usuário |
-| Post | /salvarUsuario | Salvar |
-| Post | /AlterarUsuario | Alterar |
-| Post | /excluirUsuario | Deletar |
-
-<br>
-
-### Nível 1 → Aplicação de recursos
-
-Observe que o nome dos recursos foram equalizados e para não gerar ambiguidade é necessário definir um verbo apropriadamente.
-
-| Verbo HTTP | URL | Operação |
-| --- | --- | --- |
-| Get | /usuarios/1 | Pesquisar usuário |
-| Post | /usuarios | Salvar |
-| Put | /usuarios/1 | Alterar |
-| Delete | /usuarios/1 | Deletar |
-
-<br>
-
-### Nível 2 → Implementação de verbos HTTP
-
-Como a definição dos verbos já foi requisitada no Nível 1, o Nível 2 se encarrega de validar a aplicabilidade dos verbos para finalidades específicas como observado na figura acima.
-
->💡 Existe uma discussão quando precisamos retornar dados através de parâmetros via body recebidos pelo método POST.
-
-| Verbo HTTP | Função |
+| Restrição | Significa |
 | --- | --- |
-| Get | Retorna dados |
-| Post | Grava dados |
-| Put | Altera dados |
-| Delete | Remove dados |
+| **Cliente-servidor** | Interface (cliente) e dados (servidor) evoluem separadamente. |
+| **Sem estado** (*stateless*) | Cada requisição leva tudo o que é necessário (ex.: o token); o servidor não guarda sessão. |
+| **Cache** | As respostas dizem se podem ser guardadas em cache. |
+| **Interface uniforme** | Recursos identificados por URLs, manipulados por representações (JSON), mensagens autodescritivas e **HATEOAS**. |
+| **Sistema em camadas** | O cliente não sabe (nem precisa saber) se fala com o servidor final ou com um proxy, cache ou balanceador no caminho. |
+| **Código sob demanda** (opcional) | O servidor pode enviar código para o cliente executar (ex.: JavaScript). |
 
-<br>
+### REST × RESTful
 
-### Nível 3 → Hateoas
+Na prática, os termos são usados como sinônimos. Os puristas dizem que "RESTful" é a API que segue **todas** as restrições, incluindo o HATEOAS, enquanto muitas APIs "REST" do mercado seguem só parte delas.
 
-Hateoas (hypermedia as the engine of application state). Uma API que implementa esse nível fornece aos seus clientes links que indicarão como poderá ser feita a navegação entre seus recursos. Ou seja, quem for consumir a API precisará saber a toda principal e a resposta dessa requisição terá todas as demais rotas possíveis.
+### Boas práticas de URLs
 
->💡 O nível 3 é sem dúvidas o menos explorado. Muitas APIs existentes no mercado não implementam esse nível.
+- Use **substantivos no plural** para recursos: `/clientes`, não `/getClientes`.
+- A **ação** fica no verbo HTTP, não na URL.
+- Hierarquia para relações: `/clientes/42/pedidos`.
+- Filtros e paginação na *query string*: `/pedidos?status=pago&page=0&size=20`.
+- Devolva os **códigos de status** corretos (aula [6.2](./02-mensagens-http.md)).
 
-<details>
-<summary>Código exemplo:</summary>
+## 🪜 Modelo de maturidade de Richardson
+
+Leonard Richardson propôs 4 níveis para avaliar o quanto uma API é RESTful:
+
+```mermaid
+flowchart BT
+    N0["Nível 0 · Pântano do POX<br/>um endpoint, tudo via POST"] --> N1["Nível 1 · Recursos<br/>uma URL por recurso"]
+    N1 --> N2["Nível 2 · Verbos HTTP<br/>GET, POST, PUT, DELETE + status corretos"]
+    N2 --> N3["Nível 3 · HATEOAS<br/>respostas com links"]
+```
+
+### Nível 0: sem regras
+
+Um único endpoint (ou vários sem padrão), tudo com `POST`. HTTP usado só como "túnel":
+
+| Verbo | URL | Operação |
+| --- | --- | --- |
+| POST | `/getUsuario` | Pesquisar |
+| POST | `/salvarUsuario` | Salvar |
+| POST | `/alterarUsuario` | Alterar |
+| POST | `/excluirUsuario` | Excluir |
+
+### Nível 1: recursos
+
+Cada recurso ganha sua URL, mas os verbos ainda não são usados corretamente (tudo continua com `POST`):
+
+| Verbo | URL | Operação |
+| --- | --- | --- |
+| POST | `/usuarios/1` | Pesquisar |
+| POST | `/usuarios` | Salvar |
+| POST | `/usuarios/1/alterar` | Alterar |
+| POST | `/usuarios/1/excluir` | Excluir |
+
+### Nível 2: verbos HTTP
+
+Recursos + verbos com o significado correto + códigos de status. **É onde está a maioria das APIs do mercado.**
+
+| Verbo | URL | Operação | Status de sucesso |
+| --- | --- | --- | --- |
+| GET | `/usuarios/1` | Pesquisar | 200 |
+| POST | `/usuarios` | Salvar | 201 |
+| PUT | `/usuarios/1` | Alterar | 200 ou 204 |
+| DELETE | `/usuarios/1` | Excluir | 204 |
+
+### Nível 3: HATEOAS
+
+*Hypermedia As The Engine Of Application State*: a resposta traz **links** para as próximas ações possíveis, como uma página web traz links para outras páginas.
 
 ```json
 {
-  "name": "John Doe",
+  "id": 1234,
+  "nome": "John Doe",
   "email": "john.doe@example.com",
-  "phone": "+1 555-555-5555",
   "_links": {
-    "self": {
-      "href": "/users/1234"
-    },
-    "orders": {
-      "href": "/users/1234/orders"
-    },
-    "cart": {
-      "href": "/users/1234/cart"
-    },
-    "address": {
-      "href": "/users/1234/address"
-    },
-    "alterar": {
-      "href": "/users/1234",
-      "method": "PUT"
-    },
-    "excluir": {
-      "href": "/users/1234",
-      "method": "DELETE"
-    }
+    "self":     { "href": "/usuarios/1234" },
+    "pedidos":  { "href": "/usuarios/1234/pedidos" },
+    "endereco": { "href": "/usuarios/1234/endereco" }
   }
 }
 ```
 
+> [!NOTE]
+> O nível 3 é o menos adotado. No Spring, ele é implementado com o projeto **Spring HATEOAS** (usado no projeto da aula [6.24](./24-amazon-rds.md)).
+
+## 📌 Resumindo
+
+- REST: recursos com URLs, verbos HTTP, representações (JSON) e comunicação sem estado.
+- URLs com substantivos no plural; a ação fica no verbo.
+- Maturidade de Richardson: 0 (POX) → 1 (recursos) → 2 (verbos + status) → 3 (HATEOAS).
+
+## 🏋️ Mão na massa
+
+**1.** Reescreva estes endpoints no estilo REST: `POST /cadastrarProduto`, `GET /listarProdutos`, `POST /deletarProduto?id=5`.
+
+<details>
+<summary>Ver resposta</summary>
+
+`POST /produtos`, `GET /produtos` e `DELETE /produtos/5`.
+
 </details>
 
-<br>
+**2.** Em que nível de maturidade está uma API que usa `GET /pedidos/10` e `DELETE /pedidos/10`, devolve `404` quando o pedido não existe, mas não retorna links?
 
-<br>
+<details>
+<summary>Ver resposta</summary>
 
-<br>
+**Nível 2**: usa recursos, verbos e status corretamente, mas não tem HATEOAS (nível 3).
 
-[Voltar a Criando API REST documentada com Spring web e Swagger](/Arquivos/Conteudo/6%20-%20Ganhando%20produtividade%20com%20spring%20framwork/6.3%20Criando%20api%20rest%20documentada%20com%20spring%20web%20e%20swagger.md)<br>
-[Voltar ao inicio](/README.md)
+</details>
+
+**3.** Desenhe as rotas de uma API de contas bancárias: criar conta, consultar, listar as transações de uma conta e registrar um depósito.
+
+<details>
+<summary>Ver resposta</summary>
+
+```text
+POST /contas                       → cria a conta
+GET  /contas/{id}                  → consulta a conta
+GET  /contas/{id}/transacoes       → lista as transações
+POST /contas/{id}/depositos        → registra um depósito (cria um recurso "depósito")
+```
+
+Ações de negócio, como depositar, costumam ser modeladas como a **criação** de um recurso (o depósito), em vez de um verbo na URL.
+
+</details>
+
+---
+
+<div align="center">
+
+[⬅️ 6.13 Primeiros passos, beans, escopos, propriedades e JPA](./13-projeto-spring-boot.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [6.15 @RestController ➡️](./15-rest-controller.md)
+
+</div>

@@ -1,65 +1,108 @@
-# Mensagens HTTP (Request e response)
+# 6.2 · Mensagens HTTP: request, response e códigos de status
 
+> **Em uma frase:** toda mensagem HTTP tem uma **linha inicial**, **cabeçalhos** e um **corpo** opcional; na resposta, o **código de status** (200, 404, 500...) diz em uma palavra como a requisição terminou.
 
-[Link: HTTP status cat](https://http.cat/)
+🐱 Para memorizar os códigos rindo: [http.cat](https://http.cat/)
 
+## 📤 Request (requisição)
 
+```text
+POST /clientes HTTP/1.1                ← linha de requisição: MÉTODO  CAMINHO  VERSÃO
+Host: api.exemplo.com                  ← cabeçalhos (headers)
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer eyJhbGciOi...
+                                       ← linha em branco separa cabeçalhos e corpo
+{ "nome": "Ana", "email": "ana@email.com" }   ← corpo (body)
+```
 
-## Representação das principais características de request HTTP
+| Parte | O que contém |
+| --- | --- |
+| **Método** | A ação desejada (`GET`, `POST`...) |
+| **URI / caminho** | O recurso (`/clientes`, `/produtos/1?ativo=true`) |
+| **Versão** | `HTTP/1.1`, por exemplo |
+| **Cabeçalhos** | Metadados: `Host`, `Content-Type`, `Accept`, `Authorization`, `User-Agent`, `Cookie`... |
+| **Corpo** | Os dados enviados (opcional; comum em `POST`, `PUT` e `PATCH`) |
 
-<img src="./img/06.png" alt="" width="600">
+## 📥 Response (resposta)
 
-### Estudando os componentes da requisição:
-1. Método: o método especifica a ação que o cliente deseja realizar no servidor. Os métodos comuns incluem GET, POST, PUT, DELETE, entre outros.
-2. URI (Uniform Resource Identifier): é um identificador único para o recurso que o cliente está solicitando. Ele geralmente inclui o nome do servidor, o caminho do arquivo e os parâmetros opcionais.
-3. Versão do protocolo HTTP: a versão do protocolo HTTP que está sendo usada na solicitação.
-4. Cabeçalhos: os cabeçalhos contêm informações adicionais sobre a solicitação, como o tipo de conteúdo que o cliente aceita, informações sobre o navegador usado pelo cliente e outras informações relevantes.
-5. Corpo da mensagem: opcionalmente, uma solicitação HTTP também pode incluir um corpo da mensagem, que contém dados adicionais que o cliente está enviando ao servidor, como dados de formulário em uma solicitação POST.
-6. Uma das características fundamentais de uma solicitação HTTP é que ela é escrita em ASCII (American Standard Code for Information Interchange), que é um conjunto de caracteres que é amplamente utilizado para codificar texto em dispositivos eletrônicos. Isso garante que a solicitação possa ser lida e compreendida por qualquer sistema que esteja usando o protocolo HTTP, independentemente do tipo de hardware ou sistema operacional usado.
+```text
+HTTP/1.1 201 Created                   ← linha de status: VERSÃO  CÓDIGO  TEXTO
+Content-Type: application/json
+Location: /clientes/42
+Date: Sat, 18 Oct 2026 12:00:00 GMT
 
-As solicitações HTTP são a base para a comunicação entre clientes e servidores na web. Elas permitem que os clientes solicitem recursos específicos e enviem informações aos servidores, permitindo que as aplicações web funcionem de forma dinâmica e interativa.
+{ "id": 42, "nome": "Ana", "email": "ana@email.com" }
+```
 
-<br>
+> [!NOTE]
+> No HTTP/1.x a mensagem é **texto** (legível por humanos). No HTTP/2 e no HTTP/3 ela é **binária**, mas o conteúdo lógico (método, cabeçalhos, corpo) é o mesmo.
 
-## Representação das principais características de resonse
+## 🔢 Códigos de status
 
-<img src="./img/07.png" alt="" width="600">
+| Faixa | Significa | Mais comuns |
+| --- | --- | --- |
+| **1xx** | Informativo | `101 Switching Protocols` (usado pelo WebSocket) |
+| **2xx** | Sucesso ✅ | `200 OK`, `201 Created`, `204 No Content` |
+| **3xx** | Redirecionamento ↪️ | `301 Moved Permanently`, `302 Found`, `304 Not Modified` |
+| **4xx** | Erro **do cliente** 🙋 | `400 Bad Request`, `401 Unauthorized`, `403 Forbidden`, `404 Not Found`, `409 Conflict`, `422 Unprocessable Content`, `429 Too Many Requests` |
+| **5xx** | Erro **do servidor** 🔥 | `500 Internal Server Error`, `502 Bad Gateway`, `503 Service Unavailable` |
 
-### Estudando os componentes da resposta:
+> [!TIP]
+> `401` = "não sei quem você é" (falta autenticação). `403` = "sei quem você é, mas você não pode" (falta permissão).
 
-Uma resposta HTTP (HTTP response) é a mensagem que um servidor envia a um cliente em resposta a uma solicitação HTTP. As principais características de uma resposta HTTP incluem:
+## 🛡️ Métodos seguros e idempotentes
 
-1. Código de status: um código de status de três dígitos que indica o resultado da solicitação do cliente. Alguns exemplos de códigos de status incluem 200 OK (solicitação bem-sucedida), 404 Not Found (recurso não encontrado) e 500 Internal Server Error (erro interno do servidor).
-2. Versão do protocolo HTTP: a versão do protocolo HTTP que está sendo usada na resposta.
-3. Cabeçalhos: os cabeçalhos contêm informações adicionais sobre a resposta, como o tipo de conteúdo que está sendo retornado, informações sobre o servidor e outras informações relevantes.
-4. Corpo da mensagem: o corpo da mensagem contém os dados que o servidor está enviando de volta ao cliente. Isso pode incluir texto, HTML, arquivos de imagem, dados JSON ou outros tipos de dados, dependendo do tipo de recurso que foi solicitado.
-5. As respostas HTTP também são escritas em ASCII (American Standard Code for Information Interchange), que é um conjunto de caracteres amplamente utilizado para codificar texto em dispositivos eletrônicos. Isso garante que a resposta possa ser lida e compreendida por qualquer sistema que esteja usando o protocolo HTTP, independentemente do tipo de hardware ou sistema operacional usado. O uso de ASCII é um dos elementos fundamentais da interoperabilidade do protocolo HTTP.
+| Método | Seguro? (não altera o servidor) | Idempotente? (repetir dá o mesmo resultado) |
+| --- | --- | --- |
+| `GET`, `HEAD`, `OPTIONS` | ✅ | ✅ |
+| `PUT` | ❌ | ✅ |
+| `DELETE` | ❌ | ✅ |
+| `POST` | ❌ | ❌ |
+| `PATCH` | ❌ | ❌ (pode ser, dependendo da implementação) |
 
-As respostas HTTP são essenciais para a comunicação entre clientes e servidores na web. Elas permitem que os servidores enviem dados de volta aos clientes, permitindo que as aplicações web funcionem de forma dinâmica e interativa. Além disso, as respostas HTTP também permitem que os clientes saibam se a solicitação foi bem-sucedida ou não e forneçam informações adicionais sobre o recurso solicitado.
+Repetir um `PUT` que define o nome como "Ana" deixa o nome "Ana", não importa quantas vezes. Repetir um `POST /pedidos` pode criar **vários** pedidos. Isso importa, por exemplo, quando a rede falha e o cliente tenta de novo.
 
-<br>
+## 📌 Resumindo
 
-## Classificação dos métodos usados no HTTP
-### Métodos Seguros (Safe Methods):
+- Request: método + caminho + versão, cabeçalhos, corpo opcional.
+- Response: versão + código de status, cabeçalhos, corpo opcional.
+- 2xx sucesso, 3xx redirecionamento, 4xx erro do cliente, 5xx erro do servidor.
+- GET/HEAD/OPTIONS são seguros; GET, PUT e DELETE são idempotentes.
 
-Os métodos seguros são aqueles que não modificam o estado do servidor. Eles são chamados de seguros porque podem ser usados sem risco de modificação indesejada de dados no servidor. Os métodos seguros incluem:
+## 🏋️ Mão na massa
 
-1. GET: é usado para recuperar informações de um servidor.
-2. HEAD: é usado para solicitar apenas os cabeçalhos de uma resposta.
-3. OPTIONS: é usado para obter as opções e recursos disponíveis no servidor.
+**1.** Qual código devolver quando: (a) um recurso foi criado; (b) o recurso não existe; (c) o JSON enviado está mal formatado; (d) o banco de dados caiu?
 
-### Métodos Inseguros (Unsafe Methods):
+<details>
+<summary>Ver resposta</summary>
 
-Os métodos inseguros são aqueles que modificam o estado do servidor. Eles são chamados de inseguros porque podem alterar os dados no servidor e, portanto, devem ser usados com cuidado. Os métodos inseguros incluem:
+(a) `201 Created`; (b) `404 Not Found`; (c) `400 Bad Request`; (d) `500 Internal Server Error` (ou `503 Service Unavailable`, se for uma indisponibilidade temporária).
 
-1. POST: é usado para enviar dados do cliente para o servidor, geralmente usado em formulários.
-2. PUT: é usado para atualizar um recurso existente no servidor.
-3. DELETE: é usado para excluir um recurso do servidor.
-4. PATCH: é usado para modificar um recurso existente no servidor.
+</details>
 
-<br>
+**2.** Um usuário logado tenta acessar uma tela só de administradores. `401` ou `403`?
 
-<br>
+<details>
+<summary>Ver resposta</summary>
 
-[Voltar a Principais protocolos de comunicação da internet](/Arquivos/Conteudo/6%20-%20Ganhando%20produtividade%20com%20spring%20framwork/6.1%20Principais%20protocolos%20de%20comunicacao%20na%20internet.md)<br>
-[Voltar ao inicio](/README.md)
+`403 Forbidden`: o sistema sabe quem ele é (está autenticado), mas ele não tem permissão.
+
+</details>
+
+**3.** Por que `POST` não é idempotente?
+
+<details>
+<summary>Ver resposta</summary>
+
+Porque cada `POST` normalmente cria um **novo** recurso. Enviar o mesmo `POST` três vezes pode criar três registros iguais, enquanto três `PUT` iguais deixam o recurso no mesmo estado.
+
+</details>
+
+---
+
+<div align="center">
+
+[⬅️ 6.1 Como funciona o protocolo HTTP](./01-http.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [6.3 Cookies, cache e proxy ➡️](./03-cookies-cache-proxy.md)
+
+</div>

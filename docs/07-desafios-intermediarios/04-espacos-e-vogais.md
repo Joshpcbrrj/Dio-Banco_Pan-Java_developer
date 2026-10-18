@@ -1,91 +1,82 @@
-# Desafio conta Espaços e Vogais
+# 7.4 · Desafio: Contar espaços e vogais
 
-## Desafio
+> **Em uma frase:** dada uma frase, contar quantos espaços em branco e quantas vogais ela tem.
 
-Jorginho é professor do primário de uma determinada escola. Ele tem 
-100000 alunos e precisa criar um programa que verifica quantos espaços 
-em branco e quantas vogais existem em uma determinada string de entrada 
-que os alunos entregaram na avaliação final. Ajude-o a realizar essa 
-tarefa antes que o tempo para entrega-la no fim do semestre acabe!
+## 📋 Enunciado
 
-<br>
+O professor Jorginho precisa de um programa que, para cada frase entregue pelos alunos, informe quantos espaços em branco e quantas vogais ela contém.
 
-### Entrada
-
-A entrada será uma frase no formato de string.
-
-### Saída
-
-A saída deverá retornar quantos espaços em branco e quantas vogais existem na determinada string, conforme exemplo abaixo:
-
-| EXEMPLO DE ENTRADA | EXEMPLO DE SAÍDA |
+| Entrada | Saída |
 | --- | --- |
-| “Amo a DIO” | Espacos em branco: 2 Vogais: 5 |
-| “Esse desafio foi facil” | Espacos em branco: 3 Vogais: 10 |
-| “Navegar nas aguas do teu mar” | Espacos em branco: 5 Vogais: 11 |
+| `Amo a DIO` | `Espacos em branco: 2 Vogais: 5` |
+| `Esse desafio foi facil` | `Espacos em branco: 3 Vogais: 10` |
+| `Navegar nas aguas do teu mar` | `Espacos em branco: 5 Vogais: 11` |
 
-<br>
+## 🧠 Como pensar
 
-### Dicas para resolução
-1. Ler a entrada do usuário, utilizando a classe Scanner, e armazenar em uma variável do tipo String.
-2. Separar a string em palavras, utilizando o método `split()` e armazenar em um array de Strings.
-3. Criar um array de caracteres com as vogais: 'a', 'e', 'i', 'o' e 'u'.
-4. Percorrer o array de palavras e, para cada palavra, percorrer seus caracteres.
-5. Verificar se o caractere é um espaço em branco ou uma vogal, utilizando o método `toLowerCase()` da classe Character.
-6. Se for um espaço em branco, incrementar uma variável contador de espaços em branco.
-7. Se for uma vogal, incrementar uma variável contador de vogais.
-8. Imprimir na tela o número de espaços em branco e o número de vogais encontrados.
+Percorra a frase **caractere por caractere**:
 
----
+- se for um espaço, conte um espaço;
+- se, em minúscula, estiver em `"aeiou"`, conte uma vogal.
+
+Assim não é preciso separar em palavras com `split`, e espaços duplicados também são contados corretamente.
 
 <details>
-<summary>Código com resolução:</summary>
+<summary>Ver resposta</summary>
 
 ```java
-// Para ler e escrever dados em Java, aqui na DIO padronizamos da seguinte forma:
-// - new Scanner(System.in): cria um leitor de Entradas, com métodos úteis com prefixo "next";
-// - System.out.println:.imprime um texto de Saída (Output) e pulando uma linha.
-
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        String str = sc.nextLine();
-        String[] strSplit = str.split(" ");
-        char[] arrVogais = {'a', 'e', 'i', 'o', 'u'};
-        int espacosEmBranco = strSplit.length - 1, quantVogais = 0;
+        Scanner entrada = new Scanner(System.in);
+        String frase = entrada.nextLine();
 
-        for (String item : strSplit){
-        //TODO: Implemente condições (laços) adequados para que possamos contar os espaços em brancos e as vogais que existem na string.
-        //Dica: Você pode utilizar o Character.toLowerCase em sua condição:
-
-            for (char c : item.toLowerCase().toCharArray()) {
-                if (c == ' ') {
-                    espacosEmBranco++;
-                } else {
-                    for (char vogal : arrVogais) {
-                        if (c == vogal) {
-                            quantVogais++;
-                            break;
-                        }
-                    }
-                }
+        int espacos = 0, vogais = 0;
+        for (char c : frase.toCharArray()) {
+            if (c == ' ') {
+                espacos++;
+            } else if ("aeiou".indexOf(Character.toLowerCase(c)) >= 0) {
+                vogais++;
             }
+        }
 
-    }
-
-    System.out.println("Espacos em branco: " + espacosEmBranco + " Vogais: " + quantVogais);
+        System.out.println("Espacos em branco: " + espacos + " Vogais: " + vogais);
     }
 }
 ```
 
+A versão do curso contava os espaços com `split(" ").length - 1`, que funciona com espaços simples, mas erra quando há dois espaços seguidos ou espaços no fim da frase.
+
 </details>
 
-<br>
+## 🏋️ Mão na massa
 
-<br>
+**1.** Faça uma versão com Stream API.
 
-<br>
+<details>
+<summary>Ver resposta</summary>
 
-[Voltar ao inicio](/README.md)
+```java
+long espacos = frase.chars().filter(c -> c == ' ').count();
+long vogais = frase.toLowerCase().chars().filter(c -> "aeiou".indexOf(c) >= 0).count();
+```
+
+</details>
+
+**2.** Como contar também as vogais acentuadas (á, ê, õ...)?
+
+<details>
+<summary>Ver resposta</summary>
+
+Inclua-as na lista: `"aeiouáéíóúâêôãõàü".indexOf(Character.toLowerCase(c)) >= 0`. Outra opção é remover os acentos antes com `java.text.Normalizer.normalize(frase, Normalizer.Form.NFD).replaceAll("\\p{M}", "")`.
+
+</details>
+
+---
+
+<div align="center">
+
+[⬅️ 7.3 Triângulo](./03-triangulo.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [7.5 Taxa de Imposto de Renda ➡️](./05-imposto-de-renda.md)
+
+</div>

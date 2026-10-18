@@ -1,371 +1,201 @@
-# Set
+# 4.9 · Set: conjuntos sem repetição
 
-Em Java, um Set é uma coleção de elementos únicos, o que significa que não pode haver elementos duplicados dentro do Set. Para usar um Set em Java, é necessário importar a classe Set do pacote java.util.
+> **Em uma frase:** um `Set` não guarda elementos repetidos; escolha `HashSet` (rápido, sem ordem), `LinkedHashSet` (ordem de inserção) ou `TreeSet` (ordenado), e use-o para operações de conjuntos como união e interseção.
 
-Um **Set** é implementado através de uma classe concreta, como **HashSet**, **LinkedHashSet** ou **TreeSet**. A diferença entre essas implementações é a maneira como os elementos são armazenados dentro do **Set** e como eles são iterados.
+Introdução e comparação das implementações na aula [2.28](../02-java/28-set.md).
 
-`HashSet`
-É a implementação mais comum de Set em Java. Ela não garante a ordem dos elementos dentro do Set. Os elementos são armazenados em um hash table e a ordem de inserção não é mantida. O HashSet é a implementação mais eficiente em termos de tempo de execução para as operações add, remove e contains.
+| | `HashSet` | `LinkedHashSet` | `TreeSet` |
+| --- | --- | --- | --- |
+| Ordem | Nenhuma | Inserção | Natural ou `Comparator` |
+| `add`/`remove`/`contains` | O(1) em média | O(1) em média | O(log n) |
+| Aceita `null` | Sim (um) | Sim (um) | Não |
+| Requisito | `equals` + `hashCode` | `equals` + `hashCode` | `Comparable` ou `Comparator` |
 
-`LinkedHashSet` 
-É uma subclasse de HashSet que mantém a ordem de inserção dos elementos no Set. Isso é alcançado mantendo uma lista duplamente encadeada dos elementos. O LinkedHashSet é ligeiramente mais lento do que o HashSet em termos de tempo de execução para as operações add, remove e contains, mas é mais rápido do que o TreeSet.
-
-`TreeSet`
-É uma implementação de Set que mantém os elementos em ordem crescente ou decrescente. Os elementos são armazenados em uma árvore balanceada. O TreeSet é mais lento do que o HashSet e o LinkedHashSet em termos de tempo de execução para as operações add, remove e contains, mas é mais rápido do que o ArrayList para buscar elementos.
-
-<br>
-
-### Representação de hierarquia
-<img src="./img/07.jpg" alt="" width="800">
-
-<br>
-
-### Exemplo de uso do set
-
-#### Hashset 
-
-<details>
-<summary>Código</summary>
-
->Não mantem os elementos em ordem
+## 🔣 Operações de conjunto
 
 ```java
-import java.util.HashSet;
-import java.util.Set;
+Set<Integer> a = new HashSet<>(Set.of(1, 3, 4));
+Set<Integer> b = new HashSet<>(Set.of(3, 4, 5, 6));
 
-public class ExemploSet {
-    public static void main(String[] args) {
-        // Criando um Set vazio
-        Set<Integer> meuSet = new HashSet<Integer>();
+Set<Integer> uniao = new HashSet<>(a);
+uniao.addAll(b);              // [1, 3, 4, 5, 6]
 
-        // Adicionando elementos ao Set
-        meuSet.add(1);
-        meuSet.add(2);
-        meuSet.add(3);
-        meuSet.add(4);
+Set<Integer> intersecao = new HashSet<>(a);
+intersecao.retainAll(b);      // [3, 4]
 
-        // Removendo elementos do Set
-        meuSet.remove(2);
-
-        // Verificando se um elemento está presente no Set
-        if (meuSet.contains(1)) {
-            System.out.println("O elemento 1 está presente no Set");
-        }
-
-        // Exibindo todos os elementos do Set
-        System.out.println("Os elementos do Set são: " + meuSet);
-
-        // Realizando a união entre dois Sets
-        Set<Integer> outroSet = new HashSet<Integer>();
-        outroSet.add(3);
-        outroSet.add(4);
-        outroSet.add(5);
-        outroSet.add(6);
-        Set<Integer> uniaoSet = new HashSet<Integer>(meuSet);
-        uniaoSet.addAll(outroSet);
-        System.out.println("A união entre os dois Sets é: " + uniaoSet);
-
-        // Realizando a interseção entre dois Sets
-        Set<Integer> intersecaoSet = new HashSet<Integer>(meuSet);
-        intersecaoSet.retainAll(outroSet);
-        System.out.println("A interseção entre os dois Sets é: " + intersecaoSet);
-
-        // Realizando a diferença entre dois Sets
-        Set<Integer> diferencaSet = new HashSet<Integer>(meuSet);
-        diferencaSet.removeAll(outroSet);
-        System.out.println("A diferença entre os dois Sets é: " + diferencaSet);
-    }
-}
+Set<Integer> diferenca = new HashSet<>(a);
+diferenca.removeAll(b);       // [1]
 ```
+
+| Operação | Matemática | Método | Resultado com A = {1, 3, 4} e B = {3, 4, 5, 6} |
+| --- | --- | --- | --- |
+| União | A ∪ B | `addAll` | {1, 3, 4, 5, 6} |
+| Interseção | A ∩ B | `retainAll` | {3, 4} |
+| Diferença | A − B | `removeAll` | {1} |
+
+> [!TIP]
+> Repare que copiamos o conjunto antes (`new HashSet<>(a)`), porque `addAll`, `retainAll` e `removeAll` **alteram** o conjunto em que são chamados.
+
+## `TreeSet` e seus métodos extras
+
+```java
+TreeSet<Integer> numeros = new TreeSet<>(List.of(10, 5, 20, 15, 25));
+System.out.println(numeros);               // [5, 10, 15, 20, 25]
+System.out.println(numeros.first());       // 5
+System.out.println(numeros.last());        // 25
+System.out.println(numeros.headSet(15));   // [5, 10] (menores que 15)
+System.out.println(numeros.ceiling(12));   // 15 (o menor ≥ 12)
+System.out.println(numeros.descendingSet());   // [25, 20, 15, 10, 5]
+```
+
+## 📌 Resumindo
+
+- `Set` não aceita repetidos; o `add` devolve `false` se o elemento já existir.
+- `addAll` = união; `retainAll` = interseção; `removeAll` = diferença.
+- `TreeSet` mantém tudo ordenado e oferece `first`, `last`, `headSet`, `ceiling`...
+
+## 🏋️ Mão na massa
+
+> Exercícios do curso, agora com todas as respostas.
+
+**1.** Com as notas `7, 8.5, 9.3, 5, 7, 0, 3.6` em um `HashSet`: confira se tem 5; mostre a menor, a maior, a soma e a média; remova o 0 e as notas abaixo de 7; mostre as notas originais na ordem de inserção (`LinkedHashSet`) e em ordem crescente (`TreeSet`); por fim, apague o primeiro conjunto.
+
+<details>
+<summary>Ver resposta</summary>
+
+```java
+List<Double> originais = List.of(7.0, 8.5, 9.3, 5.0, 7.0, 0.0, 3.6);
+Set<Double> notas = new HashSet<>(originais);     // o 7 repetido entra uma vez só
+System.out.println("Notas: " + notas);
+
+System.out.println("Tem 5? " + notas.contains(5.0));
+System.out.println("Menor: " + Collections.min(notas));
+System.out.println("Maior: " + Collections.max(notas));
+
+double soma = 0;
+for (double n : notas) soma += n;
+System.out.println("Soma: " + soma + " | Média: " + soma / notas.size());
+
+notas.remove(0.0);
+notas.removeIf(n -> n < 7);
+System.out.println("Sem as menores que 7: " + notas);
+
+System.out.println("Ordem de inserção: " + new LinkedHashSet<>(originais));
+System.out.println("Ordem crescente:   " + new TreeSet<>(originais));
+
+notas.clear();
+System.out.println("Vazio? " + notas.isEmpty());
+```
+
+Repare: a média aqui usa só os valores **distintos** (o 7 conta uma vez), porque o conjunto descarta repetidos. Se a média precisar considerar as repetições, use uma lista.
 
 </details>
 
-<br>
-
-#### LinkedHashSet 
+**2.** Minhas séries favoritas: GoT (Fantasia, episódios de 60 min), Dark (Drama, 60 min) e That '70s Show (Comédia, 25 min). Mostre em ordem aleatória (`HashSet`), de inserção (`LinkedHashSet`) e pelo tempo de episódio (`TreeSet`).
 
 <details>
-<summary>Código</summary>
-
-> Mantem ordem de inserção
+<summary>Ver resposta</summary>
 
 ```java
-import java.util.LinkedHashSet;
+record Serie(String nome, String genero, int minutosPorEpisodio) { }
 
-public class ExemploLinkedHashSet {
+List<Serie> lista = List.of(
+        new Serie("GoT", "Fantasia", 60),
+        new Serie("Dark", "Drama", 60),
+        new Serie("That '70s Show", "Comédia", 25));
 
-    public static void main(String[] args) {
-        // Criando um LinkedHashSet de Strings
-        LinkedHashSet<String> set = new LinkedHashSet<>();
+System.out.println("Aleatória: " + new HashSet<>(lista));
+System.out.println("Inserção:  " + new LinkedHashSet<>(lista));
 
-        // Adicionando elementos ao set
-        set.add("banana");
-        set.add("maçã");
-        set.add("laranja");
-        set.add("uva");
-        set.add("abacaxi");
-
-        // Imprimindo os elementos do set
-        System.out.println("Elementos do LinkedHashSet: " + set);
-
-        // Removendo um elemento do set
-        set.remove("uva");
-
-        // Imprimindo os elementos do set após a remoção
-        System.out.println("Elementos do LinkedHashSet após a remoção: " + set);
-    }
-}
+Set<Serie> porTempo = new TreeSet<>(Comparator
+        .comparingInt(Serie::minutosPorEpisodio)
+        .thenComparing(Serie::nome));     // desempate: senão GoT e Dark seriam "iguais"
+porTempo.addAll(lista);
+System.out.println("Por tempo: " + porTempo);
 ```
+
+> [!WARNING]
+> Num `TreeSet`, dois elementos com `compare == 0` são tratados como **o mesmo**, e o segundo é descartado. Como GoT e Dark têm 60 minutos, sem o `thenComparing` uma das séries sumiria.
 
 </details>
 
-<br>
-
-#### TreeSet 
+**3.** Crie um conjunto com as cores do arco-íris e: mostre uma abaixo da outra; mostre quantas são; em ordem alfabética; na ordem inversa da informada; as que começam com "V"; remova as que **não** começam com "V"; limpe e mostre que está vazio.
 
 <details>
-<summary>Código</summary>
-
-> Mantem a ordem dos elementos do menor para o maior (Possui método comparable interno)
-> >Não permite elemento **“null”**
+<summary>Ver resposta</summary>
 
 ```java
-import java.util.TreeSet;
+Set<String> arcoIris = new LinkedHashSet<>(List.of(
+        "vermelho", "laranja", "amarelo", "verde", "azul", "anil", "violeta"));
 
-public class ExemploTreeSet {
+arcoIris.forEach(System.out::println);
+System.out.println("Quantidade: " + arcoIris.size());                 // 7
+System.out.println("Alfabética: " + new TreeSet<>(arcoIris));
 
-    public static void main(String[] args) {
-        // Criando um TreeSet de inteiros
-        TreeSet<Integer> set = new TreeSet<>();
+List<String> inversa = new ArrayList<>(arcoIris);
+Collections.reverse(inversa);
+System.out.println("Inversa: " + inversa);
 
-        // Adicionando elementos ao set
-        set.add(10);
-        set.add(5);
-        set.add(20);
-        set.add(15);
-        set.add(25);
-
-        // Imprimindo os elementos do set
-        System.out.println("Elementos do TreeSet: " + set);
-
-        // Obtendo o primeiro e último elemento do set
-        int primeiro = set.first();
-        int ultimo = set.last();
-
-        // Imprimindo o primeiro e último elemento do set
-        System.out.println("Primeiro elemento do TreeSet: " + primeiro);
-        System.out.println("Último elemento do TreeSet: " + ultimo);
-    }
+for (String cor : arcoIris) {
+    if (cor.startsWith("v")) System.out.println("Começa com V: " + cor);
 }
+
+arcoIris.removeIf(cor -> !cor.startsWith("v"));
+System.out.println("Só com V: " + arcoIris);   // [vermelho, verde, violeta]
+
+arcoIris.clear();
+System.out.println("Vazio? " + arcoIris.isEmpty());
 ```
+
+O `LinkedHashSet` foi escolhido para preservar a ordem informada, necessária para a "ordem inversa".
 
 </details>
 
-<br>
+**4.** Crie a classe `LinguagemFavorita` (nome, ano de criação, IDE) e um conjunto com 3 linguagens. Ordene por: inserção; nome; IDE; ano de criação; e nome → ano → IDE.
+
+<details>
+<summary>Ver resposta</summary>
+
+```java
+record LinguagemFavorita(String nome, int anoDeCriacao, String ide) { }
+
+List<LinguagemFavorita> linguagens = List.of(
+        new LinguagemFavorita("Java", 1995, "IntelliJ"),
+        new LinguagemFavorita("Python", 1991, "PyCharm"),
+        new LinguagemFavorita("JavaScript", 1995, "VS Code"));
+
+System.out.println("Inserção: " + new LinkedHashSet<>(linguagens));
+
+Set<LinguagemFavorita> porNome = new TreeSet<>(Comparator.comparing(LinguagemFavorita::nome));
+porNome.addAll(linguagens);
+System.out.println("Nome: " + porNome);
+
+Set<LinguagemFavorita> porIde = new TreeSet<>(Comparator.comparing(LinguagemFavorita::ide));
+porIde.addAll(linguagens);
+System.out.println("IDE: " + porIde);
+
+Set<LinguagemFavorita> porAno = new TreeSet<>(Comparator
+        .comparingInt(LinguagemFavorita::anoDeCriacao)
+        .thenComparing(LinguagemFavorita::nome));   // desempate: Java e JS são de 1995
+porAno.addAll(linguagens);
+System.out.println("Ano: " + porAno);
+
+Set<LinguagemFavorita> completo = new TreeSet<>(Comparator
+        .comparing(LinguagemFavorita::nome)
+        .thenComparingInt(LinguagemFavorita::anoDeCriacao)
+        .thenComparing(LinguagemFavorita::ide));
+completo.addAll(linguagens);
+System.out.println("Nome/ano/IDE: " + completo);
+```
+
+O `record` já gera construtor, getters, `equals`, `hashCode` e `toString` (veja o [módulo extra](../08-extras/01-java-moderno.md)).
+
+</details>
 
 ---
 
-## Exercícios práticos:
+<div align="center">
 
-### Exercício 1
+[⬅️ 4.8 List](./08-list.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [4.10 Map ➡️](./10-map.md)
 
-Crie um conjunto HashSet e adicione as seguintes regras:
-
-1. Insira essas notas: 7d, 8.5, 9.3, 5d, 7d, 0d, 3.6.
-2. Confira se a nota “5” esta no conjunto.
-3. Exiba a menor nota do conjunto.
-4. Exiba a maior nota do conjunto.
-5. Exiba a soma de valores do conjunto.,
-6. Exiba a média simples das notas do conjunto.
-7. Remova a nota “0.0”.
-8. Remova todas as notas abaixo de 7.
-9. Crie uma outra lista LinkedHashSet com os mesmos elementos que a HashSet inicial.
-10. Mostre os itens da nova lista LinkedHashSet na ordem que foram adicionados.
-11. Crie uma lista “treeSet” e mostre os números do menor para o maior.
-12. Apague o primeiro conjunto e demostre que ele esta vazio.
-
-<details>
-<summary>Código resposta:</summary>
-
-```java
-package Ex_1;
-
-import java.util.*;
-
-public class Main {
-    public static void main(String[] args) {
-        //1 - riando conjunto "notas" e armazenando as notas passadas (Com HashSet)
-        Set<Double> notas = new HashSet<>(Arrays.asList(7d, 8.5, 9.3, 5d, 7d, 0d, 3.6));
-
-        //Mostrando o conjunto de "notas" em forma de String
-        System.out.println("Conjunto de notas: " + notas.toString());
-
-        //2 - Verificando de "5.0" esta no conjunto
-        System.out.println("Nota 5 está no conjunto ? " + notas.contains(5.0));
-
-        //3 - Exibindo a menor nota do conjunto
-        System.out.println("Menor nota do conjunto: " + Collections.min(notas));
-
-        //4 - Exibindo a maior nota do conjunto
-        System.out.println("Maior nota do conjunto: " + Collections.max(notas));
-
-        //5 - Exibindo a soma de valores do conjunto "notas"
-        Iterator<Double> iterator = notas.iterator();
-        Double soma_numeros_conjunto = 0.0;
-        while (iterator.hasNext()){
-            Double next = iterator.next();
-            soma_numeros_conjunto += next;
-        }
-        //Imprimindo a soma dos números
-        System.out.println("Soma dos números do conjunto 'notas': " + soma_numeros_conjunto);
-
-        //6 - Mostrando a média das notas
-        System.out.println("Média de 'notas': " + (soma_numeros_conjunto / notas.size()));
-
-        //7 - Removendo a nota "0d"
-        notas.remove(0d);
-        //Mostrando "notas" para conferir se a nota "0.0" foi removida
-        System.out.println("Conjunto 'notas' sem o '0d': " + notas);
-
-        //8 - Removendo as notas abaixo de 7
-        Iterator<Double> iterator1 = notas.iterator();
-        while (iterator1.hasNext()){
-            Double next = iterator1.next();
-            if (next < 7) iterator1.remove();
-        }
-        //Mostrando as notas e conferindo se as menores que 7 foram removidas
-        System.out.println("Somente notas acima ou igual a 7: " + notas);
-
-        //9 - Lista LinkedHashSet com os mesmo elementos da HashSet inicial
-        Set<Double> notas2 = new LinkedHashSet<>();
-        //Adicionando elementos
-        notas2.add(7d);
-        notas2.add(8.5);
-        notas2.add(9.3);
-        notas2.add(5d);
-        notas2.add(7d);
-        notas2.add(0d);
-        notas2.add(3.6);
-
-        //10 - Mostando as notas de "LinkedHashSet" na ordem que foram adicionadas
-        System.out.println("Lista LikedHashSet na ordem de adição dos itens: " + notas2);
-
-        //11 - Criando lista TreeSet e mostrando os números do menor para o maior
-        Set <Double> notas3 = new TreeSet<>(notas2);
-        //Mostrando os elementos (O prórprio treeSet organiza do maior para o menor com o comparable interno)
-        System.out.println("Lista TreeSet do menor pro maior: " + notas3);
-
-        //12 - Apagando elementos do conjunto "notas"
-        notas.clear();
-        //Demostrando que "notas" esta vazio
-        System.out.println("O conjunto notas esta vazio ? " + notas.isEmpty());
-    }
-}
-```
-
-</details>
-
-<br>
-
-### Exercício 2
-
-Dadas as informações sobre minhas séries favoritas, crie um conjunto e ordene exibindo:
-
-1. Nome - Gênero - Tempo de episódio 
-    - Nome: Got, Gênero: Fantasia, Tempo_eps: 60
-    - Nome: Dark, Gênero: Drama, Tempo_eps: 60
-    - Nome: That ‘70s show, Gênero: Comédia. Tempo_eps: 25
-2. Mostre a lista na ordem aleatória (HashSet)
-3. Mostre na ordem de inserção (LinkedHashSet)
-4. Mostre de acordo com o tempo de episódio / menor no começo maior no final (TreeSet)
-
-<details>
-<summary>Código resposta:</summary>
-
-```java
-//Classe main
-
-package Ex_2;
-
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.TreeSet;
-
-public class Main {
-    public static void main(String[] args) {
-        //1 - Criando lista de séries e inserindo elementos
-        Set<Series> series = new HashSet<>(){{
-            add(new Series("Got", "Fantasia", 60));
-            add(new Series("Dark", "Drama", 60));
-            add(new Series("That '70s show", "Comédia", 25));
-        }};
-
-        //2 - Mostrando lista na ordem aleatória
-        for(Series serie: series) System.out.println(
-                "Nome: "+ serie.getNome() + " - Gênero: " + serie.getGenero()
-                        + " - Tempo de eps: " + serie.getTempo_eps()
-        );
-
-        //3 - Criando lista de séries com LinkedHashSet para mostrar por ordem de inserção
-        Set<Series> series2 = new LinkedHashSet<>(){{
-            add(new Series("Got", "Fantasia", 60));
-            add(new Series("Dark", "Drama", 60));
-            add(new Series("That '70s show", "Comédia", 25));
-        }};
-        //Mostrando a lista na ordem de inserção
-        System.out.println("Ordem de LinkedHashSet: " + series2);
-
-        //4 - Mostrando séries de acordo com o tempo de eps (TreeSet)
-        Set<Series> series3 = new TreeSet<>(series2);
-        //Mostrando a nova lista
-        System.out.println("Ordem de TreeSet: " + series3);
-    }
-}
-```
-
-</details>
-
-<br>
-
-### Exercício 3 (Plus)
-Crie um conjunto contendo as cores do arco-íris e: 
-
-1. Exiba todas as cores uma abaixo da outra.
-2. Exiba a quantidade de cores que o conjunto arco-íres tem.
-3. Exiba as cores em ordem alfabética.
-4. Exiba as cores na ordem inversa da que foi informada.
-5. Exiba todas as cores que começam com a letra V.
-6. Remova todas as cores que não comecem com a letra V.
-7. Limpe o conjunto e demostre que esta vazio
-
-<details>
-<summary>Código resposta:</summary>
-
-</details>
-
-<br>
-
-### Exercício 4 (Proposto)
-
-Crie uma classe LinguagemFavorita que possua os atributos nome, ano_de_criacao, Ide. Em seguida, crie um conjunto com 3 linguagens e faça um programa que ordene esse conjunto por:
-
-1. Ordem de inserção
-2. Ordem alfabética (Nome)
-3. Ordem alfabética (Ide)
-4. Ordem de ano de criação
-5. Ordem nome, ano de criação e Ide
-
-<details>
-<summary>Código resposta:</summary>
-
-</details>
-
-<br>
-
-<br>
-
-<br>
-
-[Voltar a Collections](/Arquivos/Conteudo/4%20-%20Programa%C3%A7%C3%A3o%20orientada%20a%20objetos/4.2%20Collections.md)<br>
-[Voltar ao inicio](/README.md)
+</div>

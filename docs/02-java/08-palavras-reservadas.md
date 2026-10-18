@@ -1,157 +1,100 @@
-# Palavras reservadas
+# 2.8 · Palavras reservadas
 
-#### Link das palavras reservadas do Java:
-[Blog LinhaDeCódigo](http://www.linhadecodigo.com.br/artigo/83/as-52-palavras-reservadas-do-java.aspx)
+> **Em uma frase:** palavras reservadas são termos que o Java já usa para alguma coisa (`class`, `int`, `if`, `return`...), por isso **não podem** ser usadas como nomes de variáveis, métodos ou classes.
 
-## Importante! 
-Palavras reservadas são identificadores de uma linguagem que já possuem uma finalidade específica, portanto não podem ser utilizados para nomear variáveis, classes, métodos ou atributos.
-- A linguagem Java possui 52 palavras reservadas. Todas essas palavras são classificadas em grupos e escritas com letra minúscula, sendo identificadas com uma cor especial pela maioria das IDE's. Abaixo temos a lista de palavras agrupadas por sua finalidades.
+O Java tem **51 palavras reservadas** (todas em minúsculas). A IDE costuma pintá-las de outra cor, o que ajuda a reconhecê-las.
 
-    <img src="./img/09.webp" alt="" width="600">
+## 🗂️ Por categoria
 
+| Categoria | Palavras |
+| --- | --- |
+| **Pacotes** | `package`, `import` |
+| **Visibilidade** | `public`, `protected`, `private` |
+| **Tipos primitivos** | `boolean`, `byte`, `char`, `short`, `int`, `long`, `float`, `double`, `void` |
+| **Classes, interfaces e modificadores** | `class`, `interface`, `enum`, `extends`, `implements`, `abstract`, `final`, `static`, `new`, `native`, `strictfp`, `synchronized`, `transient`, `volatile` |
+| **Controle de fluxo** | `if`, `else`, `switch`, `case`, `default`, `for`, `while`, `do`, `break`, `continue`, `return`, `instanceof` |
+| **Exceções** | `try`, `catch`, `finally`, `throw`, `throws`, `assert` |
+| **Referências** | `this`, `super` |
+| **Reservadas, mas sem uso** | `const`, `goto` |
+| **Módulos e outras** | `_` (underline sozinho, desde o Java 9) |
 
-### Controle de pacotes
-- **import:** importa pacotes ou classes para dentro do código
-  
-- **package:** especifica a que pacote todas as classes de um arquivo pertencem
+### O que cada uma faz (as mais importantes)
 
-### Modificadores de acesso
+| Palavra | Uso |
+| --- | --- |
+| `package` / `import` | Diz a qual pacote a classe pertence / traz classes de outros pacotes. |
+| `class` / `interface` / `enum` | Declara uma classe / uma interface / uma enumeração de valores fixos. |
+| `extends` / `implements` | Herda de uma classe / implementa uma interface. |
+| `abstract` | Classe que não pode ser instanciada, ou método sem corpo que as filhas devem implementar. |
+| `final` | Impede reatribuir uma variável, sobrescrever um método ou herdar de uma classe. |
+| `static` | Pertence à **classe**, não a cada objeto. |
+| `new` | Cria um objeto chamando o construtor. |
+| `this` / `super` | Referência ao objeto atual / à classe pai. |
+| `return` | Sai do método (e devolve um valor, se houver). |
+| `break` / `continue` | Sai do laço / pula para a próxima volta. |
+| `instanceof` | Testa se um objeto é de determinado tipo. |
+| `try` / `catch` / `finally` | Trata exceções. |
+| `throw` / `throws` | Lança uma exceção / avisa que o método pode lançar uma. |
+| `synchronized` | Permite só uma thread por vez naquele trecho. |
+| `transient` | Campo que não é serializado. |
+| `volatile` | Variável sempre lida da memória principal (threads). |
+| `native` | Método implementado em outra linguagem (como C). |
 
-- **public:** acesso de qualquer classe
-  
-- **private:** acesso apenas dentro da classe
-  
-- **protected:** acesso por classes no mesmo pacote e subclasses
+> [!NOTE]
+> `true`, `false` e `null` **não** são palavras reservadas: são **literais**. Mesmo assim, não podem ser usados como nomes.
 
-### Primitivos
+### Palavras "contextuais" (Java moderno)
 
-- **boolean:** um valor indicando verdadeiro ou falso
-  
-- **byte:** um inteiro de 8 bits (signed).
-  
-- **char:** um character unicode (16-bit unsigned).
-  
-- **double:** um número de ponto flutuante de 64 bits (signed).
-  
-- **float:** um número de ponto flutuante de 32 bits (signed).
-  
-- **int:** um inteiro de 32 bits (signed).
-  
-- **long:** um inteiro de 64 bits (signed).
-  
-- **short:** um inteiro de 32 bits (signed).
-  
-- **void:** indica que o método não tem retorno de valor
-  
-### Modificadores de classes, variáveis e métodos
+Algumas palavras novas só têm significado especial em certos lugares, para não quebrar código antigo que as usava como nome: `var`, `record`, `yield`, `sealed`, `non-sealed`, `permits`, `when`, além de `module`, `requires`, `exports` e outras usadas em `module-info.java`. Evite usá-las como nome mesmo assim. Você verá `var` e `record` no [módulo extra](../08-extras/01-java-moderno.md).
 
-- **abstract:** classe que não pode ser instanciada ou método que precisa ser implementado por uma subclasse não abstrata.
-  
-- **class:** especifica uma classe.
-  
-- **extends:** indica a superclasse que a subclasse está estendendo.
-  
-- **final:** impossibilita que uma classe seja estendida, que um método seja sobrescrito ou que uma variável seja reinicializada.
-  
-- **implements:** indica as interfaces que uma classe irá implementar.
-  
-- **interface:** especifica uma interface.
-  
-- **native:** indica que um método está escrito em uma linguagem dependente de plataforma, como o C.
-  
-- **new:** instancia um novo objeto, chamando seu construtor.
-  
-- **static:** faz um método ou variável pertencer à classe ao invés de às instâncias.
-  
-- **strictfp:** usado em frente a um método ou classe para indicar que os números de ponto flutuante seguirão as regras de ponto flutuante em todas as expressões.
-  
-- **synchronized:** indica que um método só pode ser acessado por uma thread de cada vez.
-  
-- **transient:** impede a serialização de campos.
-  
-- **volatile:** indica que uma variável pode ser alterada durante o uso de threads.
+## 🔀 Palavras "opostas"
 
-### Controle de fluxo dentro de um bloco de código
-
-- **break:** sai do bloco de código em que ele está.
-  
-- **case:** executa um bloco de código dependendo do teste do switch.
-  
-- **continue:** pula a execução do código que viria após essa linha e vai para a próxima passagem do loop.
-  
-- **default:** executa esse bloco de código caso nenhum dos teste de switch-case seja verdadeiro.
-  
-- **do:** executa um bloco de código uma vez, e então realiza um teste em conjunto com o while para determinar se o bloco deverá ser executado novamente.
-  
-- **else:** executa um bloco de código alternativo caso o teste if seja falso.
-  
-- **for:** usado para realizar um loop condicional de um bloco de código.
-  
-- **if:** usado para realizar um teste lógico de verdadeiro o falso.
-  
-- **instanceof:** determina se um objeto é uma instância de determinada classe, superclasse ou interface.
-  
-- **return:** retorna de um método sem executar qualquer código que venha depois desta linha (também pode retornar uma variável).
-  
-- **switch:** indica a variável a ser comparada nas expressões case.
-  
-- **while:** executa um bloco de código repetidamente enquanto a condição for verdadeira.
-
-### Tratamento de erros
-
-- **assert:** testa uma expressão condicional para verificar uma suposição do programador.
-  
-- **catch:** declara o bloco de código usado para tratar uma exceção.
-
-- **finally:** bloco de código, após um try-catch, que é executado independentemente do fluxo de programa seguido ao lidar com uma exceção.
-  
-- **throw:**usado para passar uma exceção para o método que o chamou.
-  
-- **throws:** indica que um método pode passar uma exceção para o método que o chamou.
-  
-- **try:** bloco de código que tentará ser executado, mas que pode causar uma exceção.
-
-### Variáveis de referência
-
-- **super:** refere-se a superclasse imediata
-  
-- **this:** refere-se a instância atual do objeto
-
-### Palavras reservadas não utilizadas
-
-- **const:** Não utilize para declarar constantes; use public static final.
-  
-- **goto:** não implementada na linguagem Java por ser considerada prejudicial.
-
-### Literais reservados
-
-- De acordo com a Java Language Specification, **`null`**, **`true`** e **`false`**são tecnicamente chamados de valores literais, e não keywords. Se você tentar criar algum identificador com estes valores, você também terá um erro de compilação.
-
-<br>
-
-## Escopo de uso:
-| Uso | Palavras | Observações |
+| | | Diferença |
 | --- | --- | --- |
-| Arquivo | package, import, static |  |
-| Classe | public ou protected ou private + final ou abstract + extends ou implements | private (em caso de classe interna), final ou abstract ? |
-| Método | public ou protected ou private + static ou final ou abstract + void e return | void em caso de não ter retorno ou return se houver |
-| Atributo | public ou protected ou private + static ou final + tipo primitivo |  |
+| `package` | `import` | `package` diz **onde a classe está**; `import` diz **de onde trazer** outra classe. |
+| `extends` | `implements` | Uma classe **estende** outra classe; uma classe **implementa** uma interface. |
+| `final` | `abstract` | `final` impede alterações/herança; `abstract` **exige** que as filhas completem o comportamento. |
+| `throws` | `throw` | `throws` (na assinatura) **avisa** que pode lançar; `throw` (no corpo) **lança** de fato. |
 
-<br>
+## 📌 Resumindo
 
-## Palavras "opostas”:
-Assim como nas classificações gramaticais da língua portuguesa, existem algumas palavras que são completamente opostas (antônimas) na linguagem Java conforme tabela abaixo:
+- São 51 palavras reservadas, todas minúsculas; não podem virar nomes.
+- `true`, `false` e `null` são literais, mas também não podem ser nomes.
+- Palavras como `var` e `record` são contextuais (Java moderno).
 
-| Palavra | Palavra | Explicação |
-| --- | --- | --- |
-| package | import | Enquanto package determina o diretório real da classe, o import informe de onde será importada a classe. Isso porque podemos ter classes de mesmo nome. |
-| extends | implements | enquanto extends determinas que uma classe estende outra classe, implements determina que uma classe implementa uma interface, porém nunca o contrário |
-| final | abstract | enquanto final determina fim de alteração de valor ou lógica comportamental, abstract em métodos exige que sub-classes precisarão definir comportamento é um método abstrato. NOTA: Se uma classe contém um único método abstrato, toda classe precisa ser. |
-| throws | throw | Esta é uma das situações mais complicadas de compreensão destas duas palavras. Enquanto a throws determina que um método pode lançar uma exceção, throw é a implementação que dispara a exceção**. Vamos conhecer mais sobre este conceito no assunto Exceções.** |
+## 🏋️ Mão na massa
 
-<br>
+**1.** Quais destes nomes podem ser usados em uma variável: `classe`, `class`, `Int`, `null`, `retorno`?
 
-<br>
+<details>
+<summary>Ver resposta</summary>
 
-[Voltar a Aprendendo a sintaxe Java](/Arquivos/Conteudo/2%20-%20Conhecendo%20a%20linguagem%20Java/2.2%20Aprendendo%20a%20sintaxe%20java.md)<br>
-[Voltar ao incio](/README.md)
+Podem: `classe`, `Int` (o Java diferencia maiúsculas) e `retorno`. Não podem: `class` (reservada) e `null` (literal).
+
+</details>
+
+**2.** Qual a diferença entre `throw` e `throws`?
+
+<details>
+<summary>Ver resposta</summary>
+
+`throws` aparece na **assinatura** do método e avisa que ele pode lançar uma exceção. `throw` aparece no **corpo** e lança uma exceção de verdade: `throw new IllegalArgumentException("...")`.
+
+</details>
+
+**3.** Para que serve a palavra `static` no `public static void main`?
+
+<details>
+<summary>Ver resposta</summary>
+
+Faz o `main` pertencer à **classe**, e não a um objeto. Assim a JVM consegue chamá-lo sem precisar criar uma instância da classe antes.
+
+</details>
+
+---
+
+<div align="center">
+
+[⬅️ 2.7 Escopo de variáveis](./07-escopo.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [2.9 Comentários, Javadoc e a documentação oficial ➡️](./09-javadoc.md)
+
+</div>

@@ -1,184 +1,160 @@
-# Listas circulares
+# 2.22 · Listas circulares
 
-<img src="./img/31.jpg" alt="" width="700">
+> **Em uma frase:** numa lista circular, o último nó aponta de volta para o **primeiro** em vez de `null`, formando um ciclo que pode ser percorrido sem fim, como os ponteiros de um relógio.
 
-Uma lista circular em Java é uma estrutura de dados que permite armazenar uma coleção de elementos com um início e um fim, onde o último elemento aponta de volta para o primeiro elemento, formando assim um ciclo. Diferentemente de uma lista linear tradicional, em que o último elemento aponta para nulo, uma lista circular não tem um final definido, o que significa que é possível percorrer a lista indefinidamente. O primeiro elemento é chamado de “cauda” e o último de “cabeça”.
+## 🔄 Estrutura
 
-<br>
-
-### Mostrando em código:
-<details>
-<summary>Código</summary>
-
-```java
-//Class "Main"
-package com.projeto.Lista_circular;
-
-public class Main {
-    public static void main(String[] args) {
-        //Criando lista circular "minha_lista_circ" de strings
-        ListaCircular<String> minha_lista_circ = new ListaCircular<>();
-
-        //Inserindo objeto em "minha_lista_circ" e imprimindo a lista
-        minha_lista_circ.add("C0");
-        System.out.println("Lista inicial: " + minha_lista_circ);
-
-        //Removendo o objeto inserido e imprimindo novamente a lista
-        minha_lista_circ.remove(0);
-        System.out.println("Lista após remoção de objeto: " + minha_lista_circ);
-
-        //Adicionando multiplos elementos e imprimindo a lista
-        minha_lista_circ.add("C1");
-        minha_lista_circ.add("C2");
-        minha_lista_circ.add("C3");
-        System.out.println("Lista após inserções: " + minha_lista_circ);
-
-        //Usando método "get" para pegar elemento de um indice informado
-        System.out.println("Objeto de indice 1: "+ minha_lista_circ.get(1));
-        System.out.println("Objeto de indice 3: "+ minha_lista_circ.get(4)+"\n"); //Dará a volta na lista
-
-        //Demostrando melhor o looping da lista
-        for(int i = 0; i < 20; i++){
-            System.out.println("Objeto de indice " + i+": " + minha_lista_circ.get(i));
-        }
-
-    }
-}
+```mermaid
+flowchart LR
+    A["C1<br/>(cabeça)"] --> B["C2"] --> C["C3"] --> D["C4<br/>(cauda)"]
+    D -- "volta ao início" --> A
 ```
 
-```java
-//Class "No"
-package com.projeto.Lista_circular;
+- **Cabeça:** o primeiro nó.
+- **Cauda:** o último nó, cujo `proximo` aponta para a cabeça.
 
-public class No <T> {
-    private T conteudo;
-    private No<T> no_proximo;
+Na verdade, basta guardar a **cauda**: a cabeça é sempre `cauda.proximo`.
 
-    //Construtor
-    public No(T conteudo) {
-        this.conteudo = conteudo;
-        this.no_proximo = null;
-    }
+Usos típicos:
 
-    //Getters e setters de "conteudo"
-    public T getConteudo() {
-        return conteudo;
-    }
-    public void setConteudo(T conteudo) {
-        this.conteudo = conteudo;
-    }
-    //Getters e setters de "proximo_no"
-    public No<T> getNo_proximo() {
-        return no_proximo;
-    }
-    public void setNo_proximo(No<T> no_proximo) {
-        this.no_proximo = no_proximo;
-    }
+- **rodízio** de tarefas (*round-robin*): cada processo recebe um pouco de CPU, e depois do último volta-se ao primeiro;
+- **playlists** em modo repetir;
+- a vez de cada jogador em um jogo de tabuleiro.
 
-    //Método "toString" para "conteudo"
-    @Override
-    public String toString() {
-        return "No{" + "conteudo=" + conteudo + '}';
-    }
-}
-```
+## 🛠️ Implementação
 
 ```java
-//Class "ListaCircular"
-package com.projeto.Lista_circular;
-
 public class ListaCircular<T> {
-    private No<T> cabeca;
-    private No<T> cauda;
-    private int tamanho_lista;
 
-    //Construtor vazio para "ListaCircular"
-    public ListaCircular() {
-        this.cauda = null;
-        this.cabeca = null;
-        this.tamanho_lista = 0;
+    private No<T> cauda;     // usa a classe No<T> da aula 2.17
+    private int tamanho;
+
+    public void add(T conteudo) {               // adiciona no fim
+        No<T> novo = new No<>(conteudo);
+        if (cauda == null) {
+            novo.setProximo(novo);              // um nó só aponta para si mesmo
+        } else {
+            novo.setProximo(cauda.getProximo()); // o novo aponta para a cabeça
+            cauda.setProximo(novo);
+        }
+        cauda = novo;                           // e vira a nova cauda
+        tamanho++;
     }
 
-    //Método "size" (Retorna o tamanho da lista)
-    public int size(){
-        return this.tamanho_lista;
-    }
-    //Método "isEmpty" (Retorna se a lista está ou não vazia)
-    public boolean isEmpty(){
-        return this.tamanho_lista == 0 ? true: false;
-    }
-    //Método "getNo" (localiza um nó específico de acordo com um indice)
-    private No<T> getNo(int indice){
-        if(this.isEmpty()){
-            throw new IndexOutOfBoundsException("A lista está vazia!");
+    public T get(int indice) {
+        if (tamanho == 0) {
+            throw new IndexOutOfBoundsException("A lista está vazia");
         }
-        if(indice == 0){
-            return this.cauda;
+        No<T> atual = cauda.getProximo();       // começa na cabeça
+        for (int i = 0; i < indice; i++) {
+            atual = atual.getProximo();         // índices maiores "dão a volta"
         }
-        No<T> no_auxiliar = this.cauda;
-        for(int i = 0; (i < indice) && (no_auxiliar != null); i++){
-            no_auxiliar = no_auxiliar.getNo_proximo();
-        }
-        return no_auxiliar;
+        return atual.getConteudo();
     }
-    //Método "get" (Retorna elemento específico de acordo com índice)
-    public T get (int indice){
-        return this.getNo(indice).getConteudo();
-    }
-    //Método "remove" (Remove objeto da lista)
-    public void remove(int indice){
-        if(indice >= this.tamanho_lista){
-            throw new IndexOutOfBoundsException("O índice é maior que o tamanho da lista");
+
+    public T remove(int indice) {
+        if (indice < 0 || indice >= tamanho) {
+            throw new IndexOutOfBoundsException("Índice inválido: " + indice);
         }
-        No<T> no_auxiliar = this.cauda;
-        if(indice == 0){
-            this.cauda = this.cauda.getNo_proximo();
-            this.cabeca.setNo_proximo(this.cauda);
-        } else if (indice == 1) {
-            this.cauda.setNo_proximo(this.cauda.getNo_proximo().getNo_proximo());
-        }else {
-            for(int i =0; i < indice -1; i++){
-                no_auxiliar = no_auxiliar.getNo_proximo();
-            }
-            no_auxiliar.setNo_proximo(no_auxiliar.getNo_proximo().getNo_proximo());
+        No<T> anterior = cauda;                 // o anterior da cabeça é a cauda
+        for (int i = 0; i < indice; i++) {
+            anterior = anterior.getProximo();
         }
-        this.tamanho_lista--;
-    }
-    //Método "add" (Adiciona novo elemento no inicio da lista circular
-    public void add(T conteudo){
-        No<T> novo_no = new No<>(conteudo);
-        if(this.tamanho_lista == 0){
-            this.cabeca = novo_no;
-            this.cauda = this.cabeca;
-            this.cabeca.setNo_proximo(this.cauda);
-        }else {
-            novo_no.setNo_proximo(this.cauda);
-            this.cabeca.setNo_proximo(novo_no);
-            this.cauda = novo_no;
+        No<T> alvo = anterior.getProximo();
+        if (tamanho == 1) {
+            cauda = null;
+        } else {
+            anterior.setProximo(alvo.getProximo());
+            if (alvo == cauda) cauda = anterior;
         }
-        this.tamanho_lista++;
+        tamanho--;
+        return alvo.getConteudo();
     }
-    //Método "toString" para ver conteúdo interno da lista e suas conexões
+
+    public int size() { return tamanho; }
 
     @Override
     public String toString() {
-        String str_retorno ="";
-        No<T> no_auxiliar = this.cauda;
-        for (int i = 0; i < this.size(); i++){
-            str_retorno += "[No{conteúdo = " + no_auxiliar + "}]--->";
-            no_auxiliar = no_auxiliar.getNo_proximo();
+        if (tamanho == 0) return "[]";
+        StringBuilder sb = new StringBuilder();
+        No<T> atual = cauda.getProximo();
+        for (int i = 0; i < tamanho; i++) {     // conta as voltas: senão seria infinito!
+            sb.append("[").append(atual.getConteudo()).append("] → ");
+            atual = atual.getProximo();
         }
-        str_retorno += this.size() != 0 ? "(Retorna ao início)": "[]";
-        return str_retorno;
+        return sb.append("(volta ao início)").toString();
     }
 }
+```
+
+```java
+ListaCircular<String> lista = new ListaCircular<>();
+lista.add("C1");
+lista.add("C2");
+lista.add("C3");
+System.out.println(lista);        // [C1] → [C2] → [C3] → (volta ao início)
+
+for (int i = 0; i < 7; i++) {
+    System.out.print(lista.get(i) + " ");   // C1 C2 C3 C1 C2 C3 C1
+}
+```
+
+> [!CAUTION]
+> Como não existe `null` no fim, qualquer laço do tipo `while (atual != null)` vira **infinito**. Sempre percorra contando até `tamanho`.
+
+## 📌 Resumindo
+
+- O último nó (cauda) aponta para o primeiro (cabeça).
+- Basta guardar a cauda: a cabeça é `cauda.proximo`.
+- Ótima para rodízios; cuidado com laços infinitos ao percorrer.
+
+## 🏋️ Mão na massa
+
+**1.** Numa lista circular com `A, B, C`, o que retorna `get(10)`?
+
+<details>
+<summary>Ver resposta</summary>
+
+`B`. Com 3 elementos, o índice 10 equivale a `10 % 3 = 1`, que é o `B`.
+
+</details>
+
+**2.** Otimize o `get` para não dar voltas desnecessárias quando o índice for muito grande.
+
+<details>
+<summary>Ver resposta</summary>
+
+Use o resto da divisão pelo tamanho antes de percorrer:
+
+```java
+int passos = indice % tamanho;
+for (int i = 0; i < passos; i++) { ... }
 ```
 
 </details>
 
-<br>
+**3.** Simule um rodízio: 3 tarefas e 7 "fatias de tempo". Qual tarefa executa em cada fatia?
 
-<br>
+<details>
+<summary>Ver resposta</summary>
 
-[Voltar a Estrutura de dados em Java](/Arquivos/Conteudo/2%20-%20Conhecendo%20a%20linguagem%20Java/2.5%20Estrutura%20de%20dados%20em%20java.md)<br>
-[Voltar para inicio](/README.md)
+```java
+ListaCircular<String> tarefas = new ListaCircular<>();
+tarefas.add("Tarefa A");
+tarefas.add("Tarefa B");
+tarefas.add("Tarefa C");
+for (int fatia = 0; fatia < 7; fatia++) {
+    System.out.println("Fatia " + fatia + ": " + tarefas.get(fatia));
+}
+// A, B, C, A, B, C, A
+```
+
+</details>
+
+---
+
+<div align="center">
+
+[⬅️ 2.21 Listas duplamente encadeadas](./21-listas-duplamente-encadeadas.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [2.23 Árvores e árvores binárias de busca ➡️](./23-arvores-binarias.md)
+
+</div>

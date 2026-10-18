@@ -1,37 +1,118 @@
-# Swagger
+# 6.16 · Documentando a API com OpenAPI e Swagger
 
-[Página oficial do Swagger](https://swagger.io/)
+> **Em uma frase:** **OpenAPI** é o padrão para descrever uma API REST (rotas, parâmetros, respostas); **Swagger** é o conjunto de ferramentas em torno dele, e o **Swagger UI** gera uma página interativa onde dá para ler a documentação e testar cada endpoint.
 
-<br>
+## 📖 Swagger × OpenAPI
 
-### Definição:
+O Swagger foi criado em **2011** por Tony Tam (na empresa Wordnik) e depois adquirido pela **SmartBear**. Em **2016**, a especificação foi doada à Linux Foundation e renomeada para **OpenAPI Specification**. Hoje:
 
-Se trata de uma estrutura de software de código aberto que ajuda a projetar, construir, documentar e consumir serviços da web RESTful. Foi criado pela empresa Reverb Technologies em 2010 e, desde então, tem sido mantido pela SmartBear Software.
+- **OpenAPI** = a especificação (um arquivo JSON/YAML que descreve a API);
+- **Swagger** = as ferramentas (Swagger UI, Swagger Editor, Swagger Codegen, SwaggerHub).
 
-#### Vantagens de uso:
+| Ferramenta | Para quê |
+| --- | --- |
+| **Swagger UI** | Página web interativa gerada a partir do OpenAPI: lê e **testa** a API. |
+| **Swagger Editor** | Escrever/validar especificações OpenAPI no navegador. |
+| **Swagger Codegen** / OpenAPI Generator | Gerar clientes (e servidores) em várias linguagens a partir da especificação. |
+| **SwaggerHub** | Plataforma online para hospedar e colaborar em especificações. |
 
-Algumas das principais vantagens de uso do Swagger são:
+## ☕ No Spring Boot: springdoc-openapi
 
-- **Documentação automática**: o Swagger gera automaticamente a documentação da API com base nas anotações dos controladores, o que facilita a compreensão e a utilização da API pelos desenvolvedores;
-- **Interatividade**: o Swagger permite que os desenvolvedores testem a API a partir da própria documentação, sem a necessidade de escrever código adicional;
-- **Padronização**: o Swagger fornece um padrão para projetar e documentar APIs, o que facilita a manutenção e a colaboração entre equipes;
-- **Geração de clientes**: o Swagger pode gerar clientes de API em diversas linguagens de programação, o que facilita a integração com outras aplicações.
+> [!WARNING]
+> Os projetos do curso usam o **Springfox** (`springfox-boot-starter`). Ele foi **abandonado** em 2020 e **não funciona** com o Spring Boot 2.6+ sem gambiarras, nem com o Boot 3. Esse é o motivo dos erros de dependência que muita gente teve no curso. Hoje o padrão é o **springdoc-openapi**.
 
+Basta uma dependência:
 
-### Principais recursos
+```xml
+<dependency>
+    <groupId>org.springdoc</groupId>
+    <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+    <version>2.8.9</version>   <!-- linha 2.x para o Spring Boot 3; 3.x para o Spring Boot 4 -->
+</dependency>
+```
 
-O Swagger oferece diversos recursos para facilitar a criação e a documentação de APIs RESTful. Alguns dos principais são:
+Suba a aplicação e acesse:
 
-- **Swagger Editor**: é uma ferramenta web que permite criar e editar especificações OpenAPI (anteriormente conhecidas como Swagger). É possível validar a sintaxe da especificação e visualizar a documentação em tempo real;
-- **Swagger UI**: é uma interface web que gera automaticamente a documentação da API a partir da especificação OpenAPI. Além de documentar a API, o Swagger UI permite testar a API a partir da própria documentação;
-- **Swagger Codegen**: é uma ferramenta que gera clientes de API em diversas linguagens de programação a partir da especificação OpenAPI. Isso facilita a integração com outras aplicações e ajuda a manter a consistência entre as diferentes implementações da API;
-- **Swagger Hub**: é uma plataforma baseada em nuvem que oferece hospedagem para especificações OpenAPI, além de recursos de colaboração e integração com outras ferramentas de desenvolvimento.
+- **Swagger UI:** `http://localhost:8080/swagger-ui/index.html` (ou `/swagger-ui.html`)
+- **Especificação em JSON:** `http://localhost:8080/v3/api-docs`
 
-<br>
+Sem nenhuma configuração extra, todos os `@RestController` já aparecem documentados.
 
-<br>
+### Enriquecendo a documentação
 
-<br>
+```java
+@Configuration
+public class OpenApiConfig {
+    @Bean
+    public OpenAPI apiInfo() {
+        return new OpenAPI().info(new Info()
+                .title("API de Usuários")
+                .description("API criada no bootcamp Banco Pan Java Developer")
+                .version("1.0.0"));
+    }
+}
+```
 
-[Voltar a Criando API REST documentada com Spring web e Swagger](/Arquivos/Conteudo/6%20-%20Ganhando%20produtividade%20com%20spring%20framwork/6.3%20Criando%20api%20rest%20documentada%20com%20spring%20web%20e%20swagger.md)<br>
-[Voltar ao inicio](/README.md)
+```java
+@Tag(name = "Usuários", description = "Cadastro e consulta de usuários")
+@RestController
+@RequestMapping("/usuarios")
+public class UsuarioController {
+
+    @Operation(summary = "Busca um usuário pelo id")
+    @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
+    @GetMapping("/{id}")
+    public ResponseEntity<Usuario> buscar(@PathVariable Long id) { ... }
+}
+```
+
+## ✅ Vantagens
+
+- **Documentação sempre atualizada**, gerada a partir do próprio código.
+- **Teste interativo** direto no navegador, sem Postman.
+- **Padronização**: a especificação OpenAPI é entendida por inúmeras ferramentas.
+- **Geração de clientes** para quem vai consumir a API.
+
+## 📌 Resumindo
+
+- OpenAPI = especificação; Swagger = ferramentas (Swagger UI, Editor, Codegen).
+- No Spring Boot atual, use **springdoc-openapi** (o Springfox foi abandonado).
+- Swagger UI em `/swagger-ui/index.html`; especificação em `/v3/api-docs`.
+- Enriqueça com `@Tag`, `@Operation` e `@ApiResponse`.
+
+## 🏋️ Mão na massa
+
+**1.** Adicione o springdoc ao projeto da aula 6.15 e abra o Swagger UI.
+
+<details>
+<summary>Ver resposta</summary>
+
+Inclua a dependência `springdoc-openapi-starter-webmvc-ui` no `pom.xml`, recarregue o Maven, suba a aplicação e acesse `http://localhost:8080/swagger-ui/index.html`. Clique num endpoint → **Try it out** → **Execute** para testá-lo.
+
+</details>
+
+**2.** Por que trocar o Springfox pelo springdoc?
+
+<details>
+<summary>Ver resposta</summary>
+
+Porque o Springfox parou de ser mantido em 2020 e é incompatível com as versões atuais do Spring Boot. O springdoc é mantido ativamente e suporta o Spring Boot 3 e 4 com uma única dependência.
+
+</details>
+
+**3.** Qual a diferença entre OpenAPI e Swagger?
+
+<details>
+<summary>Ver resposta</summary>
+
+**OpenAPI** é a **especificação** (o formato do documento que descreve a API). **Swagger** é a família de **ferramentas** que trabalham com essa especificação, como o Swagger UI.
+
+</details>
+
+---
+
+<div align="center">
+
+[⬅️ 6.15 @RestController](./15-rest-controller.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [6.17 Tratamento de erros na API ➡️](./17-tratamento-de-erros.md)
+
+</div>

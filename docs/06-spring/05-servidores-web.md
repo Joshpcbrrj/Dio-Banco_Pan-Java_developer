@@ -1,73 +1,83 @@
-# Servidores/Sistema de aplicação
+# 6.5 · Servidores web e de aplicação
 
-## Apache server 
+> **Em uma frase:** um **servidor web** (Apache, NGINX) entrega arquivos e encaminha requisições; um **servidor de aplicação** ou *servlet container* (Tomcat, Jetty) executa o código da aplicação Java; e o Spring Boot já traz um deles **embutido**.
 
-<img src="./img/14.jpeg" alt="" width="300">
+## 🌐 Os mais conhecidos
 
-### História do Apache Server:
-O Apache Server é um servidor web de código aberto que foi desenvolvido pela Apache Software Foundation. Foi criado em 1995 por um grupo de desenvolvedores liderados por Brian Behlendorf, e o nome "Apache" foi escolhido porque o servidor originalmente consistia em um conjunto de patches ("apache" em inglês significa "índio apache" e patch significa "remendo") para o servidor HTTP NCSA.
+| Servidor | Tipo | Destaques |
+| --- | --- | --- |
+| **Apache HTTP Server** (1995) | Servidor web | Muito configurável e modular; foi o mais usado do mundo por décadas. |
+| **NGINX** (2004, Igor Sysoev) | Servidor web, proxy reverso e balanceador | Criado para lidar com milhares de conexões simultâneas (o "problema C10K"); hoje é o mais usado na frente de aplicações. |
+| **Apache Tomcat** | *Servlet container* Java | Executa aplicações Java web; é o padrão embutido no Spring Boot. |
+| **Jetty** / **Undertow** | *Servlet containers* Java | Alternativas leves ao Tomcat, também suportadas pelo Spring Boot. |
+| **XAMPP** | Pacote de desenvolvimento | Instala Apache + MariaDB (MySQL) + PHP + Perl de uma vez, para testes locais. |
 
-A partir da versão 1.0, o Apache Server tornou-se rapidamente popular entre os usuários da Internet e em pouco tempo se tornou o servidor web mais utilizado no mundo. Em 2009, o Apache Server ultrapassou a marca de 100 milhões de sites ativos, o que o tornou o servidor web mais utilizado na história da Internet.
+> [!NOTE]
+> O nome "Apache" é muitas vezes explicado como "*a patchy server*" (um servidor "remendado", feito de patches sobre o servidor NCSA). A própria fundação diz que o nome foi escolhido em homenagem à nação indígena Apache, e a piada surgiu depois.
 
-### Principais Características do Apache Server:
+## 🧭 Como eles trabalham juntos
 
-<img src="./img/15.png" alt="" width="600">
+```mermaid
+flowchart LR
+    U["Usuários"] --> N["NGINX<br/>(proxy reverso, HTTPS,<br/>arquivos estáticos)"]
+    N --> A1["App Spring Boot 1<br/>(Tomcat embutido)"]
+    N --> A2["App Spring Boot 2<br/>(Tomcat embutido)"]
+    A1 --> DB[("Banco de dados")]
+    A2 --> DB
+```
 
-#### Algumas das principais características do Apache Server incluem:
+Uma arquitetura típica coloca o **NGINX** na frente: ele recebe o HTTPS, entrega arquivos estáticos (imagens, CSS, JS) e distribui as requisições entre as instâncias da aplicação Java.
 
-1. Código aberto: O Apache Server é um software livre, o que significa que é disponibilizado gratuitamente e os usuários podem modificar e distribuir o código-fonte.
-2. Multiplataforma: O Apache Server é compatível com uma ampla variedade de plataformas, incluindo Linux, Windows, macOS, Solaris, FreeBSD, NetBSD e outras.
-3. Flexibilidade: O Apache Server é altamente configurável e pode ser personalizado para atender às necessidades específicas de cada usuário.
-4. Modularidade: O Apache Server é baseado em módulos, o que significa que os recursos podem ser adicionados ou removidos conforme necessário.
-5. Confiabilidade: O Apache Server é conhecido por sua confiabilidade e estabilidade, o que o torna uma escolha popular para servidores de alto tráfego.
-6. Segurança: O Apache Server é projetado com segurança em mente e inclui recursos como suporte a SSL/TLS e autenticação de usuário. Suporte HTTP 2.0.
-7. Suporte à linguagem de programação: O Apache Server suporta várias linguagens de programação, incluindo PHP, Perl, Python e Ruby, permitindo que os desenvolvedores criem aplicativos web dinâmicos e interativos.
+## ☕ E no Spring Boot?
 
-<br>
+Antigamente, era preciso instalar um Tomcat, gerar um arquivo `.war` e copiá-lo para dentro do servidor. Com o **Spring Boot**, o Tomcat vem **dentro** da aplicação:
 
-## Xampp server
+```bash
+mvn package
+java -jar target/minha-api-0.0.1-SNAPSHOT.jar   # o servidor sobe junto, na porta 8080
+```
 
-<img src="./img/16.png" alt="" width="300">
+Para trocar a porta, use `server.port=9090` no `application.properties`.
 
-O XAMPP é um pacote de software livre que inclui o servidor web Apache, o banco de dados MySQL, a linguagem de script PHP e outras ferramentas, como o phpMyAdmin e o OpenSSL. Foi criado pela Apache Friends em 2002 e é amplamente utilizado para testes de desenvolvimento web local em ambientes Windows, Linux e macOS.
+## 📌 Resumindo
 
-#### Principais Características do XAMPP:
+- Apache e NGINX: servidores web/proxy; NGINX é o mais usado na frente de aplicações.
+- Tomcat, Jetty, Undertow: executam aplicações Java web.
+- O Spring Boot embute o Tomcat: basta `java -jar`.
 
-Algumas das principais características do XAMPP incluem:
+## 🏋️ Mão na massa
 
-1. Instalação fácil: O XAMPP é fácil de instalar e configurar, permitindo que os desenvolvedores configurem rapidamente um ambiente de desenvolvimento local completo.
-2. Multiplataforma: O XAMPP é compatível com várias plataformas, incluindo Windows, Linux e macOS.
-3. Controle de versão: O XAMPP é fornecido com um sistema de controle de versão integrado, que permite que os desenvolvedores trabalhem em equipe e acompanhem as alterações no código.
-4. Configuração personalizável: O XAMPP permite que os usuários personalizem facilmente as configurações do servidor, incluindo a versão do PHP, a configuração do banco de dados e as configurações de segurança.
-5. Recursos adicionais: O XAMPP inclui recursos adicionais, como o phpMyAdmin, que permite aos desenvolvedores gerenciar facilmente seus bancos de dados MySQL.
-6. Ambiente de desenvolvimento completo: Com o XAMPP, os desenvolvedores podem configurar um ambiente de desenvolvimento completo local, incluindo servidor web, banco de dados e linguagem de script.
-7. Compatibilidade com aplicativos web: O XAMPP é compatível com uma ampla variedade de aplicativos web e frameworks, como WordPress, Joomla e Drupal.
+**1.** Qual a diferença entre um servidor web como o NGINX e um *servlet container* como o Tomcat?
 
-<br>
+<details>
+<summary>Ver resposta</summary>
 
-## NGINX
+O NGINX recebe requisições, serve arquivos estáticos e encaminha (proxy) para outros servidores, mas não executa código Java. O Tomcat executa a aplicação Java (servlets, Spring) que gera as respostas dinâmicas.
 
-<img src="./img/17.png" alt="" width="500">
+</details>
 
-### História do NGINX:
+**2.** Como mudar a porta da sua aplicação Spring Boot para 8081?
 
-O NGINX é um servidor web de alto desempenho de código aberto, que foi criado em 2004 por Igor Sysoev, um engenheiro de software russo. Inicialmente, o NGINX foi desenvolvido para resolver os problemas de escalabilidade e desempenho enfrentados pelo servidor web Apache em ambientes de alto tráfego. Desde então, o NGINX se tornou um dos servidores web mais populares do mundo e é amplamente utilizado por grandes empresas como Netflix, Airbnb e Dropbox.
+<details>
+<summary>Ver resposta</summary>
 
-#### Principais Características do NGINX:
+No `src/main/resources/application.properties`: `server.port=8081`. Ou, ao rodar: `java -jar app.jar --server.port=8081`.
 
-Algumas das principais características do NGINX incluem:
+</details>
 
-1. Alto desempenho: O NGINX é conhecido por sua capacidade de lidar com um grande número de conexões simultâneas e entregar conteúdo estático rapidamente.
-2. Escalabilidade: O NGINX é altamente escalável e pode lidar com grandes volumes de tráfego sem comprometer o desempenho.
-3. Configuração flexível: O NGINX é altamente configurável e pode ser personalizado para atender às necessidades específicas de cada usuário.
-4. Suporte a vários protocolos: O NGINX suporta vários protocolos, incluindo HTTP/HTTPS, TCP, UDP, SMTP e POP3, permitindo que ele seja usado para uma ampla variedade de aplicações.
-5. Modularidade: O NGINX é baseado em módulos, o que significa que os recursos podem ser adicionados ou removidos conforme necessário.
-6. Confiabilidade: O NGINX é conhecido por sua confiabilidade e estabilidade, o que o torna uma escolha popular para servidores de alto tráfego.
-7. Balanceamento de carga: O NGINX inclui recursos avançados de balanceamento de carga, permitindo que o tráfego seja distribuído de forma eficiente entre vários servidores.
+**3.** Por que colocar um NGINX na frente de várias instâncias da sua API?
 
-<br>
+<details>
+<summary>Ver resposta</summary>
 
-<br>
+Para **distribuir a carga** entre elas (balanceamento), cuidar do HTTPS num só lugar, servir arquivos estáticos rapidamente e continuar atendendo mesmo se uma instância cair.
 
-[Voltar a Principais protocolos de comunicação da internet](/Arquivos/Conteudo/6%20-%20Ganhando%20produtividade%20com%20spring%20framwork/6.1%20Principais%20protocolos%20de%20comunicacao%20na%20internet.md)<br>
-[Voltar ao inicio](/README.md)
+</details>
+
+---
+
+<div align="center">
+
+[⬅️ 6.4 HTTP/2 e HTTP/3](./04-http2-e-http3.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [6.6 Criptografia e certificados digitais ➡️](./06-criptografia-e-certificados.md)
+
+</div>

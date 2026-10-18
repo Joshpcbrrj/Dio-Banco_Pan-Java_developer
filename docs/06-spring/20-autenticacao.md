@@ -1,89 +1,153 @@
-# Autenticação simples/ autenticação em memória
+# 6.20 · Autenticação simples, usuários em memória e configuração de segurança
 
-## O que é autenticação simples ?
+> **Em uma frase:** a configuração de segurança é feita declarando um bean `SecurityFilterChain` (regras de acesso por URL) e um `UserDetailsService` (de onde vêm os usuários); as senhas são sempre guardadas com um **PasswordEncoder**, como o BCrypt.
 
-É um tipo de autenticação que envolve a validação de um nome de usuário e senha em um formulário de login. É o tipo de autenticação mais comum em aplicações web, onde o usuário fornece suas credenciais em um formulário e o sistema valida essas informações para conceder ou negar acesso a determinados recursos.
+## 1️⃣ O jeito mais simples: `application.properties`
 
-- No Spring Security, a autenticação simples é implementada através de um filtro de autenticação padrão, que intercepta as solicitações de login e verifica as credenciais do usuário em um repositório de usuários. O Spring Security permite que os desenvolvedores configurem diferentes opções de autenticação simples, como a configuração do repositório de usuários, o uso de criptografia de senha, o tratamento de erros de autenticação, entre outros.
-- Além disso, o Spring Security também suporta a integração com diferentes fontes de autenticação, como provedores de autenticação externos, como OAuth ou SAML, ou sistemas de autenticação empresariais, como LDAP ou Active Directory.
-- Podemos definir a autenticação simples dentro do “application.properties”, arquivo que o Spring security verificrá na sua inicialização.
+Para um único usuário de teste:
 
-<details>
-<summary>Código exemplo:</summary>
-
-**Exemplo de configuração que pode ser feita no “application.properties”**
-
-```xml
+```properties
 spring.security.user.name=josue
 spring.security.user.password=123
-spring.security.user.roles=USERS
+spring.security.user.roles=USER
 ```
 
-</details>
+## 2️⃣ Configuração completa (Spring Security 6+)
 
-<br>
-
-## Autenticação em memória
-A configuração de acesso em memória é uma das maneiras de configurar a autenticação e autorização em uma aplicação Spring Security. Isso permite que os desenvolvedores configurem regras de acesso em memória, sem precisar de um banco de dados para armazenar informações de usuários e permissões.
-
-Para configurar o acesso em memória no Spring Security, é necessário estender a classe `WebSecurityConfigurerAdapter` e sobrescrever o método `configure(AuthenticationManagerBuilder auth)`. Nesse método, os desenvolvedores podem configurar a autenticação em memória, criando usuários e senhas diretamente na aplicação.
-
-<details>
-<summary>Código exemplo:</summary>
-
-**Exemplo de configuração em memoria**
+> [!IMPORTANT]
+> O curso usou a classe `WebSecurityConfigurerAdapter` sobrescrevendo os métodos `configure(...)` (o "configure adapter"). Ela foi **descontinuada no Spring Security 5.7** e **removida no 6.0** (Spring Boot 3). Hoje a configuração é feita com **beans**, como abaixo.
 
 ```java
 @Configuration
 @EnableWebSecurity
-public class MemorySecurityConfig extends WebSecurityConfigurerAdapter {
+@EnableMethodSecurity          // habilita @PreAuthorize nos métodos
+public class SecurityConfig {
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
-            .withUser("user").password("{noop}password").roles("USER")
-            .and()
-            .withUser("admin").password("{noop}password").roles("ADMIN");
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/managers").hasRole("MANAGER")
+                .requestMatchers("/users").hasAnyRole("USER", "MANAGER")
+                .anyRequest().authenticated())
+            .httpBasic(Customizer.withDefaults())      // usuário/senha no cabeçalho Authorization
+            .formLogin(Customizer.withDefaults());     // tela de login no navegador
+        return http.build();
     }
 
-    // Outras configurações de segurança, como autorização e filtros, podem ser adicionadas
+    @Bean
+    public UserDetailsService usuariosEmMemoria(PasswordEncoder encoder) {
+        UserDetails user = User.withUsername("user")
+                .password(encoder.encode("senha123"))
+                .roles("USER")
+                .build();
+        UserDetails admin = User.withUsername("admin")
+                .password(encoder.encode("master123"))
+                .roles("MANAGER")
+                .build();
+        return new InMemoryUserDetailsManager(user, admin);
+    }
 
-		/*
-			Nesse exemplo, o método inMemoryAuthentication() cria um gerenciador de autenticação 
-			em memória, e os métodos withUser() e password() são usados para criar usuários e 
-			senhas. Além disso, o método roles() é usado para conceder as autoridades para 
-			cada usuário.
-
-			É importante observar que o método password() usa a notação {noop} antes da senha 
-			para indicar que a senha está em texto plano. Em uma aplicação real, é altamente 
-			recomendável que as senhas sejam criptografadas antes de serem armazenadas.
-
-			Em resumo, a configuração de acesso em memória é uma maneira simples e prática 
-			de configurar a autenticação e autorização em uma aplicação Spring Security, 
-			sem a necessidade de um banco de dados externo.
-		*/
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 }
+```
+
+| Trecho | O que faz |
+| --- | --- |
+| `authorizeHttpRequests` | Regras por URL, da mais específica para a mais genérica. |
+| `permitAll()` | Libera sem login. |
+| `hasRole("MANAGER")` | Exige o papel (o Spring acrescenta o prefixo `ROLE_`). |
+| `anyRequest().authenticated()` | Todo o resto exige login. |
+| `httpBasic()` / `formLogin()` | Formas de enviar as credenciais. |
+| `InMemoryUserDetailsManager` | Usuários guardados na memória (bom para testes e estudos). |
+
+### Autorização por método
+
+```java
+@GetMapping("/managers")
+@PreAuthorize("hasRole('MANAGER')")
+public String managers() {
+    return "Área dos gerentes";
+}
+```
+
+> [!NOTE]
+> Em APIs REST que usam tokens (sem cookies de sessão), é comum desabilitar a proteção CSRF: `http.csrf(csrf -> csrf.disable())`. Em aplicações com login por formulário e cookies, **mantenha** o CSRF ativo.
+
+## 🔑 Codificação de senhas
+
+**Nunca** guarde senhas em texto puro. Use um `PasswordEncoder`, que aplica um **hash** lento e com *salt* (um valor aleatório por senha):
+
+| Encoder | Situação |
+| --- | --- |
+| **`BCryptPasswordEncoder`** | ✅ O mais usado; salt automático e "custo" configurável. |
+| **`Argon2PasswordEncoder`** | ✅ Recomendado pela OWASP; muito resistente a ataques com placas de vídeo. |
+| **`SCryptPasswordEncoder`** | ✅ Forte, usa bastante memória de propósito. |
+| **`Pbkdf2PasswordEncoder`** | ✅ Aceito (inclusive em normas como a FIPS). |
+| `StandardPasswordEncoder` (SHA-256) | ❌ Descontinuado: rápido demais, fácil de quebrar por força bruta. |
+| `NoOpPasswordEncoder` / `{noop}` | ❌ Não codifica nada. Só para demonstrações. |
+
+```java
+String hash = encoder.encode("senha123");    // "$2a$10$Vh1R..."  (muda a cada execução, por causa do salt)
+encoder.matches("senha123", hash);           // true
+```
+
+> [!TIP]
+> `PasswordEncoderFactories.createDelegatingPasswordEncoder()` grava o algoritmo junto com o hash (`{bcrypt}$2a$10$...`), permitindo trocar de algoritmo no futuro sem invalidar as senhas antigas.
+
+## 📌 Resumindo
+
+- Usuário único de teste: `spring.security.user.*` no `application.properties`.
+- Configuração atual: beans `SecurityFilterChain`, `UserDetailsService` e `PasswordEncoder` (o `WebSecurityConfigurerAdapter` foi removido).
+- Regras por URL com `authorizeHttpRequests` e por método com `@PreAuthorize`.
+- Senhas sempre com BCrypt, Argon2, SCrypt ou PBKDF2.
+
+## 🏋️ Mão na massa
+
+**1.** Libere `GET /` para todos e exija o papel `ADMIN` para `DELETE /usuarios/**`.
+
+<details>
+<summary>Ver resposta</summary>
+
+```java
+.authorizeHttpRequests(auth -> auth
+    .requestMatchers(HttpMethod.GET, "/").permitAll()
+    .requestMatchers(HttpMethod.DELETE, "/usuarios/**").hasRole("ADMIN")
+    .anyRequest().authenticated())
 ```
 
 </details>
 
-<br>
+**2.** Por que o hash BCrypt da mesma senha sai diferente a cada `encode`?
 
-### Tipos de criptografias
+<details>
+<summary>Ver resposta</summary>
 
-O Spring Security fornece uma série de implementações de codificadores de senha que podem ser usados para proteger senhas de usuário em aplicações Java. Entre eles, estão o BCryptPasswordEncoder, PBKDF2PasswordEncoder e SCryptPasswordEncoder.
+Por causa do **salt** aleatório, que é gerado a cada vez e guardado dentro do próprio hash. Assim, duas pessoas com a mesma senha têm hashes diferentes, e tabelas de hashes pré-calculados (*rainbow tables*) não funcionam. O `matches` extrai o salt do hash para conferir.
 
-1. `BCryptPasswordEncoder`: uma implementação baseada em hash que usa o algoritmo de hash bcrypt para codificar senhas. O bcrypt é considerado um dos algoritmos de hash mais seguros e difíceis de quebrar. Ele utiliza um salt aleatório para tornar mais difícil a descoberta da senha original a partir do hash. Ele é um dos algoritmos mais seguros disponíveis e é resistente a ataques de dicionário e força bruta.
-2. `StandardPasswordEncoder`: uma implementação baseada em hash que usa o algoritmo SHA-256 para codificar senhas. Ele também usa um salt aleatório, mas não é tão seguro quanto o bcrypt, pois o SHA-256 é mais rápido e pode ser mais facilmente atacado por força bruta, além de ser menos seguro do que o `BCryptPasswordEncoder` e deve ser evitado em favor de opções mais fortes.
-3. `NoOpPasswordEncoder`: uma implementação simples que não codifica a senha. Ela é usada para testes ou em casos onde a senha não precisa ser armazenada com segurança, como em aplicações que usam autenticação baseada em token. Ele é fornecido principalmente para fins de depuração ou testes, mas nunca deve ser usado em um ambiente de produção.
-4. `Pbkdf2PasswordEncoder`: usa o algoritmo PBKDF2 (Password-Based Key Derivation Function 2) para criptografar senhas com força de trabalho configurável. É um algoritmo seguro e amplamente utilizado para proteger senhas.
-5. `ScryptPasswordEncoder`: este codificador usa o algoritmo de hash Scrypt para criptografar senhas com força de trabalho configurável. Ele é considerado uma alternativa mais segura ao algoritmo de hash bcrypt, mas é mais exigente em termos de recursos do sistema.
+</details>
 
-<br>
+**3.** Teste a API protegida com HTTP Basic pelo `curl`.
 
-<br>
+<details>
+<summary>Ver resposta</summary>
 
-<br>
+```bash
+curl -u user:senha123 http://localhost:8080/users        # 200
+curl -u user:senha123 http://localhost:8080/managers     # 403 (falta o papel MANAGER)
+curl http://localhost:8080/users                         # 401 (sem credenciais)
+```
 
-[Voltar a Adicionando segurança a uma API REST com Spring](/Arquivos/Conteudo/6%20-%20Ganhando%20produtividade%20com%20spring%20framwork/6.4%20Adicionando%20seguranca%20a%20uma%20api%20rest%20com%20spring.md)<br>
-[Voltar ao inicio](/README.md)
+</details>
+
+---
+
+<div align="center">
+
+[⬅️ 6.19 Introdução ao Spring Security](./19-spring-security.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [6.21 Autenticação com banco de dados ➡️](./21-autenticacao-com-banco.md)
+
+</div>

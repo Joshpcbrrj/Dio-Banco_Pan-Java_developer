@@ -1,105 +1,169 @@
-# Entendendo alguns pontos importantes
+# 1.4 · Ciclo de vida dos arquivos, desfazendo mudanças e conflitos
 
-## Ciclo de vida de arquivos no Git
+> **Em uma frase:** todo arquivo passa por estados (novo, modificado, preparado, salvo); o `git status` mostra em qual estado cada um está, o `git restore` e o `git reset` desfazem mudanças, e um **conflito** é quando o Git precisa que você decida qual versão fica.
 
-<img src="./img/21.jpg" alt="" width="700">
+## 🔄 Os estados de um arquivo
 
-**1. Untracked** (não rastreado):
-- Arquivo ainda não está sendo monitorado pelo Git.
-- O Git não registra alterações ou mantém o histórico do arquivo.
-  
-**2. Staged** (preparado):
-- Arquivo foi adicionado ao índice do Git para ser incluído no próximo commit.
-- O Git está ciente das alterações feitas no arquivo e pronto para registrá-las.
+| Estado | O que significa |
+| --- | --- |
+| 🔴 **Untracked** (não rastreado) | Arquivo novo: o Git sabe que ele existe, mas não guarda o histórico dele. |
+| ⚪ **Unmodified** (sem alteração) | Igual à versão do último commit. |
+| 🟡 **Modified** (modificado) | Você alterou depois do último commit, mas ainda não preparou. |
+| 🟢 **Staged** (preparado) | Marcado com `git add` para entrar no próximo commit. |
 
-**3. Unmodified** (não modificado):
-- Arquivo está no estado atual, sem alterações em relação ao último commit.
-- O Git não detectou modificações no arquivo desde o último commit.
-
-**4. Modified** (modificado):
-- Arquivo foi alterado desde o último commit.
-- O Git registrou as alterações feitas no arquivo, mas elas ainda não foram incluídas em um novo commit.
-
-Esses estágios refletem o estado dos arquivos em relação ao controle de versão do Git, permitindo que você monitore e gerencie as alterações nos seus arquivos ao longo do tempo.
-
-<br>
-
-## Representação
-
-<img src="./img/22.jpg" alt="" width="600">
-
-### Para monitorar a situação que estão nossos arquivos vamos usar o comando:
-```bash
-# Comando importante para saber o que faremos a seguir com o arquivo.
-git status
-```
-<br>
-
-## Desfazendo alterações (git restore)
-O comando "git restore" é usado no Git para desfazer alterações em arquivos específicos, restaurando-os para um estado anterior. Ele permite reverter modificações feitas em arquivos modificados ou desfazer adições de arquivos ao índice (staging area).
-
-### Os principais comandos relacionados ao "git restore" são:
-```bash
-# Restaurar um arquivo modificado para o estado anterior
-git restore <arquivo>
-
-# Remover um arquivo do índice (staging area)
-git restore --staged <arquivo>
-
-# Restaurar um arquivo para um estado específico, referenciado pelo hash SHA-1 do commit
-git restore --source=<commit> <arquivo>
-
-# Descartar todas as alterações feitas em um arquivo modificado
-git restore --worktree <arquivo>
+```mermaid
+stateDiagram-v2
+    direction LR
+    [*] --> Untracked: cria o arquivo
+    Untracked --> Staged: git add
+    Unmodified --> Modified: edita o arquivo
+    Modified --> Staged: git add
+    Staged --> Unmodified: git commit
+    Unmodified --> Untracked: git rm --cached
 ```
 
-<br>
+E as **três áreas** por onde as alterações passam:
 
-## Resetando as modificações feitas por commits (git reset)
-O comando "git reset" é utilizado no Git para desfazer commits ou reposicionar o HEAD e o branch atual em um commit específico. Ele permite reverter o histórico de commits e refazer o estado do repositório para um ponto anterior.
-
-### Importante!
-- É importante mencionar que o "git reset" modifica o histórico do Git e pode afetar outros colaboradores do repositório. Portanto, tenha cuidado ao usar esse comando e evite utilizá-lo em commits já compartilhados com outros membros da equipe.
-
-- O "git reset" é uma ferramenta poderosa para desfazer commits e reorganizar o estado do repositório, mas é recomendado usá-lo com cuidado para evitar perdas irreversíveis de código.
-
-- Tenha cuidado ao usar o git reset --hard, pois ele descarta todas as alterações não confirmadas. Utilize esses comandos com cautela e certifique-se de entender seu impacto no histórico do Git.
-
-### Existem diferentes opções e formas de utilizar o "git reset", que são:
-```bash
-# Desfazer o commit e manter as alterações no índice (staging area)
-git reset --soft <commit>
-
-# Desfazer o commit e limpar o índice, mantendo as alterações nos diretórios de trabalho
-git reset --mixed <commit>
-
-# Desfazer o commit e descartar todas as alterações nos arquivos
-git reset --hard <commit>
+```mermaid
+flowchart LR
+    subgraph Local["Seu computador"]
+        W["Working directory<br/>(onde você edita)"]
+        S["Staging area<br/>(o que vai no commit)"]
+        L["Repositório local<br/>(histórico em .git)"]
+    end
+    R["Repositório remoto<br/>(GitHub)"]
+    W -- "git add" --> S -- "git commit" --> L -- "git push" --> R
 ```
-<br>
 
-## Resolução de conflito entre arquivos
-A resolução de conflitos de arquivos ocorre quando o Git encontra diferenças entre as versões de um arquivo em diferentes ramos ou commits e não consegue mesclá-las automaticamente. Isso geralmente acontece quando duas ou mais alterações conflitantes foram feitas no mesmo local de um arquivo.
+> [!TIP]
+> **`git status` é o comando mais importante do dia a dia.** Ele mostra o estado de cada arquivo e ainda sugere o próximo passo.
 
-### Para resolver conflitos de arquivos no Git, você pode seguir os seguintes passos:
+## ♻️ Desfazendo alterações em arquivos: `git restore`
 
-- Identificar o conflito: O Git informará quais arquivos têm conflitos e mostrará as seções conflitantes dentro desses arquivos.
+```bash
+# Descarta as alterações de um arquivo (volta ao último commit)
+git restore Main.java
 
-- Abrir o arquivo conflitante: Abra o arquivo em um editor de texto e localize as seções conflitantes, que serão demarcadas pelo Git.
+# Tira um arquivo do staging, mas mantém as alterações nele
+git restore --staged Main.java
 
-- Editar o arquivo: Edite o arquivo para resolver manualmente as diferenças e decidir qual versão do código deve ser mantida. Remova as marcações de conflito e deixe o arquivo com a versão desejada.
+# Restaura um arquivo como ele estava em um commit específico
+git restore --source=a1b2c3d Main.java
+```
 
-- Adicionar o arquivo modificado: Após editar o arquivo para resolver os conflitos, adicione-o novamente ao índice (staging area) usando o comando git add <arquivo>.
+> [!WARNING]
+> `git restore <arquivo>` (sem `--staged`) **apaga** as alterações não commitadas. Elas não vão para a lixeira.
 
-- Completar a mesclagem: Depois de adicionar todos os arquivos conflitantes, finalize a mesclagem executando o comando git commit. O Git criará um novo commit que contém a resolução do conflito.
+## ⏪ Desfazendo commits: `git reset`
 
-É importante lembrar que a resolução de conflitos requer atenção e consideração cuidadosa para garantir que as alterações conflitantes sejam tratadas corretamente. É recomendado revisar cuidadosamente o código e testar as alterações após a resolução do conflito para garantir a integridade e funcionamento adequado do projeto.
+O `reset` faz a branch "voltar" para um commit anterior. O que acontece com as alterações dos commits desfeitos depende da opção:
 
-Usando o comando `git status`, você verá uma seção chamada "Conflitos de mesclagem". Essa seção lista os arquivos com conflitos e indica que eles precisam ser resolvidos manualmente. 
+| Opção | Commits | Alterações vão para... | Risco |
+| --- | --- | --- | --- |
+| `--soft` | Desfeitos | **Staging area** (prontas para commitar de novo) | 🟢 Baixo |
+| `--mixed` (padrão) | Desfeitos | **Arquivos**, fora do staging | 🟢 Baixo |
+| `--hard` | Desfeitos | **Lugar nenhum: são apagadas** | 🔴 Alto |
 
-<br>
+```bash
+git reset --soft HEAD~1    # desfaz o último commit, mantendo tudo preparado
+git reset HEAD~1           # desfaz o último commit, mantendo as alterações nos arquivos
+git reset --hard HEAD~1    # desfaz o último commit e APAGA as alterações
+```
 
-<br>
+`HEAD~1` significa "um commit antes do atual".
 
-[Voltar a introdução ao Git](/Arquivos/Conteudo/1%20-%20Principio%20de%20desenvolvimento%20de%20software/1.1%20Introducao%20ao%20git.md)<br>
-[Voltar para inicio](/README.md)
+> [!CAUTION]
+> Nunca use `reset` em commits que **já foram enviados** para o GitHub e que outras pessoas possam ter baixado. Para desfazer algo já compartilhado, use `git revert <hash>`, que cria um **novo commit** desfazendo o anterior sem reescrever o histórico.
+
+## ⚔️ Conflitos
+
+Um **conflito** acontece quando duas versões alteram **a mesma linha** do mesmo arquivo (por exemplo, você e um colega, ou duas branches) e o Git não sabe qual manter. Ele para e marca o trecho:
+
+```text
+<<<<<<< HEAD
+System.out.println("Bem-vindo!");
+=======
+System.out.println("Olá, seja bem-vindo!");
+>>>>>>> feature-saudacao
+```
+
+| Marcador | Significado |
+| --- | --- |
+| `<<<<<<< HEAD` | Início da **sua** versão |
+| `=======` | Divisória |
+| `>>>>>>> feature-saudacao` | Fim da versão que está **chegando** |
+
+### Como resolver
+
+1. Rode `git status`: os arquivos em conflito aparecem como *both modified*.
+2. Abra cada arquivo, escolha o que deve ficar (uma versão, a outra ou uma mistura) e **apague os marcadores**.
+3. Marque como resolvido com `git add <arquivo>`.
+4. Finalize com `git commit`.
+
+> [!TIP]
+> O IntelliJ e o VS Code mostram botões como **Accept Current**, **Accept Incoming** e **Accept Both**, que facilitam muito. Desistiu no meio? `git merge --abort` volta tudo como estava.
+
+## 📌 Resumindo
+
+- Estados: **untracked → staged → unmodified → modified → staged...**
+- `git restore` desfaz alterações em arquivos; `git restore --staged` tira do staging.
+- `git reset` desfaz commits locais (`--soft`, `--mixed`, `--hard`); `git revert` desfaz commits já compartilhados.
+- Conflito: edite o trecho, apague os marcadores, `git add` e `git commit`.
+
+## 🏋️ Mão na massa
+
+**1.** No `treino-git`, edite o `README.md` e depois descarte a alteração sem commitar.
+
+<details>
+<summary>Ver resposta</summary>
+
+```bash
+echo "linha que vou descartar" >> README.md
+git status              # README.md aparece como modified
+git restore README.md
+git status              # working tree clean
+```
+
+</details>
+
+**2.** Você fez um commit com a mensagem errada e ainda não deu push. Como desfazê-lo mantendo as alterações para commitar de novo?
+
+<details>
+<summary>Ver resposta</summary>
+
+```bash
+git reset --soft HEAD~1
+git commit -m "Mensagem correta"
+```
+
+(Outra opção para só corrigir a mensagem é `git commit --amend -m "Mensagem correta"`.)
+
+</details>
+
+**3.** Provoque um conflito de propósito no `treino-git` e resolva-o.
+
+<details>
+<summary>Ver resposta</summary>
+
+```bash
+git switch -c outra
+echo "versão da branch outra" > conflito.txt
+git add . && git commit -m "Versão da branch outra"
+git switch main
+echo "versão da main" > conflito.txt
+git add . && git commit -m "Versão da main"
+git merge outra            # CONFLICT em conflito.txt
+# edite conflito.txt, deixe o texto final e apague os marcadores
+git add conflito.txt
+git commit
+```
+
+</details>
+
+---
+
+<div align="center">
+
+[⬅️ 1.3 Configurando o Git e fazendo o primeiro commit](./03-primeiro-commit.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [1.5 O Manifesto Ágil ➡️](./05-manifesto-agil.md)
+
+</div>

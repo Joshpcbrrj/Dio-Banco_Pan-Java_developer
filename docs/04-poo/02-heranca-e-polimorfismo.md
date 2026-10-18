@@ -1,304 +1,228 @@
-# Herança 
+# 4.2 · Herança, upcast/downcast e polimorfismo
 
-Herança é um conceito fundamental na programação orientada a objetos que permite criar uma hierarquia de classes, onde uma classe filha herda os atributos e métodos de sua classe pai. Isso significa que uma classe filha pode aproveitar o comportamento e a funcionalidade da classe pai, além de adicionar suas próprias características únicas.
+> **Em uma frase:** **herança** cria uma classe filha que reaproveita atributos e métodos da classe pai (relação "**é um**"); **polimorfismo** permite tratar objetos diferentes pelo tipo do pai, e cada um responde do seu jeito.
 
-- Em Java, para definir uma classe filha que herda da classe pai, usamos a palavra-chave "extends". Por exemplo, considere a seguinte classe pai "Animal":
-    ```java
-    //Classe pai, classe mãe ou superclasse "Animal"
-    public class Animal {
-        private String nome;
-        private int idade;
-
-        public Animal(String nome, int idade) {
-            this.nome = nome;
-            this.idade = idade;
-        }
-
-        public String getNome() {
-            return nome;
-        }
-
-        public int getIdade() {
-            return idade;
-        }
-
-        public void fazerSom() {
-            System.out.println("O animal está fazendo som!");
-        }
-    }
-    ```
-<br>
-
-- Agora, vamos criar uma classe filha "Cachorro" que herda de "Animal" e adiciona um método "latir":
-- Observe que a classe filha "Cachorro" usa a palavra-chave "extends" para herdar de "Animal". Também é importante notar que a classe filha não precisa definir novamente os atributos e métodos que já foram definidos na classe pai.
-    ```java
-    //Subclasse ou classe filho "Cachorro"
-    public class Cachorro extends Animal {
-        public Cachorro(String nome, int idade) {
-            super(nome, idade);
-        }
-
-        public void latir() {
-            System.out.println("O cachorro está latindo!");
-        }
-    }
-    ```
-<br>
-
-- Agora, podemos criar uma instância da classe "Cachorro" e chamar seus métodos:
-
-    > 💡 Observe que a instância da classe **Cachorro** pode acessar os métodos **"getNome"** e **"getIdade"** da classe pai "Animal", bem como os métodos "fazerSom" e "latir" da classe filha **Cachorro**.
-
-
-    ```java
-    //Classe main
-    public static void main(String[] args) {
-        Cachorro cachorro = new Cachorro("Rex", 3);
-        System.out.println(cachorro.getNome()); // Output: Rex
-        System.out.println(cachorro.getIdade()); // Output: 3
-        cachorro.fazerSom(); // Output: O animal está fazendo som!
-        cachorro.latir(); // Output: O cachorro está latindo!
-    }
-    ```
-<br>
-
-## Tipos de herança 
-
-### Herança simples:
-Herança é um recurso da programação orientada a objetos que permite criar novas classes a partir de outras classes já existentes, herdando seus atributos e métodos. A classe que é herdada é chamada de classe pai ou superclasse, e a classe que herda é chamada de classe filha ou subclasse.
-
-A herança simples é quando uma classe filha herda atributos e métodos de uma única classe pai.
-
-<details>
-<summary>Código exemplo</summary>
+## 🧬 Herança com `extends`
 
 ```java
-//Superclasse "Pessoa"
-public class Pessoa {
-    private String nome;
-    private int idade;
+// superclasse (classe pai)
+public class Animal {
+    private final String nome;
+    private final int idade;
 
-    public Pessoa(String nome, int idade) {
+    public Animal(String nome, int idade) {
         this.nome = nome;
         this.idade = idade;
     }
 
-    public String getNome() {
-        return nome;
-    }
+    public String getNome() { return nome; }
+    public int getIdade() { return idade; }
 
-    public int getIdade() {
-        return idade;
-    }
-}
-
-//Subclasse "Aluno"
-public class Aluno extends Pessoa {
-    private String matricula;
-
-    public Aluno(String nome, int idade, String matricula) {
-        super(nome, idade);
-        this.matricula = matricula;
-    }
-
-    public String getMatricula() {
-        return matricula;
-    }
-}
-```
-
-</details>
-
-<br>
-
-### Herança múltipla:
-É quando uma classe filha herda atributos e métodos de duas ou mais classes pai. Em Java, a herança múltipla não é permitida diretamente, ou seja, uma classe não pode herdar de mais de uma classe pai. Porém, podemos simular a herança múltipla utilizando interfaces.
-
-Uma interface é uma coleção de métodos abstratos, que são definidos mas não implementados. Uma classe pode implementar uma ou mais interfaces, o que permite que ela tenha múltiplos comportamentos. Por exemplo:
-
-<details>
-<summary>Código Exemplo</summary>
-
-```java
-public interface Animal {
-    void emitirSom();
-}
-
-public interface Voador {
-    void voar();
-}
-
-public class Pato implements Animal, Voador {
     public void emitirSom() {
-        System.out.println("Quack quack");
-    }
-
-    public void voar() {
-        System.out.println("Voando...");
-    }
-}
-/*Neste exemplo, temos duas interfaces, "Animal" e "Voador", que definem métodos abstratos 
-"emitirSom" e "voar", respectivamente. A classe "Pato" implementa as duas interfaces, o que 
-significa que ela tem o comportamento de um animal e o comportamento de um animal voador.*/
-```
-
-```java
-public static void main(String[] args) {
-    Pato pato = new Pato();
-    pato.emitirSom(); // Output: Quack quack
-    pato.voar(); // Output: Voando...
-}
-
-/*Podemos criar uma instância de "Pato" e chamar seus métodos: Neste exemplo, 
-criamos um objeto "Pato" e chamamos seus métodos "emitirSom" e "voar". */
-```
-
-</details>
-
-<br>
-
-## Upcast e downcast
-Em programação orientada a objetos, a herança é uma relação entre classes na qual uma classe filha herda as propriedades e comportamentos da classe mãe. Quando falamos de upcast e downcast, estamos nos referindo a como um objeto de uma classe é tratado quando é referenciado como um objeto de outra classe relacionada através da hierarquia de herança.
-
-`Upcast` 
-Ocorre quando um objeto de uma subclasse é tratado como um objeto de uma classe mãe na hierarquia de herança. Isso pode ser feito implicitamente, sem a necessidade de um casting explícito. 
-
-`downcast`
-Ocorre quando um objeto de uma classe mãe é tratado como um objeto de uma subclasse na hierarquia de herança. Isso requer um casting explícito. Geralmente tentamos sempre evitar downcasts pois a subclasse pode conter atributos que não tenhamos na superclasse. Assim, correremos risco de perda de dados. 
-
-#### Representação:
-<img src="./img/01.webp" alt="" width="600">
-
-<br>
-
-<details>
-<summary>Código exemplo</summary>
-
-```java
-public class main{
-    public static void main(String[] args) {
-        Animal animal = new Cachorro(); // upcast
-        animal.fazerBarulho(); // chama o método da subclasse
-        //animal.correr(); // erro de compilação: Animal não tem o método correr()
-
-        Cachorro cachorro = (Cachorro) animal; // downcast
-        cachorro.fazerBarulho(); // chama o método da subclasse
-        cachorro.correr(); // chama o método da subclasse
-    }
-}
-```
-```java
-class Animal {
-    public void fazerBarulho() {
-        System.out.println("Fazendo barulho genérico de animal");
+        System.out.println("O animal faz um som.");
     }
 }
 ```
 
 ```java
-class Cachorro extends Animal {
-    public void fazerBarulho() {
-        System.out.println("Au au!");
+// subclasse (classe filha): Cachorro "é um" Animal
+public class Cachorro extends Animal {
+
+    public Cachorro(String nome, int idade) {
+        super(nome, idade);            // chama o construtor do pai
     }
 
-    public void correr() {
-        System.out.println("Cachorro correndo");
+    @Override
+    public void emitirSom() {          // sobrescreve o método do pai
+        System.out.println(getNome() + " late: Au au!");
+    }
+
+    public void buscarBolinha() {      // comportamento só do cachorro
+        System.out.println(getNome() + " foi buscar a bolinha.");
     }
 }
 ```
-</details>
-
-<br>
-
-## Polimorfismo vs sobescrita
-
-### Polimorfismo
-É a capacidade de um objeto poder ser referenciado de várias formas. Isso permite que um objeto de uma subclasse seja tratado como um objeto de sua classe pai. O polimorfismo permite escrever código mais flexível e genérico, aumentando a reutilização de código.
-
-<details>
-<summary>Código exemplo</summary>
 
 ```java
-class Animal {
-    public void emitirSom() {
-        System.out.println("O animal emite um som.");
-    }
-}
+public class Gato extends Animal {
+    public Gato(String nome, int idade) { super(nome, idade); }
 
-class Cachorro extends Animal {
     @Override
     public void emitirSom() {
-        System.out.println("O cachorro late.");
-    }
-}
-
-class Gato extends Animal {
-    @Override
-    public void emitirSom() {
-        System.out.println("O gato mia.");
-    }
-}
-
-public class ExemploPolimorfismo {
-    public static void main(String[] args) {
-        Animal animal1 = new Cachorro();
-        Animal animal2 = new Gato();
-
-        animal1.emitirSom(); // Saída: O cachorro late.
-        animal2.emitirSom(); // Saída: O gato mia.
+        System.out.println(getNome() + " mia: Miau!");
     }
 }
 ```
-
-</details>
-
-<br>
-
-### Sobrescrita
-É um mecanismo que permite que uma subclasse forneça sua própria implementação para um método definido em sua classe pai. Quando um método é sobrescrito em uma subclasse, o método na subclasse é executado em vez do método na classe pai.
-
-<details>
-<summary>Código exemplo</summary>
 
 ```java
-class Veiculo {
-    public void acelerar() {
-        System.out.println("O veículo está acelerando.");
+Cachorro rex = new Cachorro("Rex", 3);
+System.out.println(rex.getNome());   // Rex (herdado)
+rex.emitirSom();                     // Rex late: Au au! (sobrescrito)
+rex.buscarBolinha();                 // método próprio
+```
+
+```mermaid
+classDiagram
+    Animal <|-- Cachorro
+    Animal <|-- Gato
+    class Animal {
+        -String nome
+        -int idade
+        +emitirSom() void
     }
+    class Cachorro {
+        +emitirSom() void
+        +buscarBolinha() void
+    }
+    class Gato {
+        +emitirSom() void
+    }
+```
+
+> [!NOTE]
+> - O `super(...)` chama o construtor da classe pai e precisa ser a **primeira linha** do construtor da filha.
+> - A filha herda os membros `private`, mas não consegue acessá-los diretamente: usa os getters (ou membros `protected`).
+> - Toda classe Java herda, direta ou indiretamente, de **`Object`** (por isso todo objeto tem `toString()`, `equals()` e `hashCode()`).
+
+## 🚫 Herança múltipla
+
+Java **não** permite que uma classe estenda duas classes (`class Pato extends Animal, Ave` não compila). Para combinar vários comportamentos, uma classe pode **implementar várias interfaces**:
+
+```java
+interface Nadador { void nadar(); }
+interface Voador  { void voar(); }
+
+class Pato extends Animal implements Nadador, Voador {
+    Pato(String nome) { super(nome, 1); }
+    public void nadar() { System.out.println("Nadando..."); }
+    public void voar()  { System.out.println("Voando..."); }
+}
+```
+
+Interfaces são o assunto da aula [4.4](./04-interfaces.md).
+
+## ⬆️⬇️ Upcast e downcast
+
+```mermaid
+flowchart TB
+    A["Animal"] -- "downcast (explícito, arriscado)" --> C["Cachorro"]
+    C -- "upcast (automático, seguro)" --> A
+```
+
+- **Upcast**: tratar a filha como o pai. É **automático** e sempre seguro (todo cachorro é um animal).
+- **Downcast**: tratar o pai como a filha. Exige *casting* explícito e **pode falhar** (nem todo animal é um cachorro).
+
+```java
+Animal animal = new Cachorro("Rex", 3);   // upcast automático
+animal.emitirSom();                        // Rex late: Au au!
+// animal.buscarBolinha();                 ❌ não compila: o tipo da variável é Animal
+
+if (animal instanceof Cachorro cachorro) { // testa E converte (Java 16+)
+    cachorro.buscarBolinha();              // ✅ seguro
 }
 
-class Carro extends Veiculo {
+Animal outro = new Gato("Mia", 2);
+Cachorro erro = (Cachorro) outro;          // 💥 ClassCastException em tempo de execução
+```
+
+> [!TIP]
+> Antes de um downcast, **sempre** confira com `instanceof`. Se você precisa fazer muitos downcasts, provavelmente o design pode melhorar com polimorfismo.
+
+## 🎭 Polimorfismo
+
+"Muitas formas": a **mesma chamada** executa comportamentos diferentes, dependendo do **objeto real**.
+
+```java
+List<Animal> animais = List.of(new Cachorro("Rex", 3), new Gato("Mia", 2));
+
+for (Animal a : animais) {
+    a.emitirSom();     // cada objeto responde do seu jeito
+}
+// Rex late: Au au!
+// Mia mia: Miau!
+```
+
+O código do laço não precisa saber quais animais existem. Se amanhã surgir a classe `Vaca`, ele continua funcionando sem mudar nada. Essa é a grande vantagem do polimorfismo.
+
+### Sobrescrita × polimorfismo
+
+- **Sobrescrita** é o **mecanismo**: a filha reescreve um método do pai (com `@Override`).
+- **Polimorfismo** é o **efeito**: chamar esse método por uma referência do tipo pai executa a versão do objeto real.
+
+## ⚠️ Quando **não** usar herança
+
+Use herança só quando a relação "**é um**" for verdadeira **sempre**. Para "**tem um**" (um carro *tem um* motor), use **associação** (aula [4.3](./03-associacao.md)). Uma frase famosa resume: *"prefira composição a herança"*.
+
+## 📌 Resumindo
+
+- `extends` cria a herança; `super(...)` chama o construtor do pai.
+- Java não tem herança múltipla de classes, mas uma classe pode implementar várias interfaces.
+- Upcast é automático; downcast é explícito, arriscado e deve vir com `instanceof`.
+- Polimorfismo: a mesma chamada, comportamentos diferentes conforme o objeto real.
+
+## 🏋️ Mão na massa
+
+**1.** Crie as classes `Funcionario` (nome, salário, método `bonificacao()` que retorna 10% do salário) e `Gerente` (bonificação de 20%).
+
+<details>
+<summary>Ver resposta</summary>
+
+```java
+public class Funcionario {
+    protected final String nome;
+    protected final double salario;
+
+    public Funcionario(String nome, double salario) {
+        this.nome = nome;
+        this.salario = salario;
+    }
+
+    public double bonificacao() { return salario * 0.10; }
+}
+
+public class Gerente extends Funcionario {
+    public Gerente(String nome, double salario) { super(nome, salario); }
+
     @Override
-    public void acelerar() {
-        System.out.println("O carro está acelerando rapidamente.");
-    }
-}
-
-class Moto extends Veiculo {
-    @Override
-    public void acelerar() {
-        System.out.println("A moto está acelerando velozmente.");
-    }
-}
-
-public class ExemploSobrescrita {
-    public static void main(String[] args) {
-        Veiculo veiculo1 = new Carro();
-        Veiculo veiculo2 = new Moto();
-
-        veiculo1.acelerar(); // Saída: O carro está acelerando rapidamente.
-        veiculo2.acelerar(); // Saída: A moto está acelerando velozmente.
-    }
+    public double bonificacao() { return salario * 0.20; }
 }
 ```
 
 </details>
 
-<br>
+**2.** Usando as classes do exercício 1, some a bonificação de uma lista com 2 funcionários (salário 3000) e 1 gerente (salário 8000).
 
-<br>
+<details>
+<summary>Ver resposta</summary>
 
-<br>
+```java
+List<Funcionario> equipe = List.of(
+        new Funcionario("Ana", 3000),
+        new Funcionario("Bruno", 3000),
+        new Gerente("Carla", 8000));
 
-[Voltar a Programação orientada a objetos com Java](/Arquivos/Conteudo/4%20-%20Programa%C3%A7%C3%A3o%20orientada%20a%20objetos/4.1%20Programacao%20orientada%20a%20objetos%20com%20java.md)<br>
-[Voltar ao inicio](/README.md)
+double total = 0;
+for (Funcionario f : equipe) total += f.bonificacao();
+System.out.println(total);   // 300 + 300 + 1600 = 2200.0
+```
+
+Graças ao polimorfismo, cada objeto calcula a própria bonificação.
+
+</details>
+
+**3.** "Um `Carro` estende `Motor` porque usa um motor." Essa herança faz sentido?
+
+<details>
+<summary>Ver resposta</summary>
+
+**Não.** Um carro não **é** um motor, ele **tem** um motor. O correto é uma associação (composição): a classe `Carro` tem um atributo `Motor motor`.
+
+</details>
+
+---
+
+<div align="center">
+
+[⬅️ 4.1 Classes, objetos, atributos, métodos e encapsulamento](./01-classes-e-objetos.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [4.3 Associação ➡️](./03-associacao.md)
+
+</div>

@@ -1,69 +1,122 @@
-# Plugins
+# 4.19 · Plugins do Maven
 
-<img src="./img/17.jpg" alt="" width="600">
+> **Em uma frase:** no Maven, todo o trabalho é feito por **plugins**: compilar, testar, empacotar e gerar documentação são goals de plugins ligados às fases do build, e você pode configurá-los ou adicionar novos no `pom.xml`.
 
-Plugins no Maven são componentes de software que são responsáveis por executar tarefas específicas durante o ciclo de vida de construção do projeto. Eles são baseados no modelo de programação "Inversão de Controle" (IoC) do Maven, que permite que os plugins sejam configurados por meio do arquivo `pom.xml`.
+## 🧩 Plugins mais comuns
 
-## Para que servem os plugins no Maven?
+| Plugin | Função |
+| --- | --- |
+| `maven-compiler-plugin` | Compila o código (versão do Java, opções do compilador). |
+| `maven-surefire-plugin` | Roda os testes unitários. |
+| `maven-failsafe-plugin` | Roda os testes de integração. |
+| `maven-jar-plugin` / `maven-war-plugin` | Empacota em `.jar` / `.war`. |
+| `maven-clean-plugin` | Apaga a pasta `target`. |
+| `maven-javadoc-plugin` | Gera o Javadoc. |
+| `jacoco-maven-plugin` | Mede a cobertura de testes. |
+| `spring-boot-maven-plugin` | Gera um `.jar` executável com tudo dentro (*fat jar*) e roda a aplicação (`mvn spring-boot:run`). |
 
-Os plugins no Maven servem para automatizar tarefas comuns durante a construção de um projeto, como compilação, teste, empacotamento, implantação e documentação. Eles são projetados para serem altamente configuráveis, permitindo que os desenvolvedores personalizem a maneira como as tarefas são executadas.
-
-### Como os plugins são configurados no Maven?
-
-Os plugins no Maven são configurados no arquivo **`pom.xml`** do projeto. Cada plugin tem um elemento **`<plugin>`** que contém informações como o nome do plugin, a versão, a lista de metas disponíveis e as configurações específicas do plugin.
-
-### Como os plugins são executados no Maven?
-
-Os plugins no Maven são executados automaticamente durante o ciclo de vida de construção do projeto, conforme especificado pelo arquivo **`pom.xml`**. Cada plugin é configurado para ser executado em uma ou mais fases do ciclo de vida do Maven. Por exemplo, o plugin **`maven-compiler-plugin`** é executado na fase de compilação para compilar o código-fonte do projeto.
-
-### Como posso encontrar e usar plugins no Maven?
-
-O Maven possui um repositório central de plugins, que pode ser pesquisado pelo nome do plugin ou pela função que ele executa. Os desenvolvedores podem adicionar plugins ao arquivo **`pom.xml`** do projeto, especificando o nome do plugin e sua versão. O Maven fará o download e instalará automaticamente o plugin a partir do repositório central durante o processo de construção.
-
-#### Posso criar meus próprios plugins no Maven?
-
-Sim, é possível criar seus próprios plugins no Maven usando a estrutura de plugin do Maven. Os plugins personalizados podem ser úteis para automatizar tarefas específicas do projeto ou para integrar com outras ferramentas de construção ou de terceiros. Para criar um plugin personalizado, é necessário definir uma classe Java que implemente uma ou mais metas, e depois configurar o plugin no arquivo **`pom.xml`** do projeto.
-
-<details>
-<summary>Exemplo de como adicionar o plugin maven-compiler-pluginno arquivo pom.xmldo projeto:</summary>
+## ⚙️ Configurando um plugin
 
 ```xml
-<project>
-  ...
-  <build>
+<build>
     <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.8.1</version>
-        <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
-        </configuration>
-      </plugin>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.14.0</version>
+            <configuration>
+                <release>21</release>        <!-- versão do Java -->
+            </configuration>
+        </plugin>
     </plugins>
-  </build>
-  ...
-</project>
+</build>
 ```
 
-### Para ver informações do plugin no terminal vamos fazer:
+> [!NOTE]
+> Materiais antigos usam `<source>1.8</source>` e `<target>1.8</target>`. A opção `<release>` (Java 9+) é a recomendada hoje, porque também garante que você só use APIs daquela versão do Java. Em projetos simples, basta a propriedade `<maven.compiler.release>21</maven.compiler.release>`.
+
+### Ligando um goal a uma fase
+
+```xml
+<plugin>
+    <groupId>org.jacoco</groupId>
+    <artifactId>jacoco-maven-plugin</artifactId>
+    <version>0.8.13</version>
+    <executions>
+        <execution>
+            <goals><goal>prepare-agent</goal></goals>
+        </execution>
+        <execution>
+            <id>relatorio</id>
+            <phase>verify</phase>               <!-- roda o goal report na fase verify -->
+            <goals><goal>report</goal></goals>
+        </execution>
+    </executions>
+</plugin>
+```
+
+Depois de `mvn verify`, o relatório de cobertura fica em `target/site/jacoco/index.html`.
+
+## 🔎 Ajuda de um plugin no terminal
 
 ```bash
-mvn nome_do_plugin: help
+mvn help:describe -Dplugin=dependency          # lista os goals do plugin
+mvn dependency:help                            # muitos plugins têm o goal help
+mvn javadoc:help -Ddetail=true -Dgoal=javadoc  # detalhes de um goal
+```
 
-#Ex
-mvn dependency: help
-mvn javadoc: help
+Repare que não há espaço entre `plugin:goal`.
+
+## 🛠️ Posso criar meu próprio plugin?
+
+Sim: um plugin é um projeto Maven com `packaging` `maven-plugin` e classes Java (chamadas *Mojos*) que implementam os goals. É raro no dia a dia, mas útil para automatizar tarefas específicas da empresa.
+
+## 📌 Resumindo
+
+- Todo o trabalho do Maven é feito por plugins e seus goals.
+- Configure plugins em `<build><plugins>`; ligue goals a fases com `<executions>`.
+- Use `<release>` para definir a versão do Java.
+- Plugins úteis: compiler, surefire, jacoco, spring-boot-maven-plugin.
+
+## 🏋️ Mão na massa
+
+**1.** Configure o `maven-compiler-plugin` para compilar com Java 21.
+
+<details>
+<summary>Ver resposta</summary>
+
+Use o bloco de configuração mostrado nesta aula com `<release>21</release>`, ou simplesmente a propriedade:
+
+```xml
+<properties>
+    <maven.compiler.release>21</maven.compiler.release>
+</properties>
 ```
 
 </details>
 
-<br>
+**2.** Qual plugin roda os testes unitários na fase `test`?
 
-<br>
+<details>
+<summary>Ver resposta</summary>
 
-<br>
+O `maven-surefire-plugin` (goal `surefire:test`).
 
-[Voltar a Gerenciamento de dependências e build em Java com Maven](/Arquivos/Conteudo/4%20-%20Programa%C3%A7%C3%A3o%20orientada%20a%20objetos/4.5%20Gerenciamento%20de%20dependencias%20e%20build%20em%20java%20com%20maven.md)<br>
-[Voltar ao inicio](/README.md)
+</details>
+
+**3.** Adicione o JaCoCo ao projeto da aula 4.15 e abra o relatório de cobertura.
+
+<details>
+<summary>Ver resposta</summary>
+
+Inclua o plugin como no exemplo acima, rode `mvn verify` e abra `target/site/jacoco/index.html` no navegador. Ele mostra, linha por linha, o que foi e o que não foi executado pelos testes.
+
+</details>
+
+---
+
+<div align="center">
+
+[⬅️ 4.18 Projetos multimódulos](./18-maven-multi-modulos.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [4.20 Testes unitários e JUnit ➡️](./20-testes-unitarios.md)
+
+</div>

@@ -1,90 +1,134 @@
-# Métodos
+# 2.6 · Métodos: primeiros passos
 
-> Todas as ações das aplicações são consideradas métodos.
+> **Em uma frase:** um método é um bloco de código com nome que executa **uma tarefa**: ele pode receber dados (parâmetros), pode devolver um resultado (retorno) e sempre mora dentro de uma classe.
 
-Uma classe é definida por atributos e métodos. Já vimos que atributos são, em sua grande maioria, variáveis de diferentes tipos e valores. Os métodos, por sua vez, correspondem a funções ou sub-rotinas disponíveis dentro de nossas classes.
+Uma classe é formada por **atributos** (o que ela *tem*, como `nome` e `saldo`) e **métodos** (o que ela *faz*, como `depositar()` e `sacar()`).
 
-## Critério de nomeação de Métodos:
-Esses critérios não são obrigatórios, mas é recomendável que sejam seguidos, pois essas convenções facilitam a vida dos programadores ao trabalharem em códigos de forma colaborativa. Ao seguir estas convenções, tornamos o código mais legível para nós e também para outras pessoas. Para métodos, os critérios são:
+> [!NOTE]
+> Em Java **não existem funções soltas**: todo método é declarado dentro de uma classe.
 
-- Deve ser nomeado como verbo
+## 🧩 A estrutura de um método
 
-- Seguir o padrão camelCase (Todas as letras minúsculas com a exceção da primeira letra da segunda palavra).
+```java
+public double somar(double numero1, double numero2) {
+    return numero1 + numero2;
+}
+```
 
-    ```java
-    somar(int n1, int n2){}
+```mermaid
+flowchart LR
+    V["public<br/><i>visibilidade</i>"] --- R["double<br/><i>tipo de retorno</i>"] --- N["somar<br/><i>nome (verbo)</i>"] --- P["(double numero1, double numero2)<br/><i>parâmetros</i>"]
+```
 
-    abrirConexao(){}
+## ❓ Cinco perguntas para desenhar um método
 
-    concluirProcessamento() {}
+1. **Qual é a finalidade?** Um método, uma responsabilidade.
+2. **Retorna algo?** Se não retornar nada, o tipo é `void`.
+3. **Precisa de quais dados?** Esses são os parâmetros.
+4. **Pode dar erro?** Pode ser preciso tratar ou declarar uma exceção (`throws`), assunto da aula [4.13](../04-poo/13-excecoes.md).
+5. **Quem pode usar?** Visibilidade: `public`, `private`, `protected` ou nenhuma (padrão).
 
-    findById(int id){} // não se assuste, você verá muito método em inglês em sua jornada
+```java
+public class Calculadora {
 
-    calcularImprimir(){} // há algo de errado neste método, ele deveria ter uma única finalidade
-    ```
-    >💡 ATENÇÃO! Não existe em **Java** o conceito de **métodos** globais. Todos os **métodos** devem SEMPRE ser definidos dentro de uma classe.
-
-<br>
-
-### Critério de definição de métodos:
-Mas, como sabemos a melhor forma de definir os métodos das nossas classes? Para chegar à essa conclusão, somos auxiliados por uma convenção estrutural para todos os métodos. Essa convenção é determinada pelos aspectos abaixo:
-
-1. **Qual a proposta principal do método?** Você deve se perguntar constantemente até compreender a real finalidade do mesmo.
-
-2. **Qual o tipo de retorno esperado após executar o método?** Você deve analisar se o método será responsável por retornar algum valor ou não.
-   >💡 Caso o método não retorne nenhum valor, ele será representado pela palavra-chave `void`
-
-3. **Quais os parâmetros serão necessários para execução do método?** Os métodos as vezes precisam de argumentos como critérios para a execução.
-   
-4. **O método possui o risco de apresentar alguma exceção?** Exceções são comuns na execução de métodos, as vezes é necessário prever e tratar a possível existência de uma exceção.
-
-5. **Qual a visibilidade do método?** Será necessário que o método seja visível a toda aplicação, somente em mesmo pacotes, através de herança ou somente a nível a própria classe.
-
-    #### Exemplo
-    ```java
-    public class MyClass {
-        
-        public double somar(int num1, int num2){
-            //LOGICA - FINALIDADE DO MÉTODO
-            return ... ;
-        }
-        
-        public void imprimir(String texto){
-            //LOGICA - FINALIDADE DO MÉTODO
-            //AQUI NÃO PRECISA DO RETURN
-            //POIS NÃO SERÁ RETORNADO NENHUM RESULTADO
-        }
-        // throws Exception : indica que o método ao ser utilizado
-        // poderá gerar uma exceção
-        public double dividir(int dividendo, int divisor) throws Exception{}
-        
-        // este método não pode ser visto por outras classes no projeto
-        private void metodoPrivado(){}
-        
-        //alguns equívocos estruturais
-        public void validar(){
-            //este método deveria retornar algum valor
-            //no caso boolean (true ou false)
-        }
-        public void calcularEnviar(){
-            //um método deve representar uma única responsabilidade
-        }
-        public void gravarCliente(String nome, String cpf, Integer telefone, ....){
-            //este método tem a finalidade de gravar
-            //informações de um cliente, por que não criar
-            //um objeto cliente e passar como parâmetro ?
-            //veja abaixo
-        }
-        public void gravarCliente(Cliente cliente){}
-        //ou
-        public void gravar(Cliente cliente){}
+    public double somar(int num1, int num2) {        // retorna um valor
+        return num1 + num2;
     }
-    ```
 
-<br>
+    public void imprimir(String texto) {             // não retorna nada
+        System.out.println(texto);
+    }
 
-<br>
+    public double dividir(int dividendo, int divisor) {
+        if (divisor == 0) {
+            throw new IllegalArgumentException("Divisor não pode ser zero");
+        }
+        return (double) dividendo / divisor;
+    }
 
-[Voltar a Aprendendo a sintaxe Java](/Arquivos/Conteudo/2%20-%20Conhecendo%20a%20linguagem%20Java/2.2%20Aprendendo%20a%20sintaxe%20java.md)<br>
-[Voltar ao incio](/README.md)
+    private void metodoInterno() { }                 // só a própria classe enxerga
+}
+```
 
+## 🚩 Erros comuns de desenho
+
+```java
+public void validar() { }
+// ❌ "validar" deveria responder algo: melhor retornar boolean
+
+public void calcularEEnviar() { }
+// ❌ duas responsabilidades: separe em calcular() e enviar()
+
+public void gravarCliente(String nome, String cpf, String telefone, String email, String endereco) { }
+// ❌ parâmetros demais: agrupe em um objeto
+public void gravar(Cliente cliente) { }
+// ✅
+```
+
+## 🏷️ Nomes de métodos
+
+- Verbos no infinitivo, em `camelCase`: `somar()`, `abrirConexao()`, `concluirProcessamento()`.
+- Em projetos em inglês, você verá muito `findById()`, `save()`, `getName()`.
+
+> [!TIP]
+> Este é só o primeiro contato. Assinatura, parâmetros, construtores, sobrecarga e retornos são aprofundados nas aulas [2.30 a 2.33](./30-metodos-conceitos.md).
+
+## 📌 Resumindo
+
+- Método = bloco nomeado que executa uma tarefa, sempre dentro de uma classe.
+- Estrutura: visibilidade + tipo de retorno + nome + parâmetros.
+- `void` quando não retorna nada; `return` para devolver um valor.
+- Um método, uma responsabilidade; poucos parâmetros.
+
+## 🏋️ Mão na massa
+
+**1.** Escreva um método `ehMaiorDeIdade` que recebe uma idade e diz se a pessoa é maior de idade.
+
+<details>
+<summary>Ver resposta</summary>
+
+```java
+public static boolean ehMaiorDeIdade(int idade) {
+    return idade >= 18;
+}
+```
+
+Como o método só responde "sim ou não", o retorno é `boolean`.
+
+</details>
+
+**2.** O que há de errado com `public void calcularMediaEImprimirBoletim()`?
+
+<details>
+<summary>Ver resposta</summary>
+
+Ele tem **duas responsabilidades** (calcular e imprimir). O ideal é um método `calcularMedia()` que retorna a média e outro `imprimirBoletim()` que usa esse valor.
+
+</details>
+
+**3.** No `treino-java`, crie uma classe `Conversor` com um método que converte graus Celsius em Fahrenheit (`F = C × 9/5 + 32`) e teste no `main`.
+
+<details>
+<summary>Ver resposta</summary>
+
+```java
+public class Conversor {
+    public static double celsiusParaFahrenheit(double celsius) {
+        return celsius * 9 / 5 + 32;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(celsiusParaFahrenheit(25));   // 77.0
+    }
+}
+```
+
+</details>
+
+---
+
+<div align="center">
+
+[⬅️ 2.5 Operadores](./05-operadores.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [2.7 Escopo de variáveis ➡️](./07-escopo.md)
+
+</div>

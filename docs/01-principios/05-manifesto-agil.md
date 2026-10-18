@@ -1,82 +1,95 @@
-# Manifesto ágil
+# 1.5 · O Manifesto Ágil
 
-[Link do manifesto Ágil](https://agilemanifesto.org/iso/ptbr/manifesto.html)
+> **Em uma frase:** agilidade não é fazer as coisas mais **rápido**, é entregar valor **aos poucos**, ouvir o cliente o tempo todo e **mudar de rumo** quando necessário.
 
-## Agilidade x Velocidade
+## 🚄 Agilidade não é velocidade
 
-<img src="./img/01.jpg" alt="" width="800">
+Pense em um **trem-bala** e em um **guepardo**. O trem é rapidíssimo, mas só anda em linha reta, em trilhos definidos com antecedência. O guepardo talvez seja mais lento, mas muda de direção num instante para acompanhar a presa. Equipes ágeis querem ser o guepardo: **adaptar-se** rápido ao que o cliente realmente precisa.
 
-- Agilidade está mais ligado a eficiência e adaptação.
-- Existe correção de rumos e comunicação assertiva.
+## 📜 Como surgiu
 
-<br> 
+Em **fevereiro de 2001**, 17 desenvolvedores se reuniram em Snowbird (Utah, EUA) incomodados com processos pesados, cheios de documentação e pouca entrega. Dali saiu o **[Manifesto Ágil](https://agilemanifesto.org/iso/ptbr/manifesto.html)**, com 4 valores e 12 princípios.
 
-## Falando sobre valores do manifesto Ágil
+## 💎 Os 4 valores
 
-<img src="./img/02.jpg" alt="" width="800">
+> Valorizamos mais os itens da esquerda, **sem desprezar** os da direita.
 
-- O manifesto ágil foi criado em fevereiro de 2001, durante uma reunião de 17 desenvolvedores de software em Snowbird, Utah, nos Estados Unidos. Essa reunião levou à criação do Manifesto Ágil, que estabeleceu os valores e princípios para o desenvolvimento ágil de software.
-- O Manifesto Ágil é um conjunto de valores e princípios que norteiam o desenvolvimento ágil de software. 
-  
-### Os valores do manifesto são:
-1. Indivíduos e interações acima de processos e ferramentas: o foco deve estar nas pessoas e na comunicação entre elas, em vez de se prender a processos e ferramentas rígidas.
-2. Software em funcionamento acima de documentação abrangente: o objetivo principal é criar um software funcional que atenda às necessidades do cliente, em vez de se concentrar em documentação extensa.
-3. Colaboração do cliente acima de negociação de contratos: é fundamental ter uma colaboração ativa e constante com o cliente, em vez de se basear em contratos que muitas vezes são inflexíveis.
-4. Responder a mudanças acima de seguir um plano: a flexibilidade é essencial em um ambiente de desenvolvimento ágil, portanto, é mais importante ser capaz de se adaptar a mudanças do que seguir um plano rigoroso.
+| Mais valor para... | ...do que para |
+| --- | --- |
+| **Indivíduos e interações** | processos e ferramentas |
+| **Software em funcionamento** | documentação abrangente |
+| **Colaboração com o cliente** | negociação de contratos |
+| **Responder a mudanças** | seguir um plano |
 
-<br>
+> [!NOTE]
+> O manifesto **não** diz que documentação, contratos ou planos são inúteis. Diz que, quando houver conflito, os itens da esquerda devem pesar mais.
 
-## Os 12 princípios ágeis
+## 📋 Os 12 princípios (em linguagem simples)
 
-<img src="./img/03.jpg" alt="" width="800">
+1. A prioridade é **satisfazer o cliente** entregando software útil cedo e sempre.
+2. **Mudanças são bem-vindas**, mesmo no fim do projeto.
+3. Entregue software funcionando **com frequência** (de semanas a poucos meses; quanto mais curto, melhor).
+4. Pessoas de negócio e desenvolvedores **trabalham juntas todos os dias**.
+5. Monte o projeto em torno de **pessoas motivadas**, dê apoio e confie nelas.
+6. A forma mais eficiente de trocar informação é a **conversa direta**.
+7. **Software funcionando** é a principal medida de progresso.
+8. Mantenha um **ritmo sustentável**, que a equipe aguente indefinidamente.
+9. **Excelência técnica** e bom design aumentam a agilidade.
+10. **Simplicidade**: maximizar o trabalho que *não* precisa ser feito (o famoso *KISS: Keep It Simple*).
+11. As melhores soluções surgem de equipes **auto-organizadas**.
+12. De tempos em tempos a equipe **reflete** sobre como melhorar e ajusta seu jeito de trabalhar.
 
-1.&nbsp;&nbsp;Satisfação do cliente através da entrega contínua e adiantada de software de valor.
+## 👥 Características de um time ágil
 
-2.&nbsp;&nbsp;Mudanças nos requisitos são bem-vindas, mesmo que tardias no projeto.
+- Alinhado com o cliente e com os *stakeholders* (pessoas interessadas no projeto).
+- Auto-organizado e responsável pelo que entrega.
+- Multidisciplinar: tem as habilidades necessárias para entregar sozinho.
+- Entrega valor continuamente e aprende o tempo todo.
+- Tem metas e métricas claras.
 
-3.&nbsp;&nbsp;Entregar software funcionando com frequência, na escala de semanas até meses, com preferência aos períodos mais curtos.
+### Por que o ágil importa em tecnologia?
 
-4.&nbsp;&nbsp;Pessoas de negócio e desenvolvedores devem trabalhar juntos diariamente durante todo o projeto.
+O mundo da tecnologia muda muito rápido: requisitos mudam, concorrentes lançam novidades, usuários se comportam de forma inesperada. Esse cenário costuma ser chamado de **VUCA** (volátil, incerto, complexo e ambíguo). Em vez de planejar tudo no início e torcer para dar certo, o ágil aposta em **ciclos curtos com feedback**, corrigindo o rumo a cada entrega.
 
-5.&nbsp;&nbsp;Construir projetos em torno de indivíduos motivados. Dar a eles o ambiente e suporte necessário e confiar neles para fazer o trabalho.
+## 📌 Resumindo
 
-6.&nbsp;&nbsp;O método mais eficiente e eficaz de transmitir informações para e entre uma equipe de desenvolvimento é através de uma conversa cara-a-cara.
+- Agilidade = **adaptação e entrega contínua de valor**, não pressa.
+- O Manifesto Ágil (2001) tem **4 valores** e **12 princípios**.
+- Pessoas, software funcionando, colaboração e resposta a mudanças pesam mais que processos, documentação, contratos e planos rígidos.
 
-7.&nbsp;&nbsp;Software funcionando é a medida primária de progresso.
+## 🏋️ Mão na massa
 
-8.&nbsp;&nbsp;Processos ágeis promovem um ambiente sustentável. Os patrocinadores, desenvolvedores e usuários devem ser capazes de manter um ritmo constante indefinidamente.
+**1.** Um gerente diz: "Somos ágeis, então não precisamos de documentação". Ele está certo?
 
-9.&nbsp;&nbsp;Contínua atenção à excelência técnica e bom design aumenta a agilidade.
+<details>
+<summary>Ver resposta</summary>
 
-10.&nbsp;Simplicidade – a arte de maximizar a quantidade de trabalho que não precisa ser feito – é essencial. KISS
+**Não.** O manifesto valoriza *mais* o software funcionando do que a documentação abrangente, mas não descarta a documentação. A ideia é documentar o necessário, sem que a documentação atrase a entrega de valor.
 
-11.&nbsp;As melhores arquiteturas, requisitos e designs emergem de equipes auto-organizáveis.
+</details>
 
-12.&nbsp;Em intervalos regulares, a equipe reflete sobre como se tornar mais eficaz e ajusta seu comportamento de acordo.
+**2.** Qual princípio ágil fala de "maximizar o trabalho que não precisa ser feito"? Dê um exemplo em um projeto de software.
 
-<br>
+<details>
+<summary>Ver resposta</summary>
 
-### Características de um time Ágil
-- Alinhado com o cliente e stakeholders
-- Auto-organizado e responsável
-- Multidisciplinar
-- Entrega valor continuamente
-- Está sempre aprendendo
-- Melhoria contínua
-- Possui métricas e metas claras
-- Unido
+O princípio da **simplicidade** (10º). Exemplo: em vez de construir um sistema de relatórios completo "porque um dia alguém pode precisar", entregar só o relatório que o cliente pediu e evoluir conforme surgir necessidade real.
 
-<br> 
+</details>
 
-### Importância do ágil no mundo de tecnologia
+**3.** Explique a analogia do trem-bala e do guepardo.
 
-<img src="./img/04.jpg" alt="" width="">
+<details>
+<summary>Ver resposta</summary>
 
-<br>
+O trem-bala é veloz, mas preso aos trilhos (um plano rígido). O guepardo muda de direção rapidamente. Agilidade é ser como o guepardo: adaptar-se às mudanças, não apenas correr.
 
-<br>
+</details>
 
-<br>
+---
 
-[Voltar a trabalho com equipes ágeis](/Arquivos/Conteudo/1%20-%20Principio%20de%20desenvolvimento%20de%20software/1.2%20Trabalho%20com%20equipes%20ageis.md)<br>
-[Voltar para inicio](/README.md)
+<div align="center">
+
+[⬅️ 1.4 Ciclo de vida dos arquivos, desfazendo mudanças e conflitos](./04-ciclo-de-vida-e-conflitos.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [1.6 Gestão tradicional × gestão ágil ➡️](./06-tradicional-vs-agil.md)
+
+</div>

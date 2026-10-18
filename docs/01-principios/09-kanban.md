@@ -1,22 +1,90 @@
-# Kanban 
+# 1.9 · Kanban
 
-## Pontos importantes!
+> **Em uma frase:** o Kanban é um método **visual** de gestão do trabalho: as tarefas viram cartões que andam por colunas (A fazer → Fazendo → Feito), e limitar o que está "em andamento" faz o fluxo andar mais rápido.
 
-- Kanban é um sistema visual utilizado para gerenciar e controlar o fluxo de produção em uma linha de montagem ou em processos de desenvolvimento de software, por exemplo.
-- O termo "kanban" significa literalmente "cartão" ou "sinalização" em japonês, e é um método que utiliza cartões para indicar a quantidade de itens que devem ser produzidos em cada etapa do processo.
-- O sistema kanban foi criado no Japão na década de 1940 pela Toyota, com o objetivo de otimizar a produção e reduzir o estoque de materiais. Ao longo do tempo, o método se tornou popular em outras indústrias e áreas de negócio, como a tecnologia da informação e a gestão de projetos.
-- Atualmente, o kanban é uma das práticas mais utilizadas em metodologias ágeis de desenvolvimento de software, como o Scrum e o Lean (Redução de desperdicios).
+## 📖 Origem
 
+*Kanban* significa "cartão" ou "sinal" em japonês. O método nasceu na **Toyota**, entre o fim dos anos 1940 e os anos 1950, para produzir só o necessário e evitar estoque parado. Em 2007, David J. Anderson adaptou a ideia para o trabalho de conhecimento, e hoje ele é muito usado em equipes de software, sozinho ou junto com o Scrum.
 
-### Ilustrando quadro Kanban:
+## 🗂️ O quadro Kanban
 
-<img src="./img/13.webp" alt="" width="500">
+```mermaid
+flowchart LR
+    subgraph A["📝 A fazer"]
+        a1[Tela de login]
+        a2[Relatório mensal]
+    end
+    subgraph B["🔨 Fazendo (máx. 2)"]
+        b1[API de cadastro]
+    end
+    subgraph C["✅ Feito"]
+        c1[Banco de dados]
+        c2[Layout inicial]
+    end
+    A --> B --> C
+```
 
-<br>
+## 🧭 Princípios práticos
 
-<br>
+| Prática | O que significa |
+| --- | --- |
+| **Visualizar o trabalho** | Tudo o que está sendo feito aparece no quadro. |
+| **Limitar o WIP** (*work in progress*) | Cada coluna tem um limite de cartões. Termine antes de começar algo novo. |
+| **Gerenciar o fluxo** | Observar onde os cartões "empacam" e resolver o gargalo. |
+| **Políticas explícitas** | Regras claras, como "o que significa um cartão estar *Feito*". |
+| **Melhoria contínua** | Medir (por exemplo, quanto tempo um cartão leva para atravessar o quadro) e ajustar. |
 
-<br>
+> [!TIP]
+> Limitar o WIP parece contraintuitivo, mas faz o trabalho fluir: com menos coisas paradas pela metade, cada tarefa termina mais cedo.
 
-[Voltar a trabalho com equipes ágeis](/Arquivos/Conteudo/1%20-%20Principio%20de%20desenvolvimento%20de%20software/1.2%20Trabalho%20com%20equipes%20ageis.md)<br>
-[Voltar para inicio](/README.md)
+## ⚖️ Kanban × Scrum
+
+| | Kanban | Scrum |
+| --- | --- | --- |
+| Ritmo | Fluxo contínuo | Sprints de tamanho fixo |
+| Papéis | Não exige papéis novos | PO, Scrum Master e Desenvolvedores |
+| Mudanças | Podem entrar a qualquer momento | Normalmente esperam a próxima sprint |
+| Métrica comum | Tempo de ciclo (*lead time*) | Meta da sprint / velocidade |
+
+## 📌 Resumindo
+
+- Kanban é um método visual nascido na Toyota.
+- Cartões andam por colunas; o limite de WIP evita trabalho acumulado.
+- Pode ser usado sozinho ou combinado com Scrum ("Scrumban").
+
+## 🏋️ Mão na massa
+
+**1.** Monte um quadro Kanban para seus estudos de Java usando o [Trello](https://trello.com), o [GitHub Projects](https://github.com/features/issues) ou papel e post-its.
+
+<details>
+<summary>Ver resposta</summary>
+
+Crie colunas **A estudar**, **Estudando** (limite de 2 cartões) e **Concluído**, e um cartão por aula deste material. Mova os cartões conforme avança.
+
+</details>
+
+**2.** O que é WIP e por que limitá-lo?
+
+<details>
+<summary>Ver resposta</summary>
+
+*Work in progress*, o trabalho em andamento. Limitar evita começar muitas coisas e não terminar nenhuma, reduz trocas de contexto e faz cada tarefa ser concluída mais rápido.
+
+</details>
+
+**3.** A coluna "Testando" do seu quadro está sempre lotada. O que isso indica?
+
+<details>
+<summary>Ver resposta</summary>
+
+Um **gargalo**: o trabalho chega aos testes mais rápido do que eles são feitos. A equipe pode ajudar nos testes, automatizá-los ou reduzir a entrada de novas tarefas até o fluxo se normalizar.
+
+</details>
+
+---
+
+<div align="center">
+
+[⬅️ 1.8 Scrum](./08-scrum.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [1.10 OKR (Objetivos e Resultados-Chave) ➡️](./10-okr.md)
+
+</div>

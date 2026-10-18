@@ -1,58 +1,141 @@
-# O que é spring boot ?
+# 6.12 · Spring Boot
 
-<img src="./img/32.jpeg" alt="" width="400">
+> **Em uma frase:** o Spring Boot é a forma rápida de criar aplicações Spring: ele traz **auto-configuração**, **starters** (pacotes de dependências prontos), **servidor embutido** e ferramentas de produção, para você focar na regra de negócio.
 
-Spring Boot é um framework de desenvolvimento de aplicações Java que facilita a criação de aplicativos autônomos, prontos para produção. Ele fornece um conjunto de bibliotecas e ferramentas para simplificar o desenvolvimento e o gerenciamento de aplicativos Java, permitindo que os desenvolvedores se concentrem na lógica de negócios.
+## ✨ O que o Boot faz por você
 
-## Principais recursos do Spring Boot:
+| Recurso | O que significa |
+| --- | --- |
+| **Auto-configuração** | Olha as bibliotecas no *classpath* e configura tudo sozinho. Colocou o driver do PostgreSQL? Ele cria a conexão. Colocou o starter web? Sobe o Tomcat. |
+| **Starters** | Um único `spring-boot-starter-xxx` traz todas as dependências de um recurso, em versões compatíveis. |
+| **Gestão de versões** | O `spring-boot-starter-parent` define as versões de centenas de bibliotecas (aula [4.16](../04-poo/16-maven-dependencias.md)). |
+| **Servidor embutido** | Tomcat (ou Jetty/Undertow) dentro do `.jar`: `java -jar app.jar` e pronto. |
+| **Prontidão para produção** | Actuator com *health check* e métricas, configuração externa por ambiente (*profiles*). |
+| **Testes** | `spring-boot-starter-test` com JUnit, Mockito e AssertJ. |
 
-### Configuração automática
+> [!NOTE]
+> O Spring Boot segue a filosofia de **convenção sobre configuração**: ele assume padrões sensatos, e você só configura o que for diferente.
 
-Uma das principais vantagens do Spring Boot é sua capacidade de fornecer configuração automática para aplicativos. Ele usa um processo de descoberta de classpath para detectar as bibliotecas que estão sendo usadas e configurar automaticamente o aplicativo. Isso elimina a necessidade de configurações complicadas e reduz o tempo de configuração.
+## 🧩 Starters mais usados
 
-### Dependência de gerenciamento
+| Starter | Para quê |
+| --- | --- |
+| `spring-boot-starter-web` | APIs REST com Spring MVC + Tomcat embutido + Jackson (JSON) |
+| `spring-boot-starter-data-jpa` | Bancos relacionais com JPA/Hibernate |
+| `spring-boot-starter-data-mongodb` | MongoDB |
+| `spring-boot-starter-validation` | Validação com Bean Validation (`@NotBlank`, `@Email`...) |
+| `spring-boot-starter-security` | Spring Security |
+| `spring-boot-starter-test` | JUnit, Mockito, AssertJ e utilitários de teste |
+| `spring-boot-starter-actuator` | Endpoints de monitoramento (`/actuator/health`, métricas) |
+| `spring-boot-devtools` | Reinicia a aplicação automaticamente ao salvar o código |
+| `spring-cloud-starter-openfeign` | Clientes HTTP declarativos (do Spring Cloud) |
 
-O Spring Boot oferece uma ferramenta de gerenciamento de dependências integrada que ajuda a resolver problemas de compatibilidade e controle de versão. Isso significa que os desenvolvedores não precisam se preocupar com as versões de bibliotecas diferentes que podem estar em conflito umas com as outras.
+> [!NOTE]
+> O Boot **não** gera a documentação da API sozinho: para isso, adiciona-se a biblioteca **springdoc-openapi** (aula [6.16](./16-openapi-swagger.md)).
 
-### Servidor de aplicativos embutido
+## 🏁 Criando um projeto: Spring Initializr
 
-O Spring Boot vem com um servidor de aplicativos embutido que permite executar o aplicativo como um executável autônomo. Isso significa que os desenvolvedores podem implantar seus aplicativos sem precisar configurar e gerenciar um servidor de aplicativos separado.
+1. Acesse **[start.spring.io](https://start.spring.io/)** (ou **New Project → Spring Boot** no IntelliJ).
+2. Escolha **Maven**, **Java**, a versão estável do Spring Boot e Java **21** (ou 25).
+3. Preencha *Group* (`br.com.treino`), *Artifact* (`minha-api`) e adicione as dependências (*Spring Web*, *Spring Data JPA*...).
+4. Clique em **Generate**, descompacte e abra no IntelliJ.
 
-### Suporte para múltiplas fontes de dados
+```text
+minha-api/
+├── mvnw, mvnw.cmd               ← Maven Wrapper
+├── pom.xml
+└── src/
+    ├── main/
+    │   ├── java/br/com/treino/minhaapi/
+    │   │   └── MinhaApiApplication.java    ← classe principal
+    │   └── resources/
+    │       └── application.properties      ← configurações
+    └── test/java/...                        ← testes
+```
 
-O Spring Boot suporta múltiplas fontes de dados, incluindo bancos de dados relacionais, bancos de dados NoSQL e serviços de armazenamento em nuvem, como Amazon S3 e Microsoft Azure. Ele também oferece suporte para várias tecnologias de persistência, como JPA, Hibernate e JDBC.
+```java
+@SpringBootApplication        // = @Configuration + @EnableAutoConfiguration + @ComponentScan
+public class MinhaApiApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(MinhaApiApplication.class, args);
+    }
+}
+```
 
-### Teste fácil
+> [!IMPORTANT]
+> O `@ComponentScan` procura beans no **pacote da classe principal e nos subpacotes**. Se você criar classes num pacote "fora" dele, o Spring não as encontra.
 
-O Spring Boot facilita a criação de testes para o aplicativo, permitindo que os desenvolvedores executem testes de unidade e integração de maneira simples e rápida. Ele fornece uma ampla variedade de ferramentas para testar o aplicativo, incluindo o framework de testes JUnit e a biblioteca de teste Mockito.
+### Rodando
 
-<br>
+```bash
+./mvnw spring-boot:run          # Linux/macOS/Git Bash
+mvnw.cmd spring-boot:run        # Windows (cmd/PowerShell)
+```
 
-## O que são Starters 
+Ou pelo ▶️ na classe principal no IntelliJ.
 
-Starters são módulos pré-configurados e prontos para uso que fornecem funcionalidades específicas para aplicações desenvolvidas com o Spring Boot. Eles são uma das principais características do Spring Boot e permitem que os desenvolvedores adicionem facilmente recursos adicionais às suas aplicações, sem precisar configurá-los manualmente.
+## 🎛️ Configurações e *profiles*
 
-- Os starters do Spring Boot são projetados para ajudar os desenvolvedores a começar rapidamente e simplificar o processo de desenvolvimento, permitindo que eles adicionem funcionalidades comuns a suas aplicações com apenas algumas linhas de código. Por exemplo, há starters para bancos de dados, autenticação, segurança, web services, email e muito mais.
-- Cada starter do Spring Boot contém uma série de bibliotecas e configurações pré-definidas que são necessárias para implementar a funcionalidade específica que o starter fornece. Quando um starter é adicionado ao projeto, o Spring Boot configura automaticamente as dependências necessárias para que a funcionalidade seja ativada.
-- Os starters são gerenciados pelo Spring Initializr, que é uma ferramenta de linha de comando ou uma interface web que permite aos desenvolvedores criar rapidamente projetos do Spring Boot com as dependências e configurações necessárias. O Spring Initializr inclui uma lista completa de todos os starters disponíveis e permite que os desenvolvedores adicionem ou removam facilmente dependências de acordo com as necessidades de suas aplicações.
+```properties
+# application.properties
+server.port=8080
+spring.application.name=minha-api
+spring.datasource.url=jdbc:postgresql://localhost:5432/banco
+```
 
-<br>
+Arquivos por ambiente: `application-dev.properties`, `application-prod.properties`, ativados com `spring.profiles.active=dev`. Valores sensíveis (senhas) devem vir de **variáveis de ambiente**: `spring.datasource.password=${DB_PASSWORD}`.
 
-## Starters mais utilizados no Spring boot
+## 📌 Resumindo
 
-1. Spring Boot Starter Web: Este é o starter mais básico e é necessário para criar uma aplicação web. Ele inclui o Tomcat embutido, que permite executar a aplicação como um serviço web autônomo.
-2. Spring Boot Starter Data JPA: Este starter fornece suporte ao Java Persistence API (JPA) para persistir dados em bancos de dados relacionais. Ele inclui bibliotecas para o Hibernate, que é uma das implementações mais populares do JPA.
-3. Spring Boot Starter Security: Este starter fornece recursos de segurança, incluindo autenticação, autorização e criptografia, para aplicações web. Ele inclui o Spring Security, que é um framework de segurança amplamente utilizado para aplicações Java.
-4. Spring Boot Starter Test: Este starter fornece ferramentas para testar o aplicativo, incluindo o framework de testes JUnit e a biblioteca de teste Mockito. Ele inclui também o Spring Test, que fornece suporte de teste integrado para aplicações Spring.
-5. Spring Boot Starter Actuator: Este starter fornece recursos de monitoramento e gerenciamento para aplicações Spring Boot. Ele inclui endpoints que permitem que os desenvolvedores monitorem a saúde do aplicativo, verifiquem as métricas e obtenham informações sobre os logs e o ambiente de execução.
-6. Spring Boot Starter Data MongoDB: Este starter fornece suporte para o MongoDB, um banco de dados NoSQL popular. Ele inclui o Spring Data MongoDB, que fornece uma API simples e elegante para trabalhar com o MongoDB.
-7. Spring Cloud OpenFeign é um starter que fornece suporte para o cliente Feign, que é um framework de comunicação de serviços RESTful. O Feign é uma biblioteca que simplifica a integração entre serviços, permitindo que os desenvolvedores usem anotações Java para definir as interfaces de comunicação. O Spring Cloud OpenFeign permite que os desenvolvedores usem essas anotações Java em conjunto com a configuração do Spring Boot para criar clientes RESTful de maneira fácil e rápida.
+- Spring Boot = auto-configuração + starters + servidor embutido + ferramentas de produção.
+- Crie projetos no [start.spring.io](https://start.spring.io/).
+- `@SpringBootApplication` marca a classe principal; os beans precisam estar no pacote dela ou abaixo.
+- Configurações no `application.properties` (ou `.yml`), com *profiles* por ambiente.
 
-<br>
+## 🏋️ Mão na massa
 
-<br>
+**1.** Gere no Spring Initializr um projeto com *Spring Web* e crie um endpoint que responda "Olá, Spring!" em `GET /ola`.
 
-<br>
+<details>
+<summary>Ver resposta</summary>
 
-[Voltar para Imersão no spring framework com spring boot](/Arquivos/Conteudo/6%20-%20Ganhando%20produtividade%20com%20spring%20framwork/6.2%20Imersao%20do%20spring%20framework%20com%20spring%20boot.md)<br>
-[Voltar ao inicio](/README.md)
+```java
+@RestController
+public class OlaController {
+
+    @GetMapping("/ola")
+    public String ola() {
+        return "Olá, Spring!";
+    }
+}
+```
+
+Rode a aplicação e acesse `http://localhost:8080/ola` no navegador.
+
+</details>
+
+**2.** O que o `@SpringBootApplication` combina?
+
+<details>
+<summary>Ver resposta</summary>
+
+`@Configuration` (a classe pode declarar beans), `@EnableAutoConfiguration` (liga a auto-configuração) e `@ComponentScan` (procura componentes no pacote atual e nos subpacotes).
+
+</details>
+
+**3.** Como mudar a porta só no ambiente de desenvolvimento?
+
+<details>
+<summary>Ver resposta</summary>
+
+Crie `application-dev.properties` com `server.port=8081` e rode com o profile `dev` ativo: `spring.profiles.active=dev` no `application.properties`, ou `./mvnw spring-boot:run -Dspring-boot.run.profiles=dev`.
+
+</details>
+
+---
+
+<div align="center">
+
+[⬅️ 6.11 IoC, injeção de dependências, beans e escopos](./11-ioc-di-e-beans.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [6.13 Primeiros passos, beans, escopos, propriedades e JPA ➡️](./13-projeto-spring-boot.md)
+
+</div>

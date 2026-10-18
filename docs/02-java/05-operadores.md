@@ -1,199 +1,180 @@
-# Operadores
+# 2.5 · Operadores
 
-## Símbolos especiais tem um significado próprio para a linguagem e estão associados a determinadas operações.
+> **Em uma frase:** operadores são os símbolos que fazem contas (`+ - * / %`), atribuem valores (`=`, `+=`), comparam (`==`, `>`), combinam condições (`&&`, `||`) e escolhem entre dois valores (`? :`).
 
-Geralmente as primeiras palavras que ouvimos em um curso de programação são: um programa é um conjunto de instruções lógicas que, quando executadas, produzem algum resultado. Com isso em mente, ao começar a criar as primeiras linhas de código, logo você notará que é comum receber dados do usuário, prover alguma lógica para processá-los e então apresentar o resultado desse processamento.
+Todo programa recebe dados, processa e mostra um resultado. Os operadores são as ferramentas do "processa".
 
-<img src="./img/08.webp" alt="" width="400">
+## 📝 Atribuição
 
-<br>
+O `=` **guarda** um valor numa variável (não confunda com o `==`, que compara):
 
-## Classificação do operadores
+```java
+String nome = "Josué";
+int idade = 22;
+double peso = 79.5;
+char inicial = 'J';
+boolean doadorDeOrgaos = true;
+LocalDate nascimento = LocalDate.of(2002, 5, 10);   // import java.time.LocalDate
+```
 
-### Atribuição:
-- Representado pelo símbolo de igualdade =. O operador de atribuição é utilizado para definir o valor inicial ou sobrescrever o valor de uma variável. em Java definimos um tipo, nome e opcionalmente atribuímos um valor à variável através do operador de atribuição. Exemplos abaixo:
-  ```java
-    //classe Operadores.java
-    String nome = "josué";
-    String time = "Flamengo";
-    int idade = 22;
-    double peso = 99.9;
-    char sexo = 'M';
-    boolean doadorOrgao = true;
-    Date dataNascimento = new Date();
-    ```
-### Aritméticos:
-- O operador aritmético é utilizado para realizar operações matemáticas entre valores numéricos, podendo se tornar ou não uma expressão mais complexa. Os operadores aritméticos são: + (adição), - (subtração), * (multiplicação) e / (divisão).
-    ```java
-    //classe Operadores.java
-    double soma = 10.5 + 15.7;
-    int subtração = 113 - 25;
-    int multiplicacao = 20 * 7;
-    int divisao = 15 / 3;
-    int modulo = 18 % 3;
-    double resultado = (10 * 7) + (20/4);
-    ```
+### Atribuição composta
 
-    >💡**ATENÇÃO!** O operador de adição (+), quando utilizado em variáveis do tipo texto, realizará a “concatenação de textos”.
+| Atalho | Equivale a | Exemplo (`x = 10`) |
+| --- | --- | --- |
+| `x += 5` | `x = x + 5` | 15 |
+| `x -= 5` | `x = x - 5` | 5 |
+| `x *= 3` | `x = x * 3` | 30 |
+| `x /= 4` | `x = x / 4` | 2 (divisão inteira!) |
+| `x %= 3` | `x = x % 3` | 1 |
 
-### Unários:
-- Esses operadores são aplicados juntamente com um outro operador aritmético. Eles realizam alguns trabalhos básicos como incrementar, decrementar, inverter valores numéricos e booleanos.
-    
-    - **(+) Operador unário de valor positivo** – números são positivos sem esse operador explicitamente;
-    
-    - **(-) Operador unário de valor negativo** – nega um número ou expressão aritmética;
-    
-    - **(++) Operador unário de incremento de valor** – incrementa o valor em 1 unidade;
-    
-    - **(--) Operador unário de decremento de valor** – decrementa o valor em 1 unidade;
-    
-    - **(!) Operador unário lógico de negação** – nega o valor de uma expressão booleana;
+## ➗ Aritméticos
 
-    ```java
-    //classe Operadores.java
-    int numero = 5;
-            
-    //Imprimindo o numero negativo
-    System.out.println(- numero);
+| Operador | Operação | Exemplo | Resultado |
+| --- | --- | --- | --- |
+| `+` | soma | `10 + 3` | 13 |
+| `-` | subtração | `10 - 3` | 7 |
+| `*` | multiplicação | `10 * 3` | 30 |
+| `/` | divisão | `10 / 3` | **3** (inteiros!) |
+| `%` | resto da divisão (módulo) | `10 % 3` | 1 |
 
-    //incrementando numero em mais 1 numero, imprime 6
-    numero ++;
-    System.out.println(numero);
+> [!WARNING]
+> **Divisão entre inteiros descarta a parte decimal**: `10 / 3` dá `3`, e `5 / 2` dá `2`. Se quiser o resultado com casas decimais, pelo menos um dos lados precisa ser decimal: `10 / 3.0` ou `(double) 10 / 3` dá `3.333...`.
 
-    //incrementando numero em mais 1 numero, imprime 7
-    System.out.println(numero ++);// ops algo de errado não está certo
+> [!TIP]
+> O `%` é ótimo para descobrir se um número é **par**: `numero % 2 == 0`.
 
-    System.out.println(numero);// agora sim, numero virou 7
+O `+` com textos **concatena** (junta):
 
-    //ordem de precedencia conta aqui
-    System.out.println(++ numero);
+```java
+String nomeCompleto = "Ana" + " " + "Silva";     // "Ana Silva"
+System.out.println("Idade: " + 30);              // "Idade: 30"
+System.out.println("1 + 1 = " + 1 + 1);          // "1 + 1 = 11"  ⚠️
+System.out.println("1 + 1 = " + (1 + 1));        // "1 + 1 = 2"   ✅
+```
 
-    boolean verdadeiro = true;
+## ➕ Unários
 
-    System.out.println("Inverteu " + !verdadeiro);
+| Operador | O que faz |
+| --- | --- |
+| `-x` | inverte o sinal |
+| `++x` / `x++` | soma 1 |
+| `--x` / `x--` | subtrai 1 |
+| `!` | inverte um booleano (`!true` é `false`) |
 
-    /* Muito cuidado com ordem de precedência dos operadores unários! */
-    ```
+A posição do `++` importa quando ele está **dentro de outra expressão**:
 
-### Ternário:
-- O Operador de Condição Ternária é uma forma resumida para definir uma condição e escolher por um dentre dois valores. Você deve pensar numa condição ternária como se fosse uma condição IF normal, porém, de uma forma em que toda a sua estrutura estará escrita numa única linha.
+```java
+int numero = 5;
+System.out.println(numero++);   // imprime 5 e DEPOIS soma (numero vira 6)
+System.out.println(++numero);   // soma ANTES (numero vira 7) e imprime 7
+```
 
-- O operador ternário é representado pelos símbolos ?: utilizados na seguinte estrutura de sintaxe:
-    > <Expressão Condicional>`` ?``<Caso condição seja true>``: ``<Caso condição seja false>
+- **Pós-fixado** (`x++`): usa o valor atual e depois incrementa.
+- **Pré-fixado** (`++x`): incrementa e depois usa o novo valor.
 
-    ```java
-    // classe Operadores.java
-    int a, b;
-    a = 5;
-    b = 6;
-    String resultado;
+## ⚖️ Relacionais (comparação)
 
-    /* EXEMPLO DE CONDICIONAL UTILIZANDO UMA ESTRUTURA IF/ELSE
-    if(a==b)
-    resultado = "verdadeiro";
-    else
-    resultado = "falso";
-    */
+Sempre retornam `true` ou `false`:
 
-    //MESMA CONDICIONAL, MAS DESSA VEZ, UTILIZANDO O OPERADOR CONDICIONAL TERNÁRIO
-    String resultado = (a==b) ? "verdadeiro" : "false";
+| Operador | Significa |
+| --- | --- |
+| `==` | igual a |
+| `!=` | diferente de |
+| `>` / `>=` | maior / maior ou igual |
+| `<` / `<=` | menor / menor ou igual |
 
-    System.out.println(valor);
+> [!CAUTION]
+> Para comparar **textos** (`String`) use `.equals()`, nunca `==`. O `==` compara se são o **mesmo objeto** na memória, não se têm o mesmo conteúdo: `nome.equals("Ana")`.
 
-    /*O operador ternário é aplicado para qualquer tipo de valor.*/
-    ```
+## 🔗 Lógicos
 
-### Relacionais:
-- Os operadores relacionais avaliam a relação entre duas variáveis ou expressões. Neste caso, mais precisamente, definem se o operando à esquerda é igual, diferente, menor, menor ou igual, maior ou maior ou igual ao da direita, retornando um valor booleano como resultado.
+| Operador | Nome | Verdadeiro quando... |
+| --- | --- | --- |
+| `&&` | E | **as duas** condições são verdadeiras |
+| <code>&#124;&#124;</code> | OU | **pelo menos uma** é verdadeira |
+| `!` | NÃO | inverte o resultado |
 
-    `==` Quando desejamos verificar se uma variável é IGUAL A outra.
+```java
+int idade = 20;
+boolean temIngresso = true;
+if (idade >= 18 && temIngresso) {
+    System.out.println("Pode entrar");
+}
+```
 
-    `!=` Quando desejamos verificar se uma variável é DIFERENTE da outra.
+Mais detalhes e tabelas-verdade na aula [2.11](./11-operadores-relacionais-e-logicos.md).
 
-    `>` Quando desejamos verificar se uma variável é MAIOR QUE a outra.
+## ❓ Ternário
 
-    `>=` Quando desejamos verificar se uma variável é MAIOR OU IGUAL a outra.
+Um `if/else` em uma linha, que **devolve** um valor: `condição ? valorSeVerdadeiro : valorSeFalso`.
 
-    `<` Quando desejamos verificar se uma variável é MENOR QUE outra.
+```java
+int a = 5, b = 6;
+String resultado = (a == b) ? "iguais" : "diferentes";
+System.out.println(resultado);   // diferentes
 
-    `<=` Quando desejamos verificar se uma variável é MENOR OU IGUAL a outra.
+int nota = 7;
+String situacao = nota >= 6 ? "Aprovado" : "Reprovado";
+```
 
-    ```java
-    //classe Operadores.java
-    int numero1 = 1;
-    int numero2 = 2;
+> [!TIP]
+> Use o ternário para escolhas simples. Se ficar difícil de ler, prefira o `if/else`.
 
-    if(numero1 > numero2)
-        System.out.print("Numero 1 maior que numero 2");
+## 📌 Resumindo
 
-    if(numero1 < numero2)
-        System.out.print("Numero 1 menor que numero 2");
+- `=` atribui; `+=`, `-=`, `*=`, `/=` são atalhos.
+- Aritméticos: `+ - * / %`; divisão entre inteiros descarta decimais.
+- `++`/`--` antes ou depois da variável muda o valor usado na expressão.
+- Relacionais retornam booleanos; para `String`, use `.equals()`.
+- Lógicos: `&&`, `||`, `!`; ternário: `cond ? a : b`.
 
-    if(numero1 >= numero2)
-        System.out.print("Numero 1 maior ou igual que numero 2");
+## 🏋️ Mão na massa
 
-    if(numero1 <= numero2)
-        System.out.print("Numero 1 menor ou igual que numero 2");
+**1.** Sem rodar, diga o resultado de cada expressão: `17 / 5`, `17 % 5`, `17 / 5.0`, `"5" + 3 + 2`, `5 + 3 + "2"`.
 
-    if(numero1 != numero2)
-        System.out.print("Numero 1 é diferente de numero 2");jav
-    ```
+<details>
+<summary>Ver resposta</summary>
 
-### Lógicos
-- Os operadores lógicos representam o recurso que nos permite criar expressões lógicas maiores a partir da junção de duas ou mais expressões.
+`3` (divisão inteira), `2` (resto), `3.4` (há um decimal), `"532"` (a partir da String, tudo é concatenado) e `"82"` (primeiro soma 5 + 3 = 8, depois concatena com "2").
 
-    `&&` Operador Lógico "E"
+</details>
 
-    `||` Operador Lógico "OU"
+**2.** O que este código imprime?
 
-    ```java
-    // Operadores.java
-    boolean condicao1=true;
+```java
+int x = 10;
+int y = x++ + ++x;
+System.out.println(x + " " + y);
+```
 
-    boolean condicao2=false;
+<details>
+<summary>Ver resposta</summary>
 
-    /* Aqui estamos utilizando o operador lógico E para fazer a união de duas 
-    expressões. 
-    É como se estivesse escrito:
-    "Se Condicao1 e Condicao2 forem verdadeiras, executar código"
-    */
+`12 22`. O `x++` usa 10 e depois x vira 11; o `++x` faz x virar 12 e usa 12. Então `y = 10 + 12 = 22`, e x termina valendo 12.
 
-    if(condicao1 && condicao2)
-        System.out.print("Os dois valores precisam ser verdadeiros");;
+</details>
 
-    //Se condicao1 OU condicao2 for verdadeira, executar código.
-    if(condicao1 || condicao2)
-        System.out.print("Um dos valores precisa ser verdadeiro");
-    ```
+**3.** Escreva um programa que, dado um número inteiro, imprima "par" ou "ímpar" usando o operador ternário.
 
-    #### Expressões lógicas avançadas
+<details>
+<summary>Ver resposta</summary>
 
-    - Nós acabamos de aprender que existem os operadores lógicos & (E) e ||(OU), mas por quê no exemplo acima, foram ilustradas as condições:
+```java
+public class ParOuImpar {
+    public static void main(String[] args) {
+        int numero = 7;
+        String tipo = numero % 2 == 0 ? "par" : "ímpar";
+        System.out.println(numero + " é " + tipo);
+    }
+}
+```
 
-        `if (condicao1 && condicao2) e if(condicao1 || condicao2) ?`
-    
-    ##### A duplicidade nos operadores lógicos é um recurso conhecido como Operador Abreviado, isso quer que se a condição1 atender aos critérios não será necessário validar a condição2.
+</details>
 
-    ```java
-    // ComparacaoAvancada.java
-    int numero1 = 1;
-    int numero2 = 1;
+---
 
-    if(numero1== 2 & numero2 ++ == 2 )
-        System.out.println("As 2 condições são verdadeiras");
+<div align="center">
 
-    System.out.println("O numero 1 agora é " + numero1);
-    System.out.println("O numero 2 agora é " + numero2);
+[⬅️ 2.4 Tipos de dados, variáveis e constantes](./04-tipos-e-variaveis.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [2.6 Métodos ➡️](./06-metodos-introducao.md)
 
-    // Vamos mudar a linha 5 do código acima para: if(numero1== 2 && numero2 ++ == 2 
-    /* O mesmo acontece com o operador | e || considerando que operador 
-    agora representa que, se uma das alternativas for verdadeira, 
-    a outra nem precisa ser avaliada. */
-    ```
-
-<br>
-
-<br>
-
-[Voltar a Aprendendo a sintaxe Java](/Arquivos/Conteudo/2%20-%20Conhecendo%20a%20linguagem%20Java/2.2%20Aprendendo%20a%20sintaxe%20java.md)<br>
-[Voltar ao inicio](/README.md)
+</div>

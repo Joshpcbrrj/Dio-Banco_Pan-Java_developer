@@ -1,122 +1,204 @@
-# Estruturas de controle de fluxo
+# 2.12 · Controle de fluxo: `if`, `else` e `switch`
 
-São estruturas que tem a capacidade de direcionar o fluxo de execução do código.
+> **Em uma frase:** estruturas de controle de fluxo decidem **qual caminho** o programa segue (`if`, `else`, `switch`), **quantas vezes** algo se repete (`for`, `while`) e **quando parar** (`break`, `continue`, `return`).
 
-### Tipos:
+| Tipo | Estruturas |
+| --- | --- |
+| **Decisão** | `if`, `if-else`, `if-else-if`, `switch`, operador ternário |
+| **Repetição** | `for`, `while`, `do-while` (aula [2.14](./14-repeticao-e-arrays.md)) |
+| **Interrupção** | `break`, `continue`, `return` |
 
-- Decisão: if, if-else, if-else-if, switch e operador ternário.
-  
-- Repetição: for, while, do-while.
-  
-- Interrupção: break, continue, return.
+## 🔀 `if`, `else if` e `else`
 
-<br>
+```mermaid
+flowchart TD
+    A{"nota >= 7?"} -- sim --> B["Aprovado"]
+    A -- não --> C{"nota >= 5?"}
+    C -- sim --> D["Recuperação"]
+    C -- não --> E["Reprovado"]
+```
 
-### 💡Pratica 1: Criando uma estrutura if que avalie o mês atual de acordo com o número que o usuário digitar e uma outra estrutura if para avaliar se as férias estão disponíveis. Os meses para se tirar férias são Janeiro, julho ou dezembro.
+```java
+double nota = 6.0;
+
+if (nota >= 7) {
+    System.out.println("Aprovado");
+} else if (nota >= 5) {
+    System.out.println("Recuperação");
+} else {
+    System.out.println("Reprovado");
+}
+```
+
+> [!TIP]
+> Mesmo quando o bloco tem uma linha só, **use as chaves**. Evita bugs quando alguém acrescenta uma segunda linha depois.
+
+### Exemplo: mês atual e férias
 
 ```java
 import java.util.Scanner;
 
-public class ExercicioControleDeFluxo1 {
+public class Ferias {
     public static void main(String[] args) {
-        //solicitando o mês atual
-        Scanner input = new Scanner(System.in);
-        System.out.println("Digite o número do mês atual: ");
-        int mes_atual = input.nextInt();
+        Scanner entrada = new Scanner(System.in);
+        System.out.print("Digite o número do mês atual: ");
+        int mes = entrada.nextInt();
 
-        if(mes_atual == 1){
-            System.out.println("Estamos no mês de Janeiro");
-        }else if(mes_atual == 2){
-            System.out.println("Estamos no mês de Fevereiro");
-        }else if(mes_atual == 3){
-            System.out.println("Estamos no mês de Março");
-        }else if(mes_atual == 4){
-            System.out.println("Estamos no mês de Abril");
-        }else if(mes_atual == 5){
-            System.out.println("Estamos no mês de Maio");
-        }else if(mes_atual == 6){
-            System.out.println("Estamos no mês de Junho");
-        }else if(mes_atual == 7){
-            System.out.println("Estamos no mês de Julho");
-        }else if(mes_atual == 8){
-            System.out.println("Estamos no mês de Agosto");
-        }else if(mes_atual == 9){
-            System.out.println("Estamos no mês de Setembro");
-        }else if(mes_atual == 10){
-            System.out.println("Estamos no mês de Outubro");
-        }else if(mes_atual == 11){
-            System.out.println("Estamos no mês de Novembro");
-        }else if(mes_atual == 12){
-            System.out.println("Estamos no mês de Dezembro");
-        }else {
-            System.out.println("Erro! O mês digitado é inválido. Escolha entre 1 a 12");
-        }
-
-        if((mes_atual == 1) || (mes_atual == 7) || (mes_atual == 12)){
-            System.out.println("Periodo de férias disponível.");
-        } else if ((mes_atual < 1) || (mes_atual > 12)) {
-            System.out.println("Erro no mês escolhido!");
+        if (mes < 1 || mes > 12) {
+            System.out.println("Mês inválido! Escolha de 1 a 12.");
+        } else if (mes == 1 || mes == 7 || mes == 12) {
+            System.out.println("Período de férias disponível.");
         } else {
-            System.out.println("Periodo de férias indisponível. " +
-                    "Os mêses para férias são: Janeiro, julho ou dezembro.");
+            System.out.println("Férias só em janeiro, julho ou dezembro.");
         }
     }
 }
 ```
 
-<br>
+> [!NOTE]
+> O `Scanner` lê dados digitados no terminal: `nextInt()` lê um inteiro, `nextDouble()` um decimal, `next()` uma palavra e `nextLine()` uma linha inteira.
 
-### 💡Pratica 2: Com switch use uma string para a partir do dia da semana exibir seu número. Ainda no switch, faça outro exemplo onde, se uma variável inteira for entre 1 e 3 seja exibido o texto “certo” e se for 4, exibir o texto “errado”, se for 5, exibir “talvez”. Para os demais valores, exiba “valor não definido”
+## 🎛️ `switch`
+
+Ideal quando você compara **uma mesma variável** com vários valores fixos.
+
+### Forma moderna (Java 14+): com setas
+
+```java
+int diaDaSemana = 3;
+
+switch (diaDaSemana) {
+    case 1 -> System.out.println("Domingo");
+    case 2 -> System.out.println("Segunda-feira");
+    case 3 -> System.out.println("Terça-feira");
+    case 4 -> System.out.println("Quarta-feira");
+    case 5 -> System.out.println("Quinta-feira");
+    case 6 -> System.out.println("Sexta-feira");
+    case 7 -> System.out.println("Sábado");
+    default -> System.out.println("Dia inválido");
+}
+```
+
+Ele também pode **devolver um valor** (*switch expression*) e agrupar casos com vírgula:
+
+```java
+int numero = 2;
+String resposta = switch (numero) {
+    case 1, 2, 3 -> "certo";
+    case 4 -> "errado";
+    case 5 -> "talvez";
+    default -> "valor não definido";
+};
+```
+
+### Forma tradicional: com `break`
+
+```java
+switch (numero) {
+    case 1:
+    case 2:
+    case 3:
+        System.out.println("certo");
+        break;            // sem o break, ele "cai" no próximo case!
+    case 4:
+        System.out.println("errado");
+        break;
+    default:
+        System.out.println("valor não definido");
+}
+```
+
+> [!WARNING]
+> Na forma tradicional, esquecer o `break` faz o código continuar executando os `case` seguintes (*fall-through*). A forma com setas `->` não tem esse problema: prefira-a.
+
+O `switch` funciona com `int`, `char`, `String`, `enum` e, nas versões recentes, até com tipos de objetos (*pattern matching*).
+
+## ⏹️ Interrupção
+
+| Comando | O que faz |
+| --- | --- |
+| `break` | Sai do laço ou do `switch` atual. |
+| `continue` | Pula o resto da volta atual do laço e vai para a próxima. |
+| `return` | Sai do método (devolvendo um valor, se houver). |
+
+## 📌 Resumindo
+
+- `if / else if / else` escolhe caminhos com base em condições.
+- `switch` compara uma variável com valores fixos; prefira a forma com `->`.
+- Na forma antiga do `switch`, cada `case` precisa de `break`.
+- `break`, `continue` e `return` interrompem o fluxo.
+
+## 🏋️ Mão na massa
+
+**1.** Peça a idade e informe: "criança" (até 12), "adolescente" (13 a 17), "adulto" (18 a 59) ou "idoso" (60+).
+
+<details>
+<summary>Ver resposta</summary>
 
 ```java
 import java.util.Scanner;
 
-public class ExercicioControleDeFluxo2 {
+public class FaixaEtaria {
     public static void main(String[] args) {
-        //Solicitando o dia da semana
-        int numero_dia_semana;
-        Scanner input = new Scanner(System.in);
-        System.out.println("Digite o número do dia da semana (entre 1 e 7)");
-        numero_dia_semana = input.nextInt();
+        Scanner entrada = new Scanner(System.in);
+        System.out.print("Idade: ");
+        int idade = entrada.nextInt();
 
-        //Trabalhando os casos (Enhace switch é bem mais elegante)
-        switch (numero_dia_semana) {
-            case 1 -> System.out.println("Hoje domingo");
-            case 2 -> System.out.println("Hoje é segunda feira");
-            case 3 -> System.out.println("Hoje é terça feira");
-            case 4 -> System.out.println("Hoje é quarta feira");
-            case 5 -> System.out.println("Hoje é quinta feira");
-            case 6 -> System.out.println("Hoje é sexta feira");
-            case 7 -> System.out.println("Hoje é sabado");
-            default -> System.out.println("Erro! A opção escolhida é inválida.");
-        }
-
-        //Solicitando número
-        int numero_da_sorte;
-        System.out.println("Digite um número entre 1 a 5:");
-        numero_da_sorte = input.nextInt();
-
-        //Trabalhando os casos
-        switch (numero_da_sorte){
-            case 1,2,3:
-                System.out.println("Certo");
-                break;
-            case 4:
-                System.out.println("Errado");
-                break;
-            case 5:
-                System.out.println("Talvez");
-                break;
-            default:
-                System.out.println("Valor indefinido.");
+        if (idade <= 12) {
+            System.out.println("criança");
+        } else if (idade <= 17) {
+            System.out.println("adolescente");
+        } else if (idade <= 59) {
+            System.out.println("adulto");
+        } else {
+            System.out.println("idoso");
         }
     }
 }
 ```
 
-<br>
+</details>
 
-<br>
+**2.** Usando `switch` com setas, transforme a sigla de um estado (`"RJ"`, `"SP"`, `"MG"`) no nome completo.
 
-[Voltar a Lógica condicional e controle de fluxos em Java](/Arquivos/Conteudo/2%20-%20Conhecendo%20a%20linguagem%20Java/2.3%20Logica%20condicional%20e%20controle%20de%20fluxo%20java.md)<br>
-[Voltar ao inicio](/README.md)
+<details>
+<summary>Ver resposta</summary>
+
+```java
+String sigla = "RJ";
+String estado = switch (sigla) {
+    case "RJ" -> "Rio de Janeiro";
+    case "SP" -> "São Paulo";
+    case "MG" -> "Minas Gerais";
+    default -> "Estado não cadastrado";
+};
+System.out.println(estado);
+```
+
+</details>
+
+**3.** O que este código imprime quando `opcao` vale 1?
+
+```java
+switch (opcao) {
+    case 1: System.out.println("Um");
+    case 2: System.out.println("Dois");
+        break;
+    case 3: System.out.println("Três");
+}
+```
+
+<details>
+<summary>Ver resposta</summary>
+
+Imprime `Um` e `Dois`. Como não há `break` no `case 1`, a execução "cai" no `case 2` até encontrar o `break`.
+
+</details>
+
+---
+
+<div align="center">
+
+[⬅️ 2.11 Operadores relacionais e lógicos a fundo](./11-operadores-relacionais-e-logicos.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [2.13 Blocos de código ➡️](./13-blocos-de-codigo.md)
+
+</div>

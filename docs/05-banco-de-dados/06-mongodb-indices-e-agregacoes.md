@@ -1,87 +1,147 @@
-# Performance e índices/ agregaões 
+# 5.6 · MongoDB: índices, desempenho e agregações
 
-## Importancia de uso de indices na performace
+> **Em uma frase:** **índices** fazem as consultas encontrarem documentos sem ler a coleção inteira, e o **pipeline de agregação** processa documentos em etapas (filtrar, agrupar, calcular) para gerar relatórios.
 
-Os índices do MongoDB são utilizados para acelerar consultas ao banco de dados, permitindo que os documentos sejam recuperados com mais eficiência. Existem vários tipos de índices que podem ser criados no MongoDB, como índices simples, compostos, geoespaciais e de texto. Cada tipo de índice é otimizado para diferentes tipos de consultas.
+## ⚡ Índices
 
-O desempenho do MongoDB pode ser medido por vários indicadores, como a taxa de transferência, a latência e a utilização de recursos do sistema. A taxa de transferência mede a quantidade de dados que pode ser transferida entre o banco de dados e a aplicação em um determinado período de tempo. A latência mede o tempo necessário para executar uma determinada operação no banco de dados. A utilização de recursos do sistema mede a quantidade de recursos que o MongoDB está utilizando, como CPU, memória e armazenamento.
+Sem índice, o MongoDB faz um **COLLSCAN**: lê **todos** os documentos para achar os que batem com o filtro. Com índice, ele vai direto aos documentos certos (**IXSCAN**), como o índice remissivo de um livro.
 
-Para otimizar o desempenho do MongoDB, é importante utilizar índices apropriados para cada tipo de consulta e monitorar regularmente a taxa de transferência, a latência e a utilização de recursos do sistema. Além disso, é importante realizar ajustes no hardware e na configuração do MongoDB para garantir uma melhor performance.
+```javascript
+db.clientes.createIndex({ email: 1 }, { unique: true })   // simples (e único)
+db.pedidos.createIndex({ clienteId: 1, data: -1 })        // composto
+db.lojas.createIndex({ localizacao: "2dsphere" })         // geoespacial
+db.artigos.createIndex({ conteudo: "text" })              // busca textual
 
-<br>
+db.clientes.getIndexes()                                   // lista os índices
+db.clientes.find({ email: "ana@email.com" }).explain("executionStats")   // IXSCAN ou COLLSCAN?
+```
 
-## Agregações
-#### Links úteis:
-[Operações com agregação](https://www.mongodb.com/docs/manual/aggregation/)<br>
-[Construindo com patterns](https://www.mongodb.com/blog/post/building-with-patterns-a-summary)
+| Tipo | Uso |
+| --- | --- |
+| Simples | Filtros em um campo |
+| Composto | Filtros/ordenação em vários campos (a ordem dos campos importa) |
+| Único | Impede valores repetidos |
+| Geoespacial (`2dsphere`) | Consultas por proximidade ("lojas perto de mim") |
+| Texto | Busca por palavras |
+| TTL | Apaga documentos automaticamente depois de um tempo (sessões, logs) |
 
-As Agregações no MongoDB são uma das funcionalidades mais poderosas desse banco de dados NoSQL. Elas permitem que os usuários processem, agrupem e analisem grandes quantidades de dados no banco de dados de uma forma eficiente. Em essência, uma agregação é uma operação que processa um conjunto de documentos e retorna um conjunto de resultados calculados com base em uma ou mais etapas de processamento. As etapas de processamento podem incluir a filtragem de documentos, a ordenação, o agrupamento e a realização de cálculos aritméticos e estatísticos.
+> [!WARNING]
+> Índices aceleram a **leitura**, mas deixam a **escrita** um pouco mais lenta e ocupam memória. Crie índices para as consultas que realmente existem.
 
-A linguagem de agregação do MongoDB é bastante expressiva e flexível, permitindo que os usuários construam pipelines complexos de processamento de dados. O pipeline de agregação consiste em uma série de etapas que são executadas em sequência. Cada etapa do pipeline recebe os resultados da etapa anterior e os transforma ou os filtra de alguma forma.
+### Medindo o desempenho
 
+Acompanhe **latência** (tempo de cada operação), **vazão** (*throughput*, operações por segundo) e o uso de **CPU, memória e disco**. Ferramentas: `explain()`, o *profiler* do banco, `mongostat`/`mongotop` e os painéis do MongoDB Atlas.
 
+## 🧮 Pipeline de agregação
 
+Os documentos passam por uma sequência de **estágios**, como numa linha de montagem. Cada estágio recebe o resultado do anterior:
 
+```mermaid
+flowchart LR
+    C[("coleção")] --> M["$match<br/>filtra"] --> G["$group<br/>agrupa"] --> S["$sort<br/>ordena"] --> L["$limit"] --> R["resultado"]
+```
 
-### Tipos de agregação:
+| Estágio | Equivalente SQL | O que faz |
+| --- | --- | --- |
+| `$match` | `WHERE` | Filtra documentos |
+| `$group` | `GROUP BY` | Agrupa e calcula (`$sum`, `$avg`, `$min`, `$max`, `$addToSet`...) |
+| `$project` | colunas do `SELECT` | Escolhe/renomeia/calcula campos |
+| `$sort` | `ORDER BY` | Ordena |
+| `$limit` / `$skip` | `LIMIT` / `OFFSET` | Paginação |
+| `$lookup` | `JOIN` | Junta com outra coleção |
+| `$unwind` | — | "Desmonta" um array em vários documentos |
+| `$count` | `COUNT(*)` | Conta os documentos |
 
-#### Count no MongoDB
+### Contando
 
-A agregação de count é utilizada para contar o número de documentos que satisfazem uma determinada condição. Ela pode ser usada para contar o número total de documentos em uma coleção ou para contar o número de documentos que correspondem a um critério específico.
+```javascript
+db.clientes.aggregate([
+  { $match: { status: "ativo" } },
+  { $count: "total_ativos" }
+])
+// { total_ativos: 42 }
+```
 
-Algumas das etapas de agregação mais comuns para o count incluem:
+### Valores distintos
 
-- $match: filtra os documentos com base em um conjunto de condições.
-- $count: conta o número de documentos que passaram pelas etapas anteriores do pipeline.
+```javascript
+// Cidades distintas dos clientes ativos
+db.clientes.aggregate([
+  { $match: { status: "ativo" } },
+  { $group: { _id: "$cidade" } },
+  { $sort: { _id: 1 } }
+])
+
+// Atalho para o mesmo resultado:
+db.clientes.distinct("cidade", { status: "ativo" })
+```
+
+### Relatório: total vendido por cliente
+
+```javascript
+db.pedidos.aggregate([
+  { $match: { status: "pago" } },
+  { $group: { _id: "$clienteId", total: { $sum: "$valor" }, pedidos: { $sum: 1 } } },
+  { $sort: { total: -1 } },
+  { $limit: 5 },
+  { $lookup: { from: "clientes", localField: "_id", foreignField: "_id", as: "cliente" } }
+])
+```
+
+> [!TIP]
+> Coloque o `$match` o mais **cedo** possível no pipeline: menos documentos chegam às etapas seguintes, e o `$match` inicial ainda pode usar índices.
+
+📚 Para ir além: [Agregações (documentação)](https://www.mongodb.com/docs/manual/aggregation/) · [Padrões de modelagem (*Building with Patterns*)](https://www.mongodb.com/blog/post/building-with-patterns-a-summary)
+
+## 📌 Resumindo
+
+- Índices evitam o COLLSCAN; confira com `explain()`.
+- Há índices simples, compostos, únicos, geoespaciais, de texto e TTL.
+- Agregação = pipeline de estágios: `$match`, `$group`, `$project`, `$sort`, `$lookup`...
+- Filtre cedo com `$match`.
+
+## 🏋️ Mão na massa
+
+**1.** Crie um índice que impeça dois clientes com o mesmo CPF.
 
 <details>
-<summary>Exemplo de uso:</summary>
+<summary>Ver resposta</summary>
 
-```bash
-db.collection.aggregate ([
-    { $match: { status: "active" } },
-    { $count: "total_active" }
+```javascript
+db.clientes.createIndex({ cpf: 1 }, { unique: true })
+```
+
+Inserir outro documento com um CPF já existente gera o erro `E11000 duplicate key`.
+
+</details>
+
+**2.** Calcule a média de idade dos clientes por cidade, da maior média para a menor.
+
+<details>
+<summary>Ver resposta</summary>
+
+```javascript
+db.clientes.aggregate([
+  { $group: { _id: "$cidade", mediaIdade: { $avg: "$idade" } } },
+  { $sort: { mediaIdade: -1 } }
 ])
 ```
 
 </details>
 
-<br>
-
-#### Distinct no MongoDB
-
-A agregação de distinct é utilizada para retornar um conjunto distinto de valores para um determinado campo em uma coleção. Ela pode ser usada para encontrar todos os valores únicos de um campo ou para encontrar os valores únicos que correspondem a um critério específico.
-
-Algumas das etapas de agregação mais comuns para o distinct incluem:
-
-- $match: filtra os documentos com base em um conjunto de condições.
-- $group: agrupa os documentos com base em um ou mais campos.
-- $project: projeta um subconjunto dos campos de um documento.
-- $sort: ordena os documentos de acordo com um ou mais campos.
-- $limit: limita o número de documentos retornados pela agregação.
-- $addToSet: adiciona um valor a um conjunto se ele ainda não estiver presente.
+**3.** Como saber se a consulta `db.pedidos.find({ clienteId: X })` está usando um índice?
 
 <details>
-<summary>Exemplo de uso:</summary>
+<summary>Ver resposta</summary>
 
-```bash
-db.collection.aggregate([
-    { $match: { status: "active" } },
-    { $group: { _id: "$field_name", uniqueValues: { $addToSet: "$field_name" } } },
-    { $project: { _id: 0, field_name: "$_id", uniqueValues: 1 } }
-])
-```
+Rode `db.pedidos.find({ clienteId: X }).explain("executionStats")` e procure o estágio vencedor: **IXSCAN** indica uso de índice; **COLLSCAN** indica leitura da coleção inteira. Compare também `totalDocsExamined` com `nReturned`.
 
 </details>
 
-<br>
+---
 
-<br>
+<div align="center">
 
-<br>
+[⬅️ 5.5 Comandos essenciais (CRUD)](./05-mongodb-comandos.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [5.7 Amazon DynamoDB ➡️](./07-dynamodb.md)
 
-<br>
-
-[Voltar a MongoDB](/Arquivos/Conteudo/5%20-%20Trabalhando%20com%20banco%20de%20dados%20sql%20e%20nosql/5.2.2%20Mongodb.md)<br>
-[Voltar a Introdução ao MongoDB](/Arquivos/Conteudo/5%20-%20Trabalhando%20com%20banco%20de%20dados%20sql%20e%20nosql/5.2%20Introducao%20ao%20mongodb.md)<br>
-[Voltar ao inicio](/README.md)
+</div>

@@ -1,49 +1,45 @@
-# Desafio Dragão
+# 3.4 · Desafio: Dragão (Mais de 8000!)
 
-## O que fazer ?
-Daenerys é a khaleesi dos Dothraki. Juntamente com Drogon, eles vão atrás do Tyrion, para tentar dominar Westeros. Ela possui, além do seu dragãozinho, um rastreador que mede o nível de energia de qualquer ser vivo. Todos os seres com o nível menor ou igual a 8000, ela considera como se fosse um inseto. Quando passa deste valor, que foi o caso do Drogon, ela se espanta e grita “Mais de 8000”. Baseado nisso, utilize a mesma tecnologia e analise o nível de energia dos seres vivos.
+> **Em uma frase:** ler vários níveis de energia e, para cada um, dizer se é maior que 8000 ("Mais de 8000!") ou não ("Inseto!").
 
-### Entrada:
-A primeira linha contém um número inteiro C relativo ao número de casos de teste. Em seguida, haverá C linhas, com um número inteiro N (100 <= N <= 100000) relativo ao nível de energia de um ser vivo.
+## 📋 Enunciado
 
-### Saída:
-Para cada valor lido, imprima o texto correspondente.
+Daenerys tem um rastreador que mede o nível de energia de qualquer ser vivo. Seres com nível **menor ou igual a 8000** são considerados insetos; acima disso, ela grita "Mais de 8000!".
 
-| Exemplo de Entrada | Exemplo de Saída |
+### Entrada
+
+A primeira linha tem um inteiro `C`, o número de casos de teste. Depois vêm `C` linhas, cada uma com um inteiro `N` (100 ≤ N ≤ 100000).
+
+### Saída
+
+Para cada `N`, imprima `Mais de 8000!` ou `Inseto!`.
+
+| Entrada | Saída |
 | --- | --- |
-| 3 | mais de 8000! |
-| 8001 | Inseto! |
-| 100 | Inseto! |
-| 200 |  |
+| `3`<br>`8001`<br>`100`<br>`200` | `Mais de 8000!`<br>`Inseto!`<br>`Inseto!` |
 
-<br>
+## 🧠 Como pensar
+
+1. Ler `C`.
+2. Repetir `C` vezes: ler `N` e testar `N > 8000`.
+
+> [!TIP]
+> Em plataformas de desafio, a saída é comparada **caractere por caractere**. Maiúsculas, acentos, espaços e pontuação precisam ser idênticos ao enunciado.
 
 <details>
-<summary>Código resposta:</summary>
+<summary>Ver resposta</summary>
 
 ```java
-package Dragao;
-
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+        Scanner entrada = new Scanner(System.in);
+        int casos = entrada.nextInt();
 
-        int casos, poderDeLuta;
-
-        Scanner ler = new Scanner(System.in);
-
-        casos = ler.nextInt();// lê o número de casos de teste
-
-        for(int i = 0; i < casos; i++){
-            poderDeLuta = ler.nextInt(); // lê o nível de energia do ser vivo
-
-            //Implemente a condição adequada para a impressão dos textos conforme o solicitado no desafio:
-            if(poderDeLuta > 8000){
-                System.out.println("Mais de 8000!");
-            } else {
-                System.out.println("Inseto!");
-            }
+        for (int i = 0; i < casos; i++) {
+            int energia = entrada.nextInt();
+            System.out.println(energia > 8000 ? "Mais de 8000!" : "Inseto!");
         }
     }
 }
@@ -51,10 +47,36 @@ public class Main {
 
 </details>
 
-<br>
+## 🏋️ Mão na massa
 
-<br>
+**1.** Qual a saída para a energia exatamente `8000`?
 
-<br>
+<details>
+<summary>Ver resposta</summary>
 
-[Voltar ao inicio](/README.md)
+`Inseto!`, porque a regra é "menor **ou igual** a 8000".
+
+</details>
+
+**2.** Acrescente uma terceira categoria: acima de 50000, imprima "Lendário!".
+
+<details>
+<summary>Ver resposta</summary>
+
+```java
+if (energia > 50000) System.out.println("Lendário!");
+else if (energia > 8000) System.out.println("Mais de 8000!");
+else System.out.println("Inseto!");
+```
+
+A condição mais restritiva vem **primeiro**; caso contrário, o "Mais de 8000!" capturaria também os lendários.
+
+</details>
+
+---
+
+<div align="center">
+
+[⬅️ 3.3 Soma de H com N termos](./03-soma-de-h.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [3.5 Fibonacci ➡️](./05-fibonacci.md)
+
+</div>

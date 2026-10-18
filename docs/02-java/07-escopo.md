@@ -1,52 +1,129 @@
-# Escopo
+# 2.7 · Escopo de variáveis
 
-O escopo pode ser entendido como o ambiente onde uma variável pode ser acessada. Em Java, o escopo de variáveis vai de acordo com o bloco onde ela foi declarada.
+> **Em uma frase:** o **escopo** é a "região" do código onde uma variável existe; ela nasce no bloco `{ }` em que foi declarada e deixa de existir quando esse bloco termina.
 
-- A variável é criada no primeiro acesso à ela, se tornando inacessível após o interpretador sair do bloco de execução ao qual ela pertence. Portanto, esta variável não pode ser lida ou manipulada por rotinas e códigos que estão fora do seu bloco de declaração, ou seja, fora do escopo da variável.
+## 🏠 A analogia da casa
 
-- Em uma Classe, podemos visualizar a diferença de escopos. Os atributos (variáveis) são declarados no corpo principal da Classe, sendo portanto acessíveis por todos os métodos.
+Pense numa casa: o que está na **sala** (atributo da classe) todo mundo da casa pode usar. O que está dentro do **seu quarto** (variável de um método) só você usa. E o que está **dentro da gaveta** do quarto (variável de um `for` ou `if`) só existe enquanto a gaveta está aberta.
 
-- Caso você declare uma variável DENTRO DE UM MÉTODO, o escopo dessa variável está limitado apenas ao corpo desse método, ou seja, dentro das chaves que limitam o método.
+## 🧭 Tipos de escopo
 
-- Uma parte fundamental na elaboração de algoritmos simples ou complexos é determinar a localização do código em questão. Sem um domínio sobre escopo de códigos seu projeto tende a conter falhas estruturais e comprometer a proposta principal da aplicação.
+| Escopo | Onde é declarada | Até onde vale |
+| --- | --- | --- |
+| **Atributo** (de instância ou de classe) | No corpo da classe | Em todos os métodos da classe |
+| **Local de método** | Dentro de um método | Só dentro daquele método |
+| **De bloco** | Dentro de um `if`, `for`, `while`... | Só dentro daquele bloco |
+| **Parâmetro** | Na assinatura do método | Só dentro daquele método |
 
-### Exemplo:
 ```java
 public class Conta {
-	//variavel da classe conta
-	double saldo=10.0;
-	
-	public void sacar(Double valor) {
-		//variavel local de método
-		double novoSaldo = saldo - valor;
-	}
-	public void imprimirSaldo(){
-		//disponível em toda classe
-		System.out.println(saldo);
-		//somente o método sacar conhece esta variavel
-		System.out.println(novoSaldo);
-	
-	}
-	public double calcularDividaExponencial(){
-		//variável local de método
-		double valorParcela = 50.0;
-		double valorMontante = 0.0; // começando a variável com valor zero
-		for(int x=1; x<=5; x++) {//x variável de escopo de fluxo
-			//esta variável será reiniciada a cada execução for
-			double valorCalculado = valorParcela * x;
-			valorMontante = valorMontante + valorCalculado;
-		}
-		//escopo de fluxo
-		//x e valorCalculado nunca estarão disponíveis fora do for
-		
-		return valorMontante;
-	}
+    double saldo = 10.0;                       // atributo: visível na classe toda
+
+    public void sacar(double valor) {          // parâmetro: visível só em sacar()
+        double novoSaldo = saldo - valor;      // local: só existe em sacar()
+        saldo = novoSaldo;
+    }
+
+    public void imprimirSaldo() {
+        System.out.println(saldo);             // ✅ atributo
+        System.out.println(novoSaldo);         // ❌ erro: novoSaldo só existe em sacar()
+    }
+
+    public double calcularDivida() {
+        double montante = 0.0;
+        for (int x = 1; x <= 5; x++) {         // x: escopo do for
+            double parcela = 50.0 * x;         // parcela: recriada a cada volta
+            montante += parcela;
+        }
+        // x e parcela não existem mais aqui
+        return montante;
+    }
 }
 ```
 
-<br>
+> [!NOTE]
+> Variáveis **locais** precisam ser inicializadas antes do uso, senão o código nem compila. Já os **atributos** recebem um valor padrão (`0`, `false` ou `null`).
 
-<br>
+> [!TIP]
+> Declare cada variável no **menor escopo possível**, perto de onde ela é usada. Isso evita confusão e bugs.
 
-[Voltar a Aprendendo a sintaxe Java](/Arquivos/Conteudo/2%20-%20Conhecendo%20a%20linguagem%20Java/2.2%20Aprendendo%20a%20sintaxe%20java.md)<br>
-[Voltar ao incio](/README.md)
+### Sombreamento (*shadowing*) e o `this`
+
+Se um parâmetro tem o mesmo nome de um atributo, o parâmetro "esconde" o atributo. Para acessar o atributo, use `this`:
+
+```java
+public class Pessoa {
+    private String nome;
+
+    public void setNome(String nome) {
+        this.nome = nome;   // this.nome = atributo; nome = parâmetro
+    }
+}
+```
+
+## 📌 Resumindo
+
+- Uma variável existe só dentro do bloco onde foi declarada.
+- Atributos valem na classe toda; variáveis locais, só no método ou bloco.
+- Locais precisam ser inicializadas; atributos têm valor padrão.
+- Use `this` para diferenciar atributo de parâmetro com o mesmo nome.
+
+## 🏋️ Mão na massa
+
+**1.** Este código compila? Por quê?
+
+```java
+for (int i = 0; i < 3; i++) {
+    int dobro = i * 2;
+}
+System.out.println(dobro);
+```
+
+<details>
+<summary>Ver resposta</summary>
+
+**Não compila.** `dobro` foi declarada dentro do `for` e deixa de existir quando o bloco termina. Para usá-la depois, declare-a antes do laço.
+
+</details>
+
+**2.** O que este código imprime?
+
+```java
+public class Teste {
+    static int valor = 10;
+    public static void main(String[] args) {
+        int valor = 20;
+        System.out.println(valor);
+        System.out.println(Teste.valor);
+    }
+}
+```
+
+<details>
+<summary>Ver resposta</summary>
+
+`20` e depois `10`. A variável local `valor` esconde o atributo de mesmo nome; com `Teste.valor`, acessamos o atributo estático da classe.
+
+</details>
+
+**3.** Por que este código não compila e como corrigir?
+
+```java
+int total;
+System.out.println(total);
+```
+
+<details>
+<summary>Ver resposta</summary>
+
+Variáveis locais não têm valor padrão, então `total` precisa ser inicializada antes do uso: `int total = 0;`.
+
+</details>
+
+---
+
+<div align="center">
+
+[⬅️ 2.6 Métodos](./06-metodos-introducao.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [2.8 Palavras reservadas ➡️](./08-palavras-reservadas.md)
+
+</div>

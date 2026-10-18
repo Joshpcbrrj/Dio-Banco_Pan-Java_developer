@@ -1,64 +1,106 @@
-# Conceitos básicos de segurança da informação
+# 6.6 · Criptografia e certificados digitais
 
-## Criptografia por chave
+> **Em uma frase:** na criptografia **simétrica**, a mesma chave cifra e decifra (rápida, mas é preciso compartilhar a chave); na **assimétrica**, há um par de chaves pública/privada (resolve o compartilhamento); e o **certificado digital** prova a quem pertence uma chave pública.
 
-<img src="./img/18.png" alt="" width="550">
+## 🔑 Criptografia simétrica
 
-A criptografia por chave, também conhecida como criptografia simétrica, é um método de criptografia em que uma única chave é usada tanto para cifrar quanto para decifrar a informação. Isso significa que a mesma chave é usada pelo remetente e pelo destinatário para proteger a confidencialidade dos dados.
+```mermaid
+flowchart LR
+    A["'Olá, tudo bem?'"] -- "cifra com a chave 🔑" --> B["18f7741f226a5923..."] -- "decifra com a MESMA chave 🔑" --> C["'Olá, tudo bem?'"]
+```
 
-- É um método de criptografia em que uma única chave é usada para cifrar e decifrar os dados
-- A mesma chave é usada pelo remetente e pelo destinatário
-- É amplamente utilizado em comunicações seguras, como VPNs e TLS/SSL
+- **Uma única chave**, conhecida pelos dois lados.
+- **Muito rápida**: ideal para grandes volumes de dados.
+- Problema: como entregar a chave para o outro lado sem que alguém a intercepte?
+- Algoritmos: **AES** (o padrão atual) e **ChaCha20**. DES e 3DES são antigos e inseguros.
 
-### Tipos de chaves:
-A criptografia pode ser realizada por meio de duas técnicas principais: criptografia simétrica e criptografia assimétrica. Ambas as técnicas usam chaves para proteger a confidencialidade dos dados, mas há diferenças importantes entre elas.
+## 🗝️ Criptografia assimétrica
 
-**Criptografia Simétrica**
+Cada pessoa tem um **par de chaves**:
 
-Na criptografia simétrica, uma única chave é usada tanto para cifrar quanto para decifrar a informação. Essa chave é compartilhada entre o remetente e o destinatário da mensagem. Isso significa que qualquer pessoa que conheça a chave pode acessar a informação protegida.
+- a **pública**, que pode ser distribuída para qualquer um;
+- a **privada**, que nunca sai das mãos do dono.
 
-Algumas características da criptografia simétrica são:
+```mermaid
+flowchart LR
+    A["Mensagem"] -- "cifra com a chave PÚBLICA de Bia" --> B["texto cifrado"] -- "só a chave PRIVADA de Bia decifra" --> C["Mensagem"]
+```
 
-- É um método simples e rápido para cifrar grandes quantidades de dados.
-- Requer que o remetente e o destinatário compartilhem a mesma chave, o que pode ser um desafio em cenários onde a comunicação é feita por canais inseguros.
-- Exemplos de algoritmos de criptografia simétrica são AES, DES e 3DES.
+| Uso | Como funciona |
+| --- | --- |
+| **Sigilo** | Cifra com a chave **pública** do destinatário; só a **privada** dele decifra. |
+| **Assinatura digital** | O autor assina com a sua chave **privada**; qualquer um confere com a **pública**. Prova autoria e que nada foi alterado. |
 
-<br>
+- Algoritmos: **RSA** e **ECC** (curvas elípticas, chaves menores com a mesma segurança).
+- É **bem mais lenta** que a simétrica.
 
-**Criptografia Assimétrica**
+> [!TIP]
+> Na prática, os dois tipos trabalham **juntos**: a assimétrica é usada só para combinar com segurança uma chave simétrica, e a simétrica cifra os dados. É exatamente o que o TLS faz (próxima aula).
 
-Na criptografia assimétrica, duas chaves são usadas: uma chave pública e uma chave privada. A chave pública pode ser compartilhada com qualquer pessoa, enquanto a chave privada é mantida em segredo pelo proprietário. A chave pública é usada para cifrar a informação e a chave privada é usada para decifrá-la.
+> [!NOTE]
+> Não confunda **criptografia** (reversível, com chave) com **hash** (irreversível, como o SHA-256). Senhas devem ser guardadas com hash próprio para senhas, como o **bcrypt** (aula [6.20](./20-autenticacao.md)).
 
-Algumas características da criptografia assimétrica são:
+## 📜 Certificado digital
 
-- É mais seguro do que a criptografia simétrica, pois a chave privada nunca é compartilhada com terceiros.
-- Permite a criação de certificados digitais que podem ser usados para autenticar a identidade de uma pessoa ou organização.
-- Exemplos de algoritmos de criptografia assimétrica são RSA e ECC.
+Como saber que a chave pública do "banco.com.br" é mesmo do banco, e não de um impostor? Por um **certificado digital**: um documento eletrônico que liga uma chave pública a uma identidade, **assinado** por uma **Autoridade Certificadora (AC)** confiável.
 
-<br>
+Um certificado contém: o nome do dono (ex.: o domínio), a chave pública, a validade e a assinatura da AC.
 
-## Certificado digital
+```mermaid
+flowchart TB
+    R["AC raiz<br/>(já vem instalada no navegador/sistema)"] -- assina --> I["AC intermediária"] -- assina --> S["Certificado do site<br/>banco.com.br"]
+```
 
-<img src="./img/19.jpg" alt="" width="300">
+O navegador confere essa **cadeia de confiança** até uma AC raiz que ele já conhece. Se algo não bate (domínio diferente, certificado vencido, AC desconhecida), ele mostra um alerta de segurança.
 
-Um certificado digital é um documento eletrônico que serve como uma identidade digital. Ele é usado para autenticar a identidade de um indivíduo, organização ou servidor e garantir a integridade da comunicação criptografada.
+### Autoridades certificadoras
 
-- É um documento eletrônico que serve como uma identidade digital
-- É usado para autenticar a identidade de um indivíduo, organização ou servidor
-- Garante a integridade da comunicação criptografada
-- É amplamente utilizado em transações comerciais on-line, como compras em lojas virtuais e internet banking.
+- **Let's Encrypt**: gratuita e automatizada, responsável por boa parte dos sites HTTPS do mundo.
+- **DigiCert**, **Sectigo**, **GlobalSign**: comerciais.
+- **ICP-Brasil**: a infraestrutura oficial brasileira, usada em e-CPF, e-CNPJ e assinaturas com validade jurídica.
 
-#### Entidades certificadoras:
-As entidades certificadoras (ou Autoridades Certificadoras - AC) são organizações responsáveis por emitir certificados digitais que autenticam a identidade de uma pessoa ou organização. Essas entidades são confiáveis e seguem padrões e protocolos internacionais para garantir a autenticidade e segurança dos certificados emitidos.
+> [!NOTE]
+> O **CA/Browser Forum** não é uma AC: é a associação de ACs e fabricantes de navegadores que define as regras que as ACs precisam seguir.
 
-- As ACs são responsáveis por verificar a identidade da pessoa ou organização que solicita o certificado, seja por meio de documentação, verificação de informações e outras técnicas de validação. Em seguida, as ACs emitem o certificado digital, que contém informações como o nome da pessoa ou organização, uma chave pública associada e outras informações relevantes.
-- Os certificados digitais são utilizados para autenticar a identidade de pessoas ou organizações em transações comerciais on-line, como compras em lojas virtuais, internet banking, acesso a serviços governamentais, entre outros. Além disso, eles também são usados para proteger a integridade dos dados transmitidos por meio de criptografia de chave pública.
-- Existem diversas ACs no mundo, desde empresas privadas até instituições governamentais. Algumas das mais conhecidas são VeriSign, Digicert, GlobalSign, Let's Encrypt, ICP-Brasil (no Brasil) e CA/Browser Forum, que é uma associação internacional de empresas certificadoras. É importante escolher uma AC confiável e com boa reputação para garantir a segurança das informações transmitidas.
+## 📌 Resumindo
 
+- Simétrica: uma chave, rápida (AES). Assimétrica: par pública/privada (RSA, ECC).
+- Pública cifra e privada decifra (sigilo); privada assina e pública confere (assinatura).
+- Certificado = chave pública + identidade, assinado por uma AC; o navegador confere a cadeia.
 
-<br>
+## 🏋️ Mão na massa
 
-<br>
+**1.** Bia quer mandar uma mensagem secreta para Caio. Com qual chave ela cifra?
 
-[Voltar a Principais protocolos de comunicação da internet](/Arquivos/Conteudo/6%20-%20Ganhando%20produtividade%20com%20spring%20framwork/6.1%20Principais%20protocolos%20de%20comunicacao%20na%20internet.md)<br>
-[Voltar ao inicio](/README.md)
+<details>
+<summary>Ver resposta</summary>
+
+Com a chave **pública de Caio**. Assim, só a chave **privada de Caio** consegue decifrar.
+
+</details>
+
+**2.** Por que não usar apenas criptografia assimétrica para tudo?
+
+<details>
+<summary>Ver resposta</summary>
+
+Porque ela é muito mais **lenta** que a simétrica. Por isso, usa-se a assimétrica só para combinar uma chave simétrica, e a simétrica cifra os dados.
+
+</details>
+
+**3.** Clique no cadeado da barra de endereço de um site HTTPS e veja o certificado. Quem é a AC emissora e até quando ele vale?
+
+<details>
+<summary>Ver resposta</summary>
+
+No Chrome: cadeado → **A conexão é segura** → **O certificado é válido**. Aparecem o nome do domínio (*emitido para*), a AC (*emitido por*, ex.: "Let's Encrypt" ou "Google Trust Services") e o período de validade. Certificados atuais costumam valer poucos meses e são renovados automaticamente.
+
+</details>
+
+---
+
+<div align="center">
+
+[⬅️ 6.5 Servidores web e de aplicação](./05-servidores-web.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [6.7 SSL e TLS ➡️](./07-tls.md)
+
+</div>

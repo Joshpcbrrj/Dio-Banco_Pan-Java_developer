@@ -1,194 +1,121 @@
-# Criando projeto com Maven
+# 4.15 · Criando projetos e comandos do Maven
 
-Para criar um projeto no Maven vamos fazer:
-```bash
-mvn archetype:generate -DgroupId=nome_do_grupo -DartifactId=nome_do_projeto 
--Darchetype=maven-archetype-quickstart -DinteractiveMode=false
-```
+> **Em uma frase:** um projeto Maven nasce de um **archetype** (modelo) e é construído com poucos comandos: `mvn compile`, `mvn test`, `mvn package`, `mvn install` e `mvn clean`.
 
-<br>
+## 🏗️ Criando um projeto
 
-## Alguns comandos úteis do Apache Maven:
-### Comando para compilar: compile
-
-O comando "compile" compila o código-fonte do projeto e gera os arquivos de classe (.class), além de copiar outros recursos para o diretório "target". Ele deve ser executado sempre que houver alterações no código-fonte.
-
-**Exemplo de código:**
+### Pela linha de comando (archetype)
 
 ```bash
-mvn compile
-```
-Para obter informações detalhadas sobre o processo de compilação, você pode ativar a saída de depuração usando o comando:
-```
-bashCopy code
-mvn -X compile
-```
-
-<br>
-
-### Comando para testar: test
-O comando "test" executa os testes automatizados presentes no projeto. Ele procura por testes na pasta "src/test/java" e os executa, exibindo os resultados no console.
-
-**Exemplo de código:**
-
-```
-bashCopy code
-mvn test
+mvn archetype:generate \
+  -DgroupId=br.com.treino \
+  -DartifactId=calculadora \
+  -DarchetypeArtifactId=maven-archetype-quickstart \
+  -DarchetypeVersion=1.5 \
+  -DinteractiveMode=false
 ```
 
-<br>
+No Windows (PowerShell), escreva tudo em uma linha ou troque a `\` por `` ` ``.
 
-### Comando para empacotar: package
+Um **archetype** é um modelo de projeto: ele cria a estrutura de pastas e os arquivos iniciais. O `maven-archetype-quickstart` gera uma aplicação Java simples com um teste de exemplo. Existem archetypes para aplicações web, plugins e muito mais ([lista oficial](https://maven.apache.org/archetypes/)).
 
-O comando "package" empacota o projeto em um arquivo .jar, .war ou .ear, dependendo do tipo de projeto, e coloca-o no diretório "target". Além disso, ele também executa as fases anteriores, como compilação e teste. É útil para preparar o projeto para a distribuição.
+### Pela IDE
 
-**Exemplo de código:**
+No IntelliJ: **New Project → Java → Build system: Maven**. Para projetos Spring Boot, use o [Spring Initializr](https://start.spring.io/) (Módulo 6).
 
-```
-bashCopy code
-mvn package
+## ⌨️ Comandos do dia a dia
 
-```
+| Comando | O que faz |
+| --- | --- |
+| `mvn compile` | Compila o código de `src/main/java` para `target/classes`. |
+| `mvn test` | Compila e roda os testes de `src/test/java`. |
+| `mvn package` | Compila, testa e gera o pacote (`.jar`/`.war`) em `target/`. |
+| `mvn install` | Faz tudo do `package` e copia o pacote para o repositório local (`~/.m2`), para outros projetos seus usarem. |
+| `mvn clean` | Apaga a pasta `target/`. |
+| `mvn clean install` | Limpa e reconstrói tudo do zero (muito usado). |
+| `mvn package -DskipTests` | Empacota sem rodar os testes (use com moderação). |
+| `mvn -X compile` | Mostra o log de depuração (útil quando o build quebra). |
+| `mvn -q package` | Modo silencioso: só mostra erros. |
 
-<br>
+> [!NOTE]
+> Cada comando executa **todas as fases anteriores** do ciclo de vida. Por isso `mvn package` também compila e testa (detalhes na aula [4.17](./17-maven-ciclo-de-vida.md)).
 
-### Comando para instalar localmente: install
+### Comandos de dependências
 
-O comando "install" é similar ao "mvn package", mas o pacote gerado é instalado no repositório local do Maven. Isso permite que outros projetos que dependam desse pacote possam encontrá-lo no repositório local e utilizá-lo.
+| Comando | O que faz |
+| --- | --- |
+| `mvn dependency:tree` | Mostra a árvore de dependências, incluindo as transitivas. |
+| `mvn dependency:build-classpath -DincludeScope=compile` | Imprime o *classpath* das dependências de um escopo (`compile`, `test`, `runtime`). |
+| `mvn dependency:resolve` | Baixa todas as dependências. |
+| `mvn versions:display-dependency-updates` | Lista as dependências que têm versões mais novas. |
 
-**Exemplo de código:**
+## ➕ Adicionando uma dependência
 
-```
-bashCopy code
-mvn install
-
-```
-
-<br>
-
-### Comandos dependency:
-
-Comando para mostrar a árvore de dependências do projeto: dependency:tree
-
-O comando "dependency:tree" exibe a árvore de dependências do projeto. Ele lista todas as dependências utilizadas pelo projeto, incluindo as dependências transitivas, ou seja, as dependências das dependências.
-
-**Exemplo de código:**
-
-```
-bashCopy code
-mvn dependency:tree
-
-```
-
-<br>
-
-### Comando para imprimir o caminho de classe das dependências de escopo "compile":
-
-Este comando é usado para imprimir o caminho de classe das dependências de escopo "compile". Isso inclui as dependências necessárias tanto para compilar quanto para executar o projeto.
-
-**Exemplo de código:**
-
-```
-bashCopy code
-mvn dependency:build-classpath -DincludeScope=compile
-
-```
-
-<br>
-
-### Comando para imprimir o caminho de classe das dependências de escopo "test":
-
-Este comando é usado para imprimir o caminho de classe das dependências de escopo "test". Isso inclui as dependências necessárias apenas para executar os testes do projeto.
-
-**Exemplo de código:**
-
-```
-bashCopy code
-mvn dependency:build-classpath -DincludeScope=test
-```
-
-<br>
-
-### Comando para imprimir o caminho de classe das dependências de escopo "runtime":
-
-Este comando é usado para imprimir o caminho de classe das dependências de escopo "runtime". Isso inclui as dependências necessárias apenas para executar o projeto em tempo de execução.
-
-**Exemplo de código:**
-
-```
-bashCopy code
-mvn dependency:build-classpath -DincludeScope=runtime
-
-```
-
-<br>
-
-### Comando para limpar diretório de trabalho: clean
-
-O comando "clean" remove o diretório "target", que contém todos os arquivos gerados pelo Maven durante a compilação e empacotamento do projeto. Ele é útil para limpar o projeto antes de realizar uma nova compilação.
-
-**Exemplo de código:**
-
-```
-bashCopy code
-mvn clean
-```
-
-<br>
-
-### Comando para preparar para distribuição e limpar diretórios de trabalho: clean install
-
-O comando "clean install" combina as funcionalidades dos comandos "mvn clean" e "mvn install". Ele remove o diretório "target", compila o código-fonte, executa os testes automatizados, empacota o projeto em um arquivo .jar, .war ou .ear e instala o pacote gerado no repositório local do Maven. É um comando útil para preparar o projeto para a distribuição, garantindo que todas as etapas tenham sido realizadas corretamente.
-
-**Exemplo de código:**
-
-```
-bashCopy code
-mvn clean install
-```
-
-<br>
-
-## Maven Archetype
-
-<img src="./img/14.jpg" alt="" width="600">
-
-É um modelo ou padrão para a criação de projetos Maven. Ele contém uma estrutura de diretórios e arquivos predefinida que segue um determinado padrão para um determinado tipo de projeto. O Maven Archetype é útil porque permite criar rapidamente um novo projeto com uma estrutura padrão e já com algumas dependências predefinidas. Isso ajuda a reduzir o tempo e o esforço necessários para configurar um novo projeto Maven. Existem vários arquétipos disponíveis para diferentes tipos de projetos, como aplicativos da Web, aplicativos de console, bibliotecas, etc.
-
-### Links úteis:
-[Apache Maven projects](https://maven.apache.org/archetypes/)<br>
-[MVN repository](https://mvnrepository.com/)<br>
-[Maven-archetype.list](https://gist.github.com/zbigniewTomczak/4235871)<br>
-[Baeldung - Guide to Maven Achetype](https://www.baeldung.com/maven-archetype)
-
-<br>
-
-## Como adicionar dependências no Maven ?
-Para adicionar dependências em um projeto Maven, é necessário incluir o elemento **`<dependencies>`** no arquivo **`pom.xml`** do projeto e adicionar as informações da dependência dentro dele.
-
-Cada dependência é definida por meio dos elementos **`<dependency>`**, que contêm as informações do groupId, artifactId e version da dependência.
-
-<details>
-<summary>Exemplo de adição de dependência no pom:</summary>
+Copie as coordenadas do [Maven Central](https://central.sonatype.com/) para dentro de `<dependencies>` no `pom.xml`:
 
 ```xml
-<!-- Adicionando a dependência do Apache Commons Lang -->
 <dependencies>
-  <dependency>
-    <groupId>org.apache.commons</groupId>
-    <artifactId>commons-lang3</artifactId>
-    <version>3.12.0</version>
-  </dependency>
+    <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+        <version>3.18.0</version>
+    </dependency>
 </dependencies>
+```
+
+No IntelliJ, depois de editar o `pom.xml`, clique no ícone 🔄 **Load Maven Changes** que aparece no canto do editor.
+
+```java
+import org.apache.commons.lang3.StringUtils;
+
+System.out.println(StringUtils.capitalize("java"));   // Java
+System.out.println(StringUtils.isBlank("   "));       // true
+```
+
+## 📌 Resumindo
+
+- Projetos nascem de archetypes (`mvn archetype:generate`) ou pela IDE / Spring Initializr.
+- `compile` → `test` → `package` → `install`; `clean` apaga o `target`.
+- `mvn dependency:tree` mostra todas as dependências.
+- Dependências são adicionadas no `<dependencies>` do `pom.xml`.
+
+## 🏋️ Mão na massa
+
+**1.** Crie um projeto com o archetype quickstart e rode `mvn package`. Onde fica o `.jar` gerado?
+
+<details>
+<summary>Ver resposta</summary>
+
+Na pasta `target/`, com o nome `artifactId-version.jar` (ex.: `target/calculadora-1.0-SNAPSHOT.jar`). Dá para executá-lo com `java -cp target/calculadora-1.0-SNAPSHOT.jar br.com.treino.App`.
+
+</details>
+
+**2.** Qual a diferença entre `mvn package` e `mvn install`?
+
+<details>
+<summary>Ver resposta</summary>
+
+Os dois geram o pacote em `target/`. O `install` vai além e **copia** o pacote para o repositório local (`~/.m2`), permitindo que outros projetos na sua máquina o usem como dependência.
+
+</details>
+
+**3.** Adicione a `commons-lang3` ao projeto e use `StringUtils.reverse("Maven")`.
+
+<details>
+<summary>Ver resposta</summary>
+
+Depois de incluir a dependência no `pom.xml` e recarregar o Maven:
+
+```java
+System.out.println(StringUtils.reverse("Maven"));   // nevaM
 ```
 
 </details>
 
-<br>
+---
 
-<br>
+<div align="center">
 
-<br>
+[⬅️ 4.14 O que é o Apache Maven](./14-maven.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [4.16 Gerenciamento de dependências ➡️](./16-maven-dependencias.md)
 
-[Voltar a Gerenciamento de dependências e build em Java com Maven](/Arquivos/Conteudo/4%20-%20Programa%C3%A7%C3%A3o%20orientada%20a%20objetos/4.5%20Gerenciamento%20de%20dependencias%20e%20build%20em%20java%20com%20maven.md)<br>
-[Voltar ao inicio](/README.md)
+</div>

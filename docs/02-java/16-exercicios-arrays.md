@@ -1,182 +1,146 @@
-# Exercícios de arrays
+# 2.16 · Exercícios de arrays
 
-1 - Crie um vetor de 6 números inteiros e mostre os 6 números na ordem inversa.
+> **Em uma frase:** quatro exercícios para praticar arrays e matrizes: inverter, filtrar, gerar números aleatórios e percorrer linhas e colunas.
+
+> [!TIP]
+> Antes de abrir a resposta, desenhe o array no papel com os índices. Isso ajuda muito a acertar os limites dos laços.
+
+**1.** Leia 6 números inteiros e mostre-os na ordem inversa.
+
 <details>
-<summary>Código:</summary>
+<summary>Ver resposta</summary>
 
 ```java
-package Arrays;
-
 import java.util.Arrays;
 import java.util.Scanner;
 
-public class Ex1_ordem_inversa {
+public class OrdemInversa {
     public static void main(String[] args) {
-        Scanner scan = new Scanner(System.in);
-        int[] vetor_6_num = new int[6];
-        int[] vetor_inverso = new int[vetor_6_num.length];
+        Scanner entrada = new Scanner(System.in);
+        int[] numeros = new int[6];
 
-        //preenchendo o array
-        for (int i = 0; i < vetor_6_num.length; i++){
-            System.out.println("Digite o número " + (i + 1)+ " de 6: " );
-            vetor_6_num[i] = scan.nextInt();
+        for (int i = 0; i < numeros.length; i++) {
+            System.out.print("Número " + (i + 1) + " de 6: ");
+            numeros[i] = entrada.nextInt();
         }
 
-        //invertendo a ordem do array
-        for (int i = vetor_6_num.length - 1; i >= 0; i--){
-            vetor_inverso[(vetor_6_num.length - 1 - i)] = vetor_6_num[i];
+        int[] inverso = new int[numeros.length];
+        for (int i = 0; i < numeros.length; i++) {
+            inverso[i] = numeros[numeros.length - 1 - i];
         }
 
-        //Mostrando os dados na tela
-        System.out.println("Array na ordem normal: " + Arrays.toString(vetor_6_num));
-        System.out.println("Array na ordem inversa: " + Arrays.toString(vetor_inverso));
+        System.out.println("Original: " + Arrays.toString(numeros));
+        System.out.println("Inverso:  " + Arrays.toString(inverso));
     }
 }
 ```
 
+A posição `i` do inverso recebe a posição `length - 1 - i` do original: a 0 recebe a 5, a 1 recebe a 4, e assim por diante.
+
 </details>
 
-<br>
+**2.** Leia 6 letras, conte quantas são consoantes e mostre quais são.
 
-2 - Faça um programa que leia um vetor de 6 caracteres, e diga quantas consoantes foram lidas e imprima somente as consoantes.
 <details>
-<summary>Código:</summary>
+<summary>Ver resposta</summary>
 
 ```java
-package Arrays;
-
-import java.util.Arrays;
 import java.util.Scanner;
 
-public class Ex2_consoantes {
+public class Consoantes {
     public static void main(String[] args) {
-        Scanner scan = new Scanner(System.in);
-        char[] vetor_caracteres = new char[6];
-        String consoantes = "";
-        int conta_consoantes = 0;
+        Scanner entrada = new Scanner(System.in);
+        char[] letras = new char[6];
+        StringBuilder consoantes = new StringBuilder();
+        int total = 0;
 
-        //Preenchendo o vetor com caracteres
-        for (int i = 0; i < vetor_caracteres.length; i++){
-            System.out.print("Digite a letra " + (i + 1) + " de 6: " );
-            vetor_caracteres[i] = scan.next().charAt(0);
+        for (int i = 0; i < letras.length; i++) {
+            System.out.print("Letra " + (i + 1) + " de 6: ");
+            letras[i] = Character.toLowerCase(entrada.next().charAt(0));
 
-            if((vetor_caracteres[i] != 'a')&&(vetor_caracteres[i] != 'e')&&(vetor_caracteres[i] != 'i')&&
-                    (vetor_caracteres[i] != 'o')&&(vetor_caracteres[i] != 'u')){
-                conta_consoantes++;
-                consoantes += vetor_caracteres[i] + " ";
+            boolean ehLetra = Character.isLetter(letras[i]);
+            boolean ehVogal = "aeiou".indexOf(letras[i]) >= 0;
+            if (ehLetra && !ehVogal) {
+                total++;
+                consoantes.append(letras[i]).append(' ');
             }
         }
-
-        //Mostrando na tela
-        System.out.println("\nAs letras digitadas são: " + Arrays.toString(vetor_caracteres));
-        System.out.println("A quantidade de consoantes é: " + conta_consoantes);
-        System.out.println("As consoantes são: " + consoantes);
+        System.out.println("Quantidade de consoantes: " + total);
+        System.out.println("Consoantes: " + consoantes);
     }
 }
 ```
 
+Melhorias em relação à versão "ingênua": converte para minúscula (para `A` contar como vogal), confere se é mesmo uma letra (para `7` não contar como consoante) e usa `StringBuilder`, a forma eficiente de montar textos em laços.
+
 </details>
 
-<br>
+**3.** Gere 20 números aleatórios entre 0 e 100, guarde-os em um array e mostre os números e seus sucessores.
 
-3 - Faça um programa que leia 20 números inteiros aleatórios entre 0 e 100, armazene-os em um vetor, e ao final mostre os números. Também mostre os sucessores desses números separadamente.
 <details>
-<summary>Código:</summary>
+<summary>Ver resposta</summary>
 
 ```java
-package Arrays;
-
 import java.util.Random;
 
-public class ex3_numeros_aleatorios {
+public class Aleatorios {
     public static void main(String[] args) {
         Random random = new Random();
-        int[] vetor_numeros_aleatorios = new int[20];
+        int[] numeros = new int[20];
 
-        for (int i = 0; i < vetor_numeros_aleatorios.length; i++){
-            int numero = random.nextInt(0,100);
-            vetor_numeros_aleatorios[i] = numero;
+        for (int i = 0; i < numeros.length; i++) {
+            numeros[i] = random.nextInt(0, 101);   // 0 a 100 (o limite superior é exclusivo)
         }
 
-        System.out.print("Numeros aleatorios: ");
-        for(int numero : vetor_numeros_aleatorios){
-            System.out.print(numero + " ");
-        }
-        System.out.print("\nSucessores dos números: ");
-        for(int numero : vetor_numeros_aleatorios){
-            System.out.print((numero + 1) + " ");
-        }
+        System.out.print("Números:    ");
+        for (int n : numeros) System.out.print(n + " ");
+
+        System.out.print("\nSucessores: ");
+        for (int n : numeros) System.out.print((n + 1) + " ");
     }
 }
 ```
 
+Atenção: em `nextInt(origem, limite)`, o limite **não** é incluído. Para ir até 100, use `101`.
+
 </details>
 
-<br>
+**4.** Crie uma matriz 4×4 com números aleatórios de 0 a 9 e mostre-a como uma tabela.
 
-4 - Crie uma matrix 4 por 4 com números aleatórios entre 0 e 9 e mostre na tela.
 <details>
-<summary>Código com método “deepToString” </summary>
+<summary>Ver resposta</summary>
 
 ```java
-package Arrays;
-
-import java.util.Arrays;
 import java.util.Random;
 
-public class Ex4_array_multidimensional {
+public class Matriz {
     public static void main(String[] args) {
         int[][] matriz = new int[4][4];
         Random random = new Random();
 
-        for(int i = 0; i < 4; i++) {
-            for(int j = 0; j < 4; j++) {
-                matriz[i][j] = random.nextInt(0,9);
+        for (int linha = 0; linha < matriz.length; linha++) {
+            for (int coluna = 0; coluna < matriz[linha].length; coluna++) {
+                matriz[linha][coluna] = random.nextInt(10);   // 0 a 9
             }
         }
-        System.out.println("A matriz de números aleatórios é: " + Arrays.deepToString(matriz));
+
+        for (int[] linha : matriz) {
+            for (int valor : linha) {
+                System.out.print(valor + " ");
+            }
+            System.out.println();
+        }
+        // Alternativa de uma linha: System.out.println(Arrays.deepToString(matriz));
     }
 }
 ```
 
 </details>
 
-<details>
-<summary>Código com o foreach </summary>
+---
 
-```java
-package Arrays;
+<div align="center">
 
-import java.util.Arrays;
-import java.util.Random;
+[⬅️ 2.15 Exercícios de estruturas de repetição](./15-exercicios-repeticao.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [2.17 Estruturas de dados ➡️](./17-estruturas-de-dados.md)
 
-public class Ex4_array_multidimensional {
-    public static void main(String[] args) {
-        int[][] matriz = new int[4][4];
-        Random random = new Random();
-
-        for(int i = 0; i < matriz.length; i++) {
-            for(int j = 0; j < matriz[i].length; j++) {
-                matriz[i][j] = random.nextInt(0,9);
-            }
-        }
-        System.out.println("Matriz de números aleatórios entre 0 e 9:");
-        for(int[] linha : matriz){
-            for (int coluna: linha){
-                System.out.print(coluna + " ");
-            }
-            System.out.println("");
-        }
-    }
-}
-```
-
-</details>
-<br>
-
-<br>
-
-<br>
-
-[Voltar a Estrutura de repetição e arrays em Java](/Arquivos/Conteudo/2%20-%20Conhecendo%20a%20linguagem%20Java/2.4%20Estruturas%20de%20repeticao%20e%20arrays%20em%20java.md)<br>
-[Voltar ao inicio](/README.md)
+</div>

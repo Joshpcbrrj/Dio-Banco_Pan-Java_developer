@@ -1,173 +1,204 @@
-# Visão geral
+# 2.14 · Estruturas de repetição e arrays
 
-## Estruturas de repetição
+> **Em uma frase:** laços (`while`, `do-while`, `for`, `for-each`) repetem um bloco de código enquanto uma condição for verdadeira, e **arrays** guardam vários valores do mesmo tipo em posições numeradas a partir de **zero**.
 
-Estruturas de repetição em Java são utilizadas para executar um determinado bloco de código várias vezes, com base em uma condição ou em um número definido de vezes. A escolha de qual estrutura usar depende do contexto em que o código está sendo escrito e da lógica que se deseja implementar.
+## 🔁 Os laços
 
-### Tipos de estruturas de repetição
-- Repetição com teste no inicio (While)
-    <img src="./img/13.jpg" alt="" width="250">
+### `while`: testa **antes**
 
-<br>
+Pode executar **zero** vezes, se a condição já começar falsa.
 
-- Repetição com teste no final (Do while)
-    <img src="./img/14.jpg" alt="" width="250">
-
-<br>
-
-- Repetição contada (For)
-    <img src="./img/15.jpg" alt="" width="250">
-
-<br>
-
-#### Comandos complementares
-- O comando `break` é usado para terminar de forma abrupta uma repetição.
-  
-- O comando `continue` é usado para pular comandos abaixo dele e forçar o programa a testar a condição novamente ou não, dependendo da aplicação.
-
-<br>
-
-### Operadores de incremento e decremento
-
-- **Pre-fixados:** Operador prefixado: Um operador prefixado é aquele que é aplicado antes do operando. No caso do operador de incremento ++, por exemplo, ele incrementa o valor do operando e retorna o valor incrementado.
-    ```java
-    System.out.println("Exemplo com operador de incremento prefixado:");
-
-    for (int i = 0; i < 5; ++i) {
-        System.out.println("Valor de i: " + i);
-    }
-
-    System.out.println("-----------------------");
-    ```
-
-
-- **Operador prefixado:** Um operador prefixado é aquele que é aplicado antes do operando. No caso do operador de incremento ++, por exemplo, ele incrementa o valor do operando e retorna o valor incrementado.
-    ```java
-    System.out.println("Exemplo com operador de incremento pós-fixado:");
-
-    int j = 0;
-    while (j < 5) {
-        System.out.println("Valor de j: " + j);
-        j++;
-    }
-
-    System.out.println("-----------------------");
-    ```
-
-<br>
-
-### Operações aritméticas
-
-Operador **`+=`** (adição e atribuição):
-
-- O operador **`+=`** é utilizado para somar um valor a uma variável e atribuir o resultado à mesma variável.
-- É equivalente a escrever **`variavel = variavel + valor`**.
-    
-    **Exemplo de uso:**
-    
-    ```java
-    int numero = 10;
-    numero += 5;
-    System.out.println("Valor após adição: " + numero);  // Saída: Valor após adição: 15
-    ```
-
-<br>
-
-Operador `-=` (subtração e atribuição):
-
-- O operador -= é utilizado para subtrair um valor de uma variável e atribuir o resultado à mesma variável.
-
-- É equivalente a escrever variavel = variavel valor.
-
-    **Exemplo de uso:**
-    ```java
-    int numero = 10;
-    numero -= 5;
-    System.out.println("Valor após subtração: " + numero);  // Saída: Valor após subtração: 5
-    ```
-
-<br>
-
-Operador **`*=`** (multiplicação e atribuição):
-
-- O operador **`=`** é utilizado para multiplicar uma variável por um valor e atribuir o resultado à mesma variável.
-- É equivalente a escrever **`variavel = variavel * valor`**.
-    
-    **Exemplo de uso:**
-    
-    ```java
-    int numero = 5;
-    numero *= 3;
-    System.out.println("Valor após multiplicação: " + numero);  // Saída: Valor após multiplicação: 15
-    ```
-
-<br>
-
-Operador **`/=`** (divisão e atribuição):
-
-- O operador **`/=`** é utilizado para dividir uma variável por um valor e atribuir o resultado à mesma variável.
-- É equivalente a escrever **`variavel = variavel / valor`**.
-    
-    **Exemplo de uso:**
-    
-    ```java
-    int numero = 20;
-    numero /= 4;
-    System.out.println("Valor após divisão: " + numero);  // Saída: Valor após divisão: 5
-    ```
-
-<br>
-
-## Arrays
-
-Um array é uma estrutura de dados que armazena um conjunto de valores do mesmo tipo em uma única variável. Cada elemento do array é acessado por um índice numérico que começa em 0 e vai até o tamanho do array menos 1.
-
-#### A declaração de um array em Java segue o seguinte formato:
-```java
-tipo[] nomeDoArray = new tipo[tamanhoDoArray];
+```mermaid
+flowchart TD
+    I([início]) --> C{"condição?"}
+    C -- verdadeira --> B["executa o bloco"] --> C
+    C -- falsa --> F([fim])
 ```
-<br>
 
-### Podemos ter 2 tipos de arrays 
-#### Array unidimensional 
-- Temos apenas uma coluna (índice) dos elementos.
+```java
+int contador = 1;
+while (contador <= 5) {
+    System.out.println("Volta " + contador);
+    contador++;
+}
+```
 
-    ```java
-    //Criando o array com 12 posições
-    double[] c = new double[12];
+### `do-while`: testa **depois**
 
-    //Atribuindo valores as posições 
-    c[0] = -45;
-    c[1] = 6;
-    c[2] = 0;
-    c[3] = 72;
-    c[4] = 1543;
-    c[5] = -89;
-    c[6] = 0;
-    c[7] = 62;
-    c[8] = -3;
-    c[9] = 1;
-    c[10] = 6453;
-    c[11] = 78;
-    ```
-    <img src="./img/19.jpg" alt="" width="500">
+Executa **pelo menos uma vez**. Ótimo para menus e validação de entrada.
 
-<br>
+```mermaid
+flowchart TD
+    I([início]) --> B["executa o bloco"] --> C{"condição?"}
+    C -- verdadeira --> B
+    C -- falsa --> F([fim])
+```
 
-#### Array multidimensional (Matriz)    
+```java
+int nota;
+do {
+    System.out.print("Digite uma nota de 0 a 10: ");
+    nota = entrada.nextInt();
+} while (nota < 0 || nota > 10);
+```
 
-- Temos um índice para coluna.
-- Temos outro índice para linhas.
-    ```java
-    //Criando o array com 3 linhas e 4 colunas
-    double[][] a = new double[3][4];
+### `for`: repetição **contada**
 
-    ```
-    <img src="./img/20.jpg" alt="" width="500">
+Junta numa linha a **inicialização**, a **condição** e a **atualização**.
 
-<br>
+```mermaid
+flowchart TD
+    I([início]) --> A["inicialização<br/>int i = 0"] --> C{"condição<br/>i < 5?"}
+    C -- verdadeira --> B["executa o bloco"] --> U["atualização<br/>i++"] --> C
+    C -- falsa --> F([fim])
+```
 
-<br>
+```java
+for (int i = 0; i < 5; i++) {
+    System.out.println("i = " + i);   // 0, 1, 2, 3, 4
+}
+```
 
-[Voltar a Estrutura de repetição e arrays em Java](/Arquivos/Conteudo/2%20-%20Conhecendo%20a%20linguagem%20Java/2.4%20Estruturas%20de%20repeticao%20e%20arrays%20em%20java.md)<br>
-[Voltar ao inicio](/README.md)
+### `for-each`: percorre **todos os elementos**
+
+```java
+String[] frutas = {"maçã", "banana", "uva"};
+for (String fruta : frutas) {
+    System.out.println(fruta);
+}
+```
+
+> [!TIP]
+> Use `for` quando precisar do **índice**; `for-each` quando só quiser **cada elemento**; `while` quando não souber quantas voltas serão; `do-while` quando precisar executar ao menos uma vez.
+
+### `break` e `continue`
+
+```java
+for (int i = 1; i <= 10; i++) {
+    if (i == 3) continue;   // pula o 3
+    if (i == 6) break;      // para no 6
+    System.out.println(i);  // 1, 2, 4, 5
+}
+```
+
+> [!WARNING]
+> Cuidado com o **laço infinito**: se a condição nunca ficar falsa (por exemplo, esquecer o `contador++` no `while`), o programa nunca termina.
+
+## 🗃️ Arrays
+
+Um array guarda **vários valores do mesmo tipo** em uma única variável, com **tamanho fixo**. Cada posição tem um **índice** que começa em **0** e vai até `tamanho - 1`.
+
+```java
+double[] c = new double[12];   // 12 posições, todas valendo 0.0
+c[0] = -45;
+c[1] = 6;
+c[11] = 78;
+
+int[] notas = {7, 8, 10};      // criando já com valores
+System.out.println(notas.length);   // 3
+System.out.println(notas[0]);       // 7
+```
+
+```mermaid
+flowchart LR
+    subgraph notas["int[] notas"]
+        direction LR
+        A["[0]<br/>7"] --- B["[1]<br/>8"] --- C["[2]<br/>10"]
+    end
+```
+
+> [!CAUTION]
+> Acessar um índice que não existe (como `notas[3]` num array de tamanho 3) lança `ArrayIndexOutOfBoundsException`. O último índice é sempre `length - 1`.
+
+### Arrays multidimensionais (matrizes)
+
+Um array de arrays: o primeiro índice é a **linha**, o segundo a **coluna**.
+
+```java
+int[][] matriz = new int[3][4];   // 3 linhas × 4 colunas
+matriz[0][2] = 5;                 // linha 0, coluna 2
+
+for (int linha = 0; linha < matriz.length; linha++) {
+    for (int coluna = 0; coluna < matriz[linha].length; coluna++) {
+        System.out.print(matriz[linha][coluna] + " ");
+    }
+    System.out.println();
+}
+```
+
+| | Coluna 0 | Coluna 1 | Coluna 2 | Coluna 3 |
+| --- | --- | --- | --- | --- |
+| **Linha 0** | `[0][0]` | `[0][1]` | `[0][2]` | `[0][3]` |
+| **Linha 1** | `[1][0]` | `[1][1]` | `[1][2]` | `[1][3]` |
+| **Linha 2** | `[2][0]` | `[2][1]` | `[2][2]` | `[2][3]` |
+
+### Utilitários da classe `Arrays`
+
+```java
+import java.util.Arrays;
+
+int[] numeros = {5, 2, 9, 1};
+Arrays.sort(numeros);                          // ordena: [1, 2, 5, 9]
+System.out.println(Arrays.toString(numeros));  // imprime bonitinho
+System.out.println(Arrays.deepToString(matriz)); // para matrizes
+```
+
+> [!NOTE]
+> Arrays têm tamanho fixo. Quando precisar de uma lista que cresce e diminui, use as **coleções**, como `ArrayList` (aula [2.27](./27-list.md)).
+
+## 📌 Resumindo
+
+- `while` testa antes; `do-while` testa depois (roda ao menos uma vez); `for` é contado; `for-each` percorre todos os elementos.
+- `break` sai do laço; `continue` pula para a próxima volta.
+- Arrays: tamanho fixo, mesmo tipo, índices de `0` a `length - 1`.
+- `Arrays.toString()`, `Arrays.sort()` e `Arrays.deepToString()` ajudam muito.
+
+## 🏋️ Mão na massa
+
+> Os exercícios completos com resolução estão nas próximas duas aulas. Aqui vão alguns rápidos.
+
+**1.** Imprima os números pares de 0 a 20 usando `for`.
+
+<details>
+<summary>Ver resposta</summary>
+
+```java
+for (int i = 0; i <= 20; i += 2) {
+    System.out.println(i);
+}
+```
+
+</details>
+
+**2.** Crie um array com 5 temperaturas e calcule a média usando `for-each`.
+
+<details>
+<summary>Ver resposta</summary>
+
+```java
+double[] temperaturas = {28.5, 31.0, 25.4, 29.9, 30.2};
+double soma = 0;
+for (double t : temperaturas) {
+    soma += t;
+}
+System.out.println("Média: " + soma / temperaturas.length);
+```
+
+</details>
+
+**3.** Quantas vezes o bloco executa em `while (x < 0)` se `x` começar valendo 5? E em `do { } while (x < 0)`?
+
+<details>
+<summary>Ver resposta</summary>
+
+No `while`, **zero** vezes (a condição já começa falsa). No `do-while`, **uma** vez (o teste só acontece depois da primeira execução).
+
+</details>
+
+---
+
+<div align="center">
+
+[⬅️ 2.13 Blocos de código](./13-blocos-de-codigo.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [2.15 Exercícios de estruturas de repetição ➡️](./15-exercicios-repeticao.md)
+
+</div>

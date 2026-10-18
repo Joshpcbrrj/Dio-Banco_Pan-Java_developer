@@ -1,50 +1,123 @@
-# Git: Revolução no Controle de Versão
+# 1.1 · Git e GitHub
 
-## História do Git
+> **Em uma frase:** o **Git** é a ferramenta que guarda o histórico de tudo o que muda no seu código; o **GitHub** é um site que hospeda esse histórico na internet para você compartilhar e trabalhar em equipe.
 
-O Git foi criado por Linus Torvalds em 2005, o famoso criador do kernel do Linux. Linus sentiu a necessidade de um novo sistema de controle de versão enquanto trabalhava no desenvolvimento do Linux. Na época, ele estava descontente com as ferramentas disponíveis, pois elas não atendiam às demandas do projeto Linux, que era grande e altamente colaborativo.
+## 🤔 Por que controlar versões?
 
-Motivado por essas frustrações, Linus decidiu criar sua própria ferramenta de controle de versão, e assim nasceu o Git. Ele projetou o Git com foco na velocidade, desempenho e na habilidade de lidar com grandes projetos de código aberto, como o Linux. O Git foi desenvolvido para ser distribuído, ou seja, permitir que cada desenvolvedor tenha uma cópia completa do repositório, proporcionando independência e flexibilidade.
+Imagine escrever um programa e ir salvando cópias assim:
 
+```text
+calculadora.java
+calculadora_final.java
+calculadora_final_agora_vai.java
+calculadora_final_v2_DEFINITIVO.java
+```
 
-### Vantagens do Git
+Funciona até o dia em que você não lembra o que mudou entre uma cópia e outra, ou duas pessoas editam o mesmo arquivo ao mesmo tempo. Um **sistema de controle de versão** resolve isso: ele funciona como uma **máquina do tempo** do projeto, registrando **quem** mudou, **quando** mudou, **o que** mudou e **por quê**.
 
-O Git oferece diversas vantagens em relação a outros sistemas de controle de versão:
+## 📖 Um pouco de história
 
-1. **Desempenho e velocidade**: O Git foi projetado para ser rápido, mesmo em projetos com grandes quantidades de código. Isso o torna eficiente tanto para pequenos projetos pessoais quanto para grandes projetos corporativos.
+O Git foi criado em **2005 por Linus Torvalds**, o criador do Linux. A ferramenta que a equipe do Linux usava deixou de ser gratuita, e Linus decidiu criar a sua própria, com três objetivos:
 
-2. **Sistema distribuído**: Cada desenvolvedor tem uma cópia completa do repositório, o que permite que trabalhem offline e tenham independência em suas ramificações. As alterações podem ser sincronizadas posteriormente.
+- ser **muito rápida**, mesmo em projetos gigantes;
+- ser **distribuída**: cada pessoa tem uma cópia completa do projeto e do histórico;
+- lidar bem com **milhares de pessoas** trabalhando em paralelo.
 
-3. **Gerenciamento eficiente de ramificações**: O Git torna fácil e rápido criar, mesclar e gerenciar ramificações. Isso permite que desenvolvedores trabalhem em diferentes recursos ou versões paralelamente sem conflitos.
+Hoje o Git é o padrão do mercado: praticamente toda empresa de software usa.
 
-4. **Histórico completo e rastreável**: O Git registra todas as alterações e mantém um histórico detalhado do projeto. Isso facilita a identificação de quando e por quem uma alteração foi feita, auxiliando no rastreamento de bugs e na colaboração entre equipes.
+## 🧰 Vantagens do Git
 
-### GitHub: Plataforma de Hospedagem de Repositórios Git
+| Vantagem | O que significa na prática |
+| --- | --- |
+| **Velocidade** | Quase tudo acontece no seu computador, sem esperar um servidor. |
+| **Distribuído** | Você trabalha offline e, se o servidor sumir, qualquer cópia restaura o projeto. |
+| **Branches leves** | Criar uma "linha paralela" para testar uma ideia é instantâneo. |
+| **Histórico completo** | Dá para saber quem alterou cada linha, quando e em qual commit. |
 
-O GitHub é uma plataforma de hospedagem de código que utiliza o Git como sistema de controle de versão. Lançado em 2008, o GitHub se tornou uma das maiores comunidades de desenvolvimento de software, oferecendo recursos de colaboração e compartilhamento de código.
+## 🌐 E o GitHub?
 
-No GitHub, desenvolvedores podem criar repositórios públicos ou privados para hospedar seu código. Eles podem colaborar com outros desenvolvedores através de pull requests, fazer contribuições para projetos de código aberto e utilizar ferramentas de gerenciamento de problemas (issue tracking) e integração contínua.
+O **GitHub** (lançado em 2008 e comprado pela Microsoft em 2018) é uma **plataforma online** que hospeda repositórios Git. Além de guardar o código, ele oferece:
 
-<br>
+- **pull requests** para revisar código antes de juntá-lo ao projeto;
+- **issues** para registrar bugs e tarefas;
+- **GitHub Actions** para automatizar testes e publicações;
+- uma vitrine pública que funciona como **portfólio** de quem programa.
 
-## Diferença entre Git e GitHub
-<img src="./img/15.png" alt="" width="500">
+### Git × GitHub
 
-A principal diferença entre Git e GitHub está na funcionalidade que cada um oferece:
+> **Analogia:** o Git está para o GitHub assim como a **foto** está para o **Instagram**. Você tira e organiza fotos sem o Instagram; o Instagram é só um lugar para guardar, mostrar e interagir com elas.
 
-- O Git é um sistema de controle de versão distribuído que permite o rastreamento e a gestão de alterações em um projeto.
+| | Git | GitHub |
+| --- | --- | --- |
+| O que é | Programa (ferramenta) | Site (plataforma) |
+| Onde roda | No seu computador | Na internet |
+| Precisa de internet? | Não | Sim |
+| Alternativas | Mercurial, SVN | GitLab, Bitbucket |
 
-- O GitHub é uma plataforma de hospedagem que utiliza o Git como sistema de controle de versão. Ele fornece recursos adicionais, como colaboração, compartilhamento de código e gerenciamento de projetos.
+```mermaid
+flowchart LR
+    subgraph PC["Seu computador"]
+        G["Git<br/>(histórico local)"]
+    end
+    subgraph Nuvem["Internet"]
+        GH["GitHub<br/>(repositório remoto)"]
+    end
+    G -- "git push (envia)" --> GH
+    GH -- "git pull (traz)" --> G
+```
 
-Em resumo, o Git é o sistema de controle de versão, enquanto o GitHub é uma plataforma que utiliza o Git para hospedar e gerenciar repositórios de código-fonte.
+> [!TIP]
+> Este material tem um resumo bem mais completo de Git e GitHub em outro repositório do autor: **[Git e GitHub Essencial](https://github.com/Joshpcbrrj/Udemy-Geek_university-Git_GitHub-Essencial_para_o_Desenvolvedor)**. Aqui ficamos no essencial para quem vai programar em Java.
 
-### Conclusão
+## 📌 Resumindo
 
-O Git revolucionou o controle de versão de software, proporcionando uma solução distribuída, eficiente e flexível. Com o Git, desenvolvedores podem trabalhar de forma colaborativa em projetos de qualquer tamanho, mantendo um histórico completo de alterações. O GitHub complementa o Git, oferecendo uma plataforma para compartilhar, colaborar e gerenciar projetos com a comunidade de desenvolvedores. Juntos, Git e GitHub tornaram-se ferramentas essenciais no desenvolvimento de software moderno.
+- Controle de versão guarda o histórico do projeto e permite voltar no tempo e trabalhar em equipe.
+- **Git** é o sistema de controle de versão distribuído criado por Linus Torvalds em 2005.
+- **GitHub** é uma plataforma online que hospeda repositórios Git e adiciona colaboração (PRs, issues, Actions).
+- Você pode usar Git sem GitHub, mas não faz sentido usar GitHub sem Git.
 
-<br>
+## 🏋️ Mão na massa
 
-<br>
+> Tente responder antes de abrir a resposta.
 
-[Voltar a introdução ao Git](/Arquivos/Conteudo/1%20-%20Principio%20de%20desenvolvimento%20de%20software/1.1%20Introducao%20ao%20git.md)<br>
-[Voltar para inicio](/README.md)
+**1.** Explique, com suas palavras, a diferença entre Git e GitHub.
+
+<details>
+<summary>Ver resposta</summary>
+
+O Git é um **programa** instalado no computador que registra o histórico de versões do projeto, e funciona sem internet. O GitHub é um **site** que hospeda repositórios Git na nuvem e acrescenta recursos de colaboração, como pull requests e issues.
+
+</details>
+
+**2.** Por que dizemos que o Git é **distribuído**? Cite uma vantagem disso.
+
+<details>
+<summary>Ver resposta</summary>
+
+Porque cada pessoa tem no próprio computador uma **cópia completa** do repositório, com todo o histórico. Vantagens: dá para trabalhar offline, as operações são rápidas e qualquer cópia pode restaurar o projeto se o servidor falhar.
+
+</details>
+
+**3.** Crie uma conta no GitHub (se ainda não tiver) e instale o Git. Confira a instalação no terminal.
+
+<details>
+<summary>Ver resposta</summary>
+
+Baixe o Git em [git-scm.com/downloads](https://git-scm.com/downloads) e crie a conta em [github.com](https://github.com). Depois rode:
+
+```bash
+git --version
+# Exemplo de saída: git version 2.51.0
+```
+
+Se aparecer a versão, está tudo certo.
+
+</details>
+
+---
+
+<div align="center">
+
+[🏠 Índice](../../README.md) &nbsp;|&nbsp; [1.2 Como o Git funciona por dentro ➡️](./02-como-o-git-funciona.md)
+
+</div>

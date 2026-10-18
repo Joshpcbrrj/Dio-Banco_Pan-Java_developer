@@ -1,34 +1,118 @@
-# Conceitos iniciais
+# 5.3 · MongoDB: conceitos e instalação
 
-## O que é o banco de dados MongoDB?
-MongoDB é um banco de dados NoSQL (Not Only SQL) de código aberto, desenvolvido pela empresa MongoDB Inc. Ele foi projetado para ser flexível, escalável e altamente disponível em ambientes distribuídos. O MongoDB é conhecido por ser um banco de dados orientado a documentos, onde os dados são armazenados em documentos semelhantes a JSON (JavaScript Object Notation), chamados de BSON. Dessa forma, os dados são armazenados em um formato de objeto mais natural e os desenvolvedores podem manipulá-los com mais facilidade.
+> **Em uma frase:** o MongoDB é um banco NoSQL **de documentos**: em vez de linhas em tabelas, ele guarda documentos parecidos com JSON dentro de **coleções**, e cada documento pode ter campos diferentes.
 
-### Quando foi criado o MongoDB?
+## 📖 Origem
 
-O MongoDB foi criado em 2007 por Dwight Merriman e Eliot Horowitz, que eram desenvolvedores da DoubleClick, uma empresa de publicidade online. A ideia era criar um banco de dados que pudesse lidar com grandes volumes de dados em tempo real e que fosse fácil de usar. Eles começaram a trabalhar em um protótipo em C++, mas logo mudaram para o JavaScript. O primeiro lançamento público do MongoDB foi em fevereiro de 2009.
+Criado em **2007** por **Dwight Merriman, Eliot Horowitz e Kevin Ryan** (que vinham da DoubleClick), na empresa 10gen, depois renomeada **MongoDB Inc.** A primeira versão pública saiu em **2009**. O núcleo é escrito em **C++**, e o nome vem de "*humongous*" (gigantesco).
 
-### Qual é o principal uso do MongoDB?
-O MongoDB é frequentemente usado em aplicativos modernos baseados em nuvem, onde a escalabilidade horizontal e a alta disponibilidade são essenciais. Ele também é popular em aplicativos de Big Data, Internet das Coisas (IoT) e análise de dados em tempo real. O MongoDB é amplamente utilizado em empresas de tecnologia, como Cisco, Forbes, Google, SAP e Verizon, bem como em startups e empresas emergentes. Além disso, ele é uma opção popular para desenvolvedores devido à sua flexibilidade, escalabilidade e fácil integração com outras tecnologias.
+## 🧱 Relacional × MongoDB
 
-<br>
+| Relacional | MongoDB |
+| --- | --- |
+| Banco de dados | Banco de dados (*database*) |
+| Tabela | **Coleção** (*collection*) |
+| Linha | **Documento** |
+| Coluna | Campo |
+| Chave primária | Campo `_id` (gerado automaticamente como `ObjectId`) |
+| `JOIN` | Documentos aninhados ou `$lookup` |
 
-## Como instalar
+```json
+{
+  "_id": ObjectId("609aeec3aa1a68ca982b47d7"),
+  "nome": "Patrick",
+  "idade": 30,
+  "enderecos": [
+    { "rua": "Av. das Conchas", "numero": 102 },
+    { "rua": "Rua das Pérolas", "numero": 100 }
+  ],
+  "ativo": true
+}
+```
 
-#### Documentação docker:
-[Docker docs](https://docs.docker.com/)
+Repare: um documento pode conter **listas** e **outros documentos** dentro dele, algo que no modelo relacional exigiria várias tabelas.
 
-#### Imagens de dockerfile:
-[Docker hub](https://hub.docker.com/)
+> [!NOTE]
+> Por dentro, o MongoDB guarda os documentos em **BSON** (*Binary JSON*), uma versão binária do JSON que é mais rápida de processar e tem tipos extras, como datas, `ObjectId` e números decimais (detalhes na [próxima aula](./04-mongodb-modelagem.md)).
 
-#### Rpbo 3t Gui MongoDB
-[Robo 3T](https://robomongo.org/)
+## 🌍 Onde é usado
 
-<br>
+Aplicações web e mobile, catálogos de produtos, gestão de conteúdo, IoT, análise em tempo real. Ele escala horizontalmente com **sharding** (dividir os dados entre servidores) e tem alta disponibilidade com **replica sets** (cópias automáticas).
 
-<br>
+## 💻 Instalando com Docker (recomendado)
 
-<br>
+O jeito mais simples de ter um MongoDB local é com o [Docker](https://docs.docker.com/get-started/):
 
-[Voltar a MongoDB](/Arquivos/Conteudo/5%20-%20Trabalhando%20com%20banco%20de%20dados%20sql%20e%20nosql/5.2.2%20Mongodb.md)<br>
-[Voltar a Introdução ao MongoDB](/Arquivos/Conteudo/5%20-%20Trabalhando%20com%20banco%20de%20dados%20sql%20e%20nosql/5.2%20Introducao%20ao%20mongodb.md)<br>
-[Voltar ao inicio](/README.md)
+```bash
+# Baixa a imagem oficial e sobe o banco na porta 27017
+docker run -d --name mongodb -p 27017:27017 mongo:8
+
+# Abre o terminal do MongoDB (mongosh) dentro do container
+docker exec -it mongodb mongosh
+```
+
+Imagens oficiais ficam no [Docker Hub](https://hub.docker.com/_/mongo). Veja mais sobre Docker no [módulo extra](../08-extras/03-docker-para-java.md).
+
+### Interfaces gráficas
+
+- **[MongoDB Compass](https://www.mongodb.com/products/tools/compass)**: a interface oficial e gratuita.
+- **[Studio 3T](https://studio3t.com/)**: sucessor do antigo Robo 3T (que foi descontinuado).
+- Extensão **MongoDB for VS Code**.
+
+> [!TIP]
+> Também dá para usar o MongoDB **na nuvem, de graça**, com o [MongoDB Atlas](https://www.mongodb.com/atlas) (plano gratuito com 512 MB), sem instalar nada.
+
+## 📌 Resumindo
+
+- MongoDB = banco de documentos; coleções guardam documentos JSON/BSON.
+- Cada documento tem um `_id` único e pode ter estrutura própria.
+- Rode localmente com `docker run ... mongo:8` e acesse com `mongosh` ou Compass.
+
+## 🏋️ Mão na massa
+
+**1.** Suba um MongoDB com Docker e confira se ele está rodando.
+
+<details>
+<summary>Ver resposta</summary>
+
+```bash
+docker run -d --name mongodb -p 27017:27017 mongo:8
+docker ps                        # o container "mongodb" deve aparecer com status Up
+docker exec -it mongodb mongosh  # abre o shell; digite "exit" para sair
+```
+
+</details>
+
+**2.** Converta este registro relacional para um documento MongoDB: cliente (id 1, nome Ana) com dois telefones na tabela `telefones`.
+
+<details>
+<summary>Ver resposta</summary>
+
+```json
+{
+  "_id": 1,
+  "nome": "Ana",
+  "telefones": ["21 99999-0000", "21 3333-1111"]
+}
+```
+
+Os telefones viram um **array** dentro do próprio documento, sem precisar de outra tabela.
+
+</details>
+
+**3.** Qual campo o MongoDB cria automaticamente em todo documento?
+
+<details>
+<summary>Ver resposta</summary>
+
+O `_id`, que funciona como chave primária. Se você não informar, ele gera um `ObjectId` único.
+
+</details>
+
+---
+
+<div align="center">
+
+[⬅️ 5.2 NoSQL](./02-nosql.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [5.4 Modelagem (embedding × referência) e boas práticas ➡️](./04-mongodb-modelagem.md)
+
+</div>

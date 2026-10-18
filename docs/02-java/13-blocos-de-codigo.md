@@ -1,64 +1,125 @@
-# Blocos de código
+# 2.13 · Blocos de código
 
-## Definição
+> **Em uma frase:** um bloco é um trecho entre chaves `{ }` que é executado em conjunto; além dos blocos de métodos, `if` e `for`, o Java tem blocos **estáticos** e **de inicialização** que rodam em momentos especiais.
 
-- Conjunto de instruções em um programa de computador que são agrupadas e executadas juntas. Um bloco de código é delimitado por chaves "{" e "}", e pode conter várias instruções, incluindo declarações de variáveis, operações aritméticas, chamadas de função, estruturas de controle de fluxo (como if, while, for, etc.) e outros comandos que compõem a lógica do programa.
+## 🧱 O que é um bloco
 
-- Os blocos de código são uma forma de organizar e estruturar o código fonte de um programa de computador. Eles permitem que os programadores criem estruturas de decisão complexas e iterem sobre coleções de dados de forma eficiente, tornando o código mais legível e fácil de manter.
-
-- Quando só temos uma linha para executar não precisamos usar o par de chaves.
-  
-### Tipos:
-
-- Locais → Dentro dos métodos.
-  
-- Estáticos → Dentro de classes.
-  
-- Instância → Dentro de classes.
-
-<br>
-
-### Pratica: Vendo o limte dos blocos de código
+Qualquer conjunto de instruções entre `{` e `}`. Os blocos organizam o código e definem o **escopo** das variáveis (aula [2.7](./07-escopo.md)): o que é declarado dentro de um bloco só existe ali.
 
 ```java
-public class ExemploBlocosCodigo {
-    // Bloco de código estático
-    static {
-        System.out.println("Este é um bloco de código estático.");
-        System.out.println("Ele é executado quando a classe é carregada.");
-        System.out.println("Pode ser usado para inicializar variáveis estáticas ou realizar outras ações.");
+if (saldo > 0) {           // bloco do if
+    double taxa = 0.01;    // existe só aqui dentro
+    saldo -= taxa;
+}
+```
+
+## 🗂️ Tipos de bloco
+
+| Tipo | Onde fica | Quando executa |
+| --- | --- | --- |
+| **Local** | Dentro de métodos (inclusive um `{ }` solto) | Quando a execução chega nele |
+| **Estático** (`static { }`) | No corpo da classe | **Uma vez**, quando a classe é carregada pela JVM |
+| **De inicialização** (`{ }` no corpo da classe) | No corpo da classe | **A cada objeto criado**, antes do construtor |
+
+```java
+public class ExemploBlocos {
+
+    static int contador;
+
+    static {                                     // bloco estático
+        System.out.println("1. Classe carregada");
+        contador = 100;
     }
 
-    // Método principal
+    {                                            // bloco de inicialização
+        System.out.println("3. Novo objeto sendo criado");
+    }
+
+    public ExemploBlocos() {
+        System.out.println("4. Construtor");
+    }
+
     public static void main(String[] args) {
-        // Bloco de código local
-        {
+        System.out.println("2. Início do main");
+
+        {                                        // bloco local
             int numero = 10;
-            System.out.println("Este é um bloco de código local.");
-            System.out.println("Ele está dentro do método main e é executado quando o método é chamado.");
-            System.out.println("O número é: " + numero);
+            System.out.println("Bloco local: " + numero);
         }
+        // numero não existe mais aqui
 
-        // Bloco de código de instância
-        ExemploBlocosCodigo exemplo = new ExemploBlocosCodigo();
-        exemplo.metodoDeInstancia();
-    }
-
-    // Método de instância
-    public void metodoDeInstancia() {
-        // Bloco de código de instância
-        {
-            String mensagem = "Este é um bloco de código de instância.";
-            System.out.println(mensagem);
-            System.out.println("Ele está dentro de um método de instância e é executado quando o método é chamado.");
-        }
+        new ExemploBlocos();
+        new ExemploBlocos();
     }
 }
 ```
 
-<br>
+Saída:
 
-<br>
+```text
+1. Classe carregada
+2. Início do main
+Bloco local: 10
+3. Novo objeto sendo criado
+4. Construtor
+3. Novo objeto sendo criado
+4. Construtor
+```
 
-[Voltar a Lógica condicional e controle de fluxos em Java](/Arquivos/Conteudo/2%20-%20Conhecendo%20a%20linguagem%20Java/2.3%20Logica%20condicional%20e%20controle%20de%20fluxo%20java.md)<br>
-[Voltar ao inicio](/README.md)
+> [!TIP]
+> Blocos estáticos são úteis para inicializar dados da classe uma única vez (por exemplo, carregar uma tabela fixa). Blocos de inicialização são raros: na prática, coloque essa lógica no **construtor**.
+
+## 📌 Resumindo
+
+- Bloco = instruções entre `{ }`; define o escopo das variáveis.
+- Bloco estático roda uma vez, quando a classe é carregada.
+- Bloco de inicialização roda a cada `new`, antes do construtor.
+
+## 🏋️ Mão na massa
+
+**1.** Em que ordem são impressas as mensagens do exemplo acima se o `main` criar só **um** objeto?
+
+<details>
+<summary>Ver resposta</summary>
+
+"1. Classe carregada" → "2. Início do main" → "Bloco local: 10" → "3. Novo objeto sendo criado" → "4. Construtor".
+
+</details>
+
+**2.** Quantas vezes um bloco `static` executa se você criar 50 objetos da classe?
+
+<details>
+<summary>Ver resposta</summary>
+
+**Uma vez só**, quando a classe é carregada. Ele pertence à classe, não aos objetos.
+
+</details>
+
+**3.** Crie uma classe `Configuracao` com um bloco estático que preenche uma constante `VERSAO` e imprima-a no `main`.
+
+<details>
+<summary>Ver resposta</summary>
+
+```java
+public class Configuracao {
+    static final String VERSAO;
+
+    static {
+        VERSAO = "1.0." + java.time.Year.now().getValue();
+    }
+
+    public static void main(String[] args) {
+        System.out.println("Versão: " + VERSAO);
+    }
+}
+```
+
+</details>
+
+---
+
+<div align="center">
+
+[⬅️ 2.12 Controle de fluxo](./12-controle-de-fluxo.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [2.14 Estruturas de repetição e arrays ➡️](./14-repeticao-e-arrays.md)
+
+</div>

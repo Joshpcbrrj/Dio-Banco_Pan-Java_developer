@@ -1,305 +1,167 @@
-# Exercícios
+# 2.33 · Exercícios de métodos
 
-1 - Crie um programa que calcule as 4 operações básicas: Soma, Subtração, multiplicação e divisão. Com 2 valores como parâmetro.
+> **Em uma frase:** cinco exercícios para praticar métodos com e sem retorno, métodos auxiliares privados e sobrecarga.
+
+> [!TIP]
+> Antes de abrir a resposta, pense: quais métodos vou criar, o que cada um recebe e o que devolve?
+
+**1.** Crie uma calculadora com métodos para as 4 operações básicas e o resto da divisão, recebendo 2 valores.
+
 <details>
-<summary>Código</summary>
+<summary>Ver resposta</summary>
 
 ```java
-//Classe "main"
-package Ex_01;
-
-public class Main {
-    public static void main(String[] args) {
-        //Usando os métodos da classe "Calculadora" ("static" para chamar método da class)
-        Calculadora.soma_numeros(3, 6);
-        Calculadora.subtrai_numeros(10, 2);
-        Calculadora.multiplica_numeros(5, 5);
-        Calculadora.divide_numeros(8, 2);
-        Calculadora.mostra_resto_numeros(10, 3);
-    }
-}
-```
-
-```java
-//Classe "Calculadora"
-package Ex_01;
-
 public class Calculadora {
-    public static void soma_numeros(double num_1, double num_2){
-        double retultado = num_1 + num_2;
-        System.out.println("A soma de: " + num_1 + " com " + num_2 + " é: " + retultado);
+    public static double somar(double a, double b)       { return a + b; }
+    public static double subtrair(double a, double b)    { return a - b; }
+    public static double multiplicar(double a, double b) { return a * b; }
+    public static double resto(double a, double b)       { return a % b; }
+
+    public static double dividir(double a, double b) {
+        if (b == 0) throw new IllegalArgumentException("Divisão por zero");
+        return a / b;
     }
-    public static void subtrai_numeros(double num_1, double num_2){
-        double retultado = num_1 - num_2;
-        System.out.println("A subtração de: " + num_1 + " por " + num_2 + " é: " + retultado);
-    }
-    public static void multiplica_numeros(double num_1, double num_2){
-        double retultado = num_1 * num_2;
-        System.out.println("A multiplicação de: " + num_1 + " por " + num_2 + " é: " + retultado);
-    }
-    public static void divide_numeros(double num_1, double num_2){
-        double retultado = num_1 / num_2;
-        System.out.println("A divisão de: " + num_1 + " por " + num_2 + " é: " + retultado);
-    }
-    public static void mostra_resto_numeros(double num_1, double num_2){
-        double retultado = num_1 % num_2;
-        System.out.println("O resto da divisão de: " + num_1 + " por " + num_2 + " é: " + retultado);
+
+    public static void main(String[] args) {
+        System.out.println("3 + 6 = " + somar(3, 6));
+        System.out.println("10 - 2 = " + subtrair(10, 2));
+        System.out.println("5 x 5 = " + multiplicar(5, 5));
+        System.out.println("8 / 2 = " + dividir(8, 2));
+        System.out.println("10 % 3 = " + resto(10, 3));
     }
 }
 ```
+
+Em vez de imprimir dentro de cada método (como na versão original do curso), os métodos **retornam** o resultado. Assim eles podem ser reaproveitados em outros cálculos.
 
 </details>
 
+**2.** A partir da hora do dia (0 a 23), mostre "Bom dia" (5h às 11h), "Boa tarde" (12h às 17h) ou "Boa noite" (demais horários).
 
-<br>
-
-2 - A partir da hora do dia, informe a mensagem adequada: Bom dia, boa tarde ou boa noite.
 <details>
-<summary>Código</summary>
+<summary>Ver resposta</summary>
 
 ```java
-//Classe "main"
-package Ex_02;
+public class Saudacao {
 
-public class Main {
-    public static void main(String[] args) {
-
-        //Utilizando métodos da class "Mensagem"
-        Mensagem.obter_mensagem(6);
-        Mensagem.obter_mensagem(13);
-        Mensagem.obter_mensagem(22);
-    }
-}
-```
-
-```java
-//Classe "Mensagem"
-package Ex_02;
-
-public class Mensagem {
-    public static void obter_mensagem(int hora_do_dia){
-        if(hora_do_dia <= 11){
-            saudacao_dia();
-        } else if (hora_do_dia >= 12) {
-            saudacao_tarde();
-        }else {
-            saudacao_noite();
+    public static String obterSaudacao(int hora) {
+        if (hora < 0 || hora > 23) {
+            throw new IllegalArgumentException("Hora inválida: " + hora);
         }
+        if (hora >= 5 && hora <= 11) return "Bom dia!";
+        if (hora >= 12 && hora <= 17) return "Boa tarde!";
+        return "Boa noite!";
     }
-    private static void saudacao_dia(){
-        System.out.println("Bom dia!");
-    }
-    private static void saudacao_tarde(){
-        System.out.println("Boa tarde!!");
-    }
-    private static void saudacao_noite(){
-        System.out.println("Boa noite!!!");
+
+    public static void main(String[] args) {
+        System.out.println(obterSaudacao(6));    // Bom dia!
+        System.out.println(obterSaudacao(13));   // Boa tarde!
+        System.out.println(obterSaudacao(22));   // Boa noite!
     }
 }
 ```
+
+Na versão original havia um bug: a condição `hora >= 12` capturava também 22h, e o "boa noite" nunca era exibido. Definir faixas fechadas resolve.
 
 </details>
 
+**3.** Simule um empréstimo: a taxa de juros depende da quantidade de parcelas. Mostre o total, o valor da parcela e os juros. Valores aceitos: de R$ 10 a R$ 100.000, em 1 a 20 parcelas.
 
-<br>
-
-3 - Calcule o valor final de um empréstimo, a partir do valor solicitado. Taxas e parcelas influenciam. Defina arbitrariamente as faixas que influenciam nos valores.
 <details>
-<summary>Código</summary>
+<summary>Ver resposta</summary>
 
 ```java
-//Class "main"
-package Ex_03;
-
-public class Main {
-    public static void main(String[] args) {
-        //Mostrando condições de emprestimo
-        Emprestimo.mostra_condicao_emprestimo();
-
-        //Simulando emprestimo
-        Emprestimo.simula_emprestimo(100, 20);
-    }
-}
-```
-
-```java
-//Classe "Emprestimo"
-package Ex_03;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class Emprestimo {
-    public static void mostra_condicao_emprestimo(){
-        System.out.println("Bem vindo ao nosso banco. Seguem as condições do nosso emprestimo:");
-        System.out.println("01 Parcela - 1% de juro");
-        System.out.println("02 Parcelas - 2% de juros");
-        System.out.println("03 Parcelas - 2,5% de juros");
-        System.out.println("04 Parcelas - 3,0% de juros");
-        System.out.println("05 parcelas - 3,5% de juros");
-        System.out.println("6 a 9 parcelas - 3,9 de juros");
-        System.out.println("10 parcelas - 10% de juros");
-        System.out.println("11 a 19 parcelas - 11% de juro");
-        System.out.println("20 parcelas - 15% de juros");
-        System.out.println("O maior valor que emprestamos é R$100000, " +
-                            "e a maior quantidade de parcelas é 20\n");
-    }
-    public static void simula_emprestimo(double valor_emprestimo, int quant_parcelas){
-        valida_valores(valor_emprestimo, quant_parcelas);
-        double v_total = calcula_total(valor_emprestimo, quant_parcelas);
-        double v_parcela = calcula_valor_parcela(v_total, quant_parcelas);
-        double v_juros = calcula_juro(valor_emprestimo, v_total);
-        double juro_mes = v_juros / quant_parcelas;
 
-        System.out.println("A simulação ficou da seguinte forma:");
-        System.out.println("Valor solicitado: " + valor_emprestimo);
-        System.out.println("Juro mensal :" + juro_mes);
-        System.out.println("Total com juros: " + v_total);
-        System.out.println("Quantidade de parcelas: " + quant_parcelas);
-        System.out.println("Valor da parcela: " + v_parcela);
+    // Método auxiliar privado: quem usa a classe não precisa conhecê-lo
+    private static BigDecimal taxaPara(int parcelas) {
+        if (parcelas == 1)  return new BigDecimal("0.010");
+        if (parcelas == 2)  return new BigDecimal("0.020");
+        if (parcelas == 3)  return new BigDecimal("0.025");
+        if (parcelas == 4)  return new BigDecimal("0.030");
+        if (parcelas == 5)  return new BigDecimal("0.035");
+        if (parcelas <= 9)  return new BigDecimal("0.039");
+        if (parcelas == 10) return new BigDecimal("0.100");
+        if (parcelas <= 19) return new BigDecimal("0.110");
+        return new BigDecimal("0.150");                  // 20 parcelas
     }
-    private static double calcula_total(double valor_emprestimo, int quant_parcelas){
-        switch (quant_parcelas){
-            case 1:
-                return valor_emprestimo + (valor_emprestimo * 0.01);
-            case 2:
-                return valor_emprestimo + (valor_emprestimo * 0.02) ;
-            case 3:
-                return valor_emprestimo + (valor_emprestimo * 0.025) ;
-            case 4:
-                return valor_emprestimo + (valor_emprestimo * 0.03);
-            case 5:
-                return valor_emprestimo + (valor_emprestimo * 0.035);
-            case 6,7,8,9:
-                return valor_emprestimo + (valor_emprestimo * 0.039);
-            case 10:
-                return valor_emprestimo + (valor_emprestimo * 0.1);
-            case 11,12,13,14,15,16,17,18,19:
-                return valor_emprestimo + (valor_emprestimo * 0.11);
-            case 20:
-                return valor_emprestimo + (valor_emprestimo * 0.2);
-            default:
-                throw new IllegalArgumentException("Número de parcelas inválido");
+
+    private static void validar(BigDecimal valor, int parcelas) {
+        if (valor.compareTo(new BigDecimal("10")) < 0 || valor.compareTo(new BigDecimal("100000")) > 0) {
+            throw new IllegalArgumentException("Valor deve estar entre R$ 10 e R$ 100.000");
         }
-    }
-    private static double calcula_valor_parcela(double total, int parcelas){
-        return total / parcelas;
-    }
-    private static double calcula_juro(double valor_inicial, double valor_final){
-        return valor_final - valor_inicial;
-    }
-    private static void valida_valores(double valor_emprestimo, int parcelas){
-        if (valor_emprestimo > 100000 || valor_emprestimo < 10){
-            throw new IllegalArgumentException("Erro! Valor de emprestimo inválido");
-        } else if (parcelas < 1 || parcelas > 20) {
-            throw new IllegalArgumentException("Erro! Quantidade de parcelas inválida");
+        if (parcelas < 1 || parcelas > 20) {
+            throw new IllegalArgumentException("Parcelas devem estar entre 1 e 20");
         }
     }
 
+    public static void simular(BigDecimal valor, int parcelas) {
+        validar(valor, parcelas);
+        BigDecimal juros = valor.multiply(taxaPara(parcelas)).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal total = valor.add(juros);
+        BigDecimal parcela = total.divide(BigDecimal.valueOf(parcelas), 2, RoundingMode.HALF_UP);
+
+        System.out.println("Valor solicitado: R$ " + valor);
+        System.out.println("Juros:            R$ " + juros);
+        System.out.println("Total:            R$ " + total);
+        System.out.println(parcelas + " parcelas de   R$ " + parcela);
+    }
+
+    public static void main(String[] args) {
+        simular(new BigDecimal("1000"), 20);
+    }
 }
 ```
+
+Melhorias em relação à versão original: usa `BigDecimal` (dinheiro!), arredonda para centavos e corrige uma inconsistência (o texto prometia 15% para 20 parcelas, mas o cálculo usava 20%).
 
 </details>
 
+**4.** Calcule a área de 3 quadriláteros notáveis (quadrado, retângulo e trapézio) usando **sobrecarga**.
 
-<br>
-
-4 - Crie uma aplicação que calcule a área dos 3 quadriláteros notáveis (No caso: Quadrado, retângulo e trapézio). Use sobrecarga.
 <details>
-<summary>Código</summary>
+<summary>Ver resposta</summary>
 
 ```java
-//Classe "main" 
-package Ex_04;
-
-public class Main {
-    public static void main(String[] args) {
-
-        //Calculando área de um quadrado
-        Quadrilatero.area(7);
-
-        //Calculando área de um retângulo
-        Quadrilatero.area(5,8);
-
-        //Calculando área de um trapézio
-        Quadrilatero.area(9,7,12);
-    }
-}
-```
-
-```java
-package Ex_04;
-
 public class Quadrilatero {
-
-    //Método "area" (para calcular figura com lados do mesmo tamanho)
-    public static void area(double lado){
-        System.out.println("A área do quadrado é: " + lado * lado);
-    }
-    //Método "area"/sobrecarga (para calcular figura com 2 lados iguais e 2 diferentes)
-    public static void area(double lado1, double lado2){
-        System.out.println("A área do retângulo é: " + lado1 * lado2);
-    }
-    //Método "area"/sobrecarga (para calcular figura com 2 bases diferentes e altura)
-    public static void area(double baseMaior, double baseMenor, double altura){
-        System.out.println("A área do trapézio é: " + ((baseMaior + baseMenor) * altura) / 2);
-    }
-}
-```
-
-</details>
-
-
-<br>
-
-5 - Recrie a aplicação que calcula área dos 3 quadriláteros notáveis. Agora use métodos que retornem valores.
-<details>
-<summary>Código</summary>
-
-```java
-//Classe "main"
-package Ex_05;
-
-public class Main {
-    public static void main(String[] args) {
-        //calculando área de um quadrado
-        double quadrado = Quadrilatero_com_retorno.area(5);
-        System.out.println("A área do quadrado é: " + quadrado);
-
-        //Calculando a área de um retangulo
-        double retangulo = Quadrilatero_com_retorno.area(8,5);
-        System.out.println("A área do retângulo é: " + retangulo);
-
-        //Calculando a área de um trapézio
-        double trapezio = Quadrilatero_com_retorno.area(7,5, 10);
-        System.out.println("A área do trapézio é: " + trapezio);
-    }
-}
-```
-
-```java
-//Classe "Quadriatero_com_retorno
-package Ex_05;
-
-public class Quadrilatero_com_retorno {
-
-    //Método para calcular área de um quadrado
-    public static double area(double lado) {
+    public static double area(double lado) {                    // quadrado
         return lado * lado;
     }
-    //Método para calcular área de um retângulo
-    public static double area(double lado1, double lado2) {
-        return lado1 * lado2;
+    public static double area(double base, double altura) {     // retângulo
+        return base * altura;
     }
-    //Método para calcular área de um trapézio
-    public static double area(double baseMaior, double baseMenor, double altura) {
-        return ((baseMaior + baseMenor) * altura) / 2;
+    public static double area(double baseMaior, double baseMenor, double altura) {  // trapézio
+        return (baseMaior + baseMenor) * altura / 2;
+    }
+
+    public static void main(String[] args) {
+        System.out.println("Quadrado:  " + area(7));          // 49.0
+        System.out.println("Retângulo: " + area(5, 8));       // 40.0
+        System.out.println("Trapézio:  " + area(9, 7, 12));   // 96.0
     }
 }
 ```
 
+O compilador escolhe a versão certa pela **quantidade** de argumentos.
+
 </details>
 
-<br>
+**5.** Por que a versão do exercício 4 que **retorna** valores é melhor que uma que só imprime a área?
 
-<br>
+<details>
+<summary>Ver resposta</summary>
 
-[Voltar a métodos em Java](/Arquivos/Conteudo/2%20-%20Conhecendo%20a%20linguagem%20Java/2.6%20Metodos%20em%20java.md)<br>
-[Voltar ao inicio](/README.md)
+Porque o resultado pode ser **reaproveitado**: somar áreas, comparar, salvar em uma lista, mostrar em uma tela web ou testar automaticamente. Um método que só imprime "prende" o resultado no console. Separar **cálculo** de **exibição** é uma das boas práticas mais importantes.
+
+</details>
+
+---
+
+<div align="center">
+
+[⬅️ 2.32 Retorno de métodos](./32-retorno-de-metodos.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [3.1 Fábrica de carros ➡️](../03-desafios-basicos/01-fabrica-de-carros.md)
+
+</div>

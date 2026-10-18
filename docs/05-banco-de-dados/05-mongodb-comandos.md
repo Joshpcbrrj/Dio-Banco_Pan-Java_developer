@@ -1,92 +1,159 @@
-# Alguns comandos para manipulação de documentos com o MongoDB
+# 5.5 · MongoDB: comandos essenciais (CRUD)
 
-[Documentação de comandos do MongoDB](https://www.mongodb.com/docs/manual/tutorial/query-documents/)
+> **Em uma frase:** no `mongosh` você cria e escolhe bancos com `use`, e manipula documentos com `insertOne/insertMany`, `find`, `updateOne/updateMany`, `replaceOne` e `deleteOne/deleteMany`.
 
-## Comandos importantes:
+📚 Documentação oficial: [Consultando documentos](https://www.mongodb.com/docs/manual/tutorial/query-documents/) · [CRUD no MongoDB](https://www.mongodb.com/docs/manual/crud/)
 
-#### Ver os databases criados
-```bash
-show databases 
-```
-<br>
+> **Hierarquia:** banco de dados → coleções → documentos.
 
-#### Para criar um database (Se ele não encontra na base, ele cria)
-```bash
-use nome_do_database
-```
+## 🗄️ Bancos e coleções
 
-<br>
+```javascript
+show dbs                       // lista os bancos
+use loja                       // usa o banco "loja" (cria quando você gravar algo)
+db                             // mostra o banco atual
 
-#### Como criar nossas collections (Lembrando: databases >> collections >> documentos)
-```bash
-# Criando diretamente a collection com validadores (Forma explicita)
-use nome_do_database
-db.createCollection("Nome_da_collection", {jason_com_parametros_de_conf_para_essa_collection})
-```
-<br>
-
-#### Para visualizar collections dentro do database base
-```bash
-show collections;
+show collections               // lista as coleções do banco
+db.createCollection("clientes")             // cria explicitamente (opcional)
+db.createCollection("produtos", {           // com validação de esquema
+  validator: { $jsonSchema: {
+    bsonType: "object",
+    required: ["nome", "preco"],
+    properties: { preco: { bsonType: "number", minimum: 0 } }
+  } }
+})
+db.clientes.drop()             // apaga a coleção
 ```
 
-<br>
+> [!NOTE]
+> Não é obrigatório criar coleções: elas surgem no primeiro `insert`.
 
-#### Para inserir dado dentro da collection
-```bash
-# Devolve id do documento criado
-db.nome_da_collection.insertOne ({"chave": "valor"})
+## ➕ Create (inserir)
+
+```javascript
+db.clientes.insertOne({ nome: "Ana", idade: 30, cidade: "Rio" })
+
+db.clientes.insertMany([
+  { nome: "Bruno", idade: 25, cidade: "São Paulo" },
+  { nome: "Carla", idade: 41, cidade: "Rio", vip: true }
+])
 ```
 
-<br>
+Cada inserção devolve o `_id` gerado.
 
-#### Para listas documentos dentro da collection
-```bash
-db.nome_da_collection.find({})
+## 🔍 Read (consultar)
+
+```javascript
+db.clientes.find()                                   // todos
+db.clientes.find({ cidade: "Rio" })                  // filtro por igualdade
+db.clientes.find({ idade: { $gte: 30 } })            // idade >= 30
+db.clientes.find({ cidade: "Rio", vip: true })       // E (vírgula)
+db.clientes.find({ $or: [{ cidade: "Rio" }, { idade: { $lt: 26 } }] })   // OU
+db.clientes.find({}, { nome: 1, _id: 0 })            // projeção: só o nome
+db.clientes.find().sort({ idade: -1 }).limit(2)      // ordena (desc) e limita
+db.clientes.findOne({ nome: "Ana" })                 // só o primeiro
+db.clientes.countDocuments({ cidade: "Rio" })        // conta
 ```
 
-<br>
+| Operador | Significa |
+| --- | --- |
+| `$eq` / `$ne` | igual / diferente |
+| `$gt` / `$gte` | maior / maior ou igual |
+| `$lt` / `$lte` | menor / menor ou igual |
+| `$in` / `$nin` | está / não está na lista |
+| `$and` / `$or` / `$not` | lógicos |
+| `$exists` | o campo existe |
+| `$regex` | busca por padrão de texto |
 
-#### Comando usado para atualizar informação de um documento por completo dentro de uma collection (Pouco usado para alterar pois preciso citar todos os atributos do elemento)
-```bash
-# Modificando elemento
-db.nome_da_collection.save ({"_id":ObjectId("id_do_objeto"), informaçõe_para_alterar})
+## ✏️ Update (atualizar)
 
-# Se o comando apontar para um Id que não existe ele cria o elemento
-db.nome_da_collection.save({novo_elemento_para_inserir})
-```
-<br>
+```javascript
+// Altera campos específicos de UM documento
+db.clientes.updateOne({ nome: "Ana" }, { $set: { idade: 31 } })
 
-#### Comando para atualizar atributo específico de um documento
-```bash
-db.nome_da_collection.update ({atributo_do_documento para buscar: "valor do atributo"}, 
-{$set: atributo: valor_novo_da_alteracao})
-```
+// Altera vários documentos
+db.clientes.updateMany({ cidade: "Rio" }, { $set: { estado: "RJ" } })
 
-<br>
+// Outros operadores de atualização
+db.clientes.updateOne({ nome: "Bruno" }, { $inc: { idade: 1 } })          // soma 1
+db.clientes.updateOne({ nome: "Bruno" }, { $push: { tags: "novo" } })     // adiciona no array
+db.clientes.updateOne({ nome: "Bruno" }, { $unset: { tags: "" } })        // remove o campo
 
-#### A partir das novas versões temos uma forma mais simples de atualizar
-```bash
-db.nome_da_collection.updateMany({chave_que_queremos_mudar}, {$set: atrubutos_para_modificar})
-```
+// Substitui o documento INTEIRO (menos o _id)
+db.clientes.replaceOne({ nome: "Carla" }, { nome: "Carla", idade: 42 })
 
-<br>
-
-#### Deletando documento
-```bash
-# deletando um alvo
-db.nome_da_collection.deleteOne({atributo_chave})
-
-# Deletando multiplos alvos
-db.nome_da_collection.deleteMany({atributo_chave})
+// Upsert: atualiza se existir, insere se não existir
+db.clientes.updateOne({ nome: "Davi" }, { $set: { idade: 19 } }, { upsert: true })
 ```
 
-<br>
+> [!WARNING]
+> Os comandos antigos `db.colecao.save()` e `db.colecao.update()`, comuns em tutoriais antigos, foram **removidos** do `mongosh`. Use `insertOne`, `updateOne`/`updateMany` e `replaceOne`.
 
-<br>
+> [!CAUTION]
+> Sem o operador `$set`, um `replaceOne` (ou o antigo `update`) **substitui o documento inteiro** e apaga os campos que você não informou.
 
-<br>
+## 🗑️ Delete (apagar)
 
-[Voltar a MongoDB](/Arquivos/Conteudo/5%20-%20Trabalhando%20com%20banco%20de%20dados%20sql%20e%20nosql/5.2.2%20Mongodb.md)<br>
-[Voltar a Introdução ao MongoDB](/Arquivos/Conteudo/5%20-%20Trabalhando%20com%20banco%20de%20dados%20sql%20e%20nosql/5.2%20Introducao%20ao%20mongodb.md)<br>
-[Voltar ao inicio](/README.md)
+```javascript
+db.clientes.deleteOne({ nome: "Davi" })
+db.clientes.deleteMany({ cidade: "São Paulo" })
+db.clientes.deleteMany({})          // ⚠️ apaga TODOS os documentos da coleção
+```
+
+## 📌 Resumindo
+
+| Operação | Comandos |
+| --- | --- |
+| Create | `insertOne`, `insertMany` |
+| Read | `find`, `findOne`, `countDocuments` |
+| Update | `updateOne`, `updateMany` (com `$set`, `$inc`, `$push`...), `replaceOne` |
+| Delete | `deleteOne`, `deleteMany` |
+
+## 🏋️ Mão na massa
+
+**1.** No banco `loja`, insira três produtos (nome, preço e categoria) e liste os da categoria "informática" ordenados pelo preço.
+
+<details>
+<summary>Ver resposta</summary>
+
+```javascript
+use loja
+db.produtos.insertMany([
+  { nome: "Teclado", preco: 149.9, categoria: "informática" },
+  { nome: "Mouse", preco: 59.9, categoria: "informática" },
+  { nome: "Cadeira", preco: 899.0, categoria: "móveis" }
+])
+db.produtos.find({ categoria: "informática" }).sort({ preco: 1 })
+```
+
+</details>
+
+**2.** Aumente em 10% o preço de todos os produtos de informática.
+
+<details>
+<summary>Ver resposta</summary>
+
+```javascript
+db.produtos.updateMany({ categoria: "informática" }, { $mul: { preco: 1.1 } })
+```
+
+O operador `$mul` multiplica o valor do campo.
+
+</details>
+
+**3.** Qual a diferença entre `updateOne(filtro, { $set: { preco: 10 } })` e `replaceOne(filtro, { preco: 10 })`?
+
+<details>
+<summary>Ver resposta</summary>
+
+O `updateOne` com `$set` altera **só** o campo `preco` e mantém os outros. O `replaceOne` troca o documento **inteiro**: depois dele, o documento terá apenas `_id` e `preco`.
+
+</details>
+
+---
+
+<div align="center">
+
+[⬅️ 5.4 Modelagem (embedding × referência) e boas práticas](./04-mongodb-modelagem.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [5.6 Índices, desempenho e agregações ➡️](./06-mongodb-indices-e-agregacoes.md)
+
+</div>

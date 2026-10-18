@@ -1,267 +1,172 @@
-# Gerenciamento de dependências 
+# 4.16 · Gerenciamento de dependências: transitividade, escopos e exclusões
 
-## Tipos de dependências do Maven
+> **Em uma frase:** ao declarar uma biblioteca, o Maven também traz as bibliotecas **das quais ela depende** (dependências transitivas); o **escopo** diz em que momento cada uma é necessária (compilar, testar, rodar).
 
-Existem dois tipos de dependências no Maven: dependências diretas e dependências transitivas.
+## 🔗 Diretas × transitivas
 
-### Dependências Diretas
+- **Direta**: você declarou no seu `pom.xml`.
+- **Transitiva**: veio "de carona", porque uma dependência sua precisa dela.
 
-As dependências diretas são aquelas que são explicitamente declaradas no arquivo POM (Project Object Model) do seu projeto.
-
-<details>
-<summary>Código exemplo:</summary>
-
-```xml
-xmlCopy code
-<dependencies>
-    <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-core</artifactId>
-        <version>5.3.13.RELEASE</version>
-    </dependency>
-</dependencies>
-
-#Neste exemplo, a dependência do **spring-core** é declarada diretamente no POM do projeto. O Maven baixará esta dependência e suas dependências transitivas (se houverem) e adicionará ao classpath do projeto. 
-
+```mermaid
+flowchart LR
+    P["seu projeto"] -- "direta" --> W["spring-web"]
+    W -- "transitiva" --> C["spring-core"]
+    W -- "transitiva" --> B["spring-beans"]
+    C -- "transitiva" --> J["spring-jcl"]
 ```
 
-</details>
-
-### Dependências Transitivas
-
-As dependências transitivas são aquelas que são necessárias para o funcionamento das dependências diretas do projeto.
-
-<details>
-<summary>Código exemplo:</summary>
-
 ```xml
-xmlCopy code
-<dependencies>
-    <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-web</artifactId>
-        <version>5.3.13.RELEASE</version>
-    </dependency>
-</dependencies>
-
-#Neste exemplo, a dependência do spring-web é declarada diretamente no POM do projeto. No entanto, esta dependência tem uma dependência transitiva com o spring-core, que será automaticamente baixada e adicionada ao classpath do projeto pelo Maven.
+<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-web</artifactId>
+    <version>6.2.10</version>
+</dependency>
+<!-- spring-core e spring-beans vêm junto automaticamente -->
 ```
 
-</details>
+Veja a árvore completa com `mvn dependency:tree`.
 
-<br>
+> [!NOTE]
+> Se duas dependências trazem **versões diferentes** da mesma biblioteca, o Maven escolhe a **mais próxima** do seu projeto na árvore (e, empatando, a declarada primeiro). Para forçar uma versão, declare-a diretamente ou use `<dependencyManagement>`.
 
-## Transitividade e escopos
+## 🎯 Escopos
 
-### Transitividade
-A transitividade é a capacidade das dependências transitivas serem baixadas e adicionadas automaticamente pelo Maven ao classpath do projeto. Por exemplo, se o **`spring-web`** depende do **`spring-core`**, o Maven irá baixar e adicionar ao classpath ambos automaticamente.
-
-<br>
-
-### Escopos
-Os escopos no Maven indicam quando e como as dependências são usadas durante o ciclo de vida do projeto. Para especificar o escopo de uma dependência no Maven, basta adicionar o elemento **`<scope>`** ao bloco de dependência no arquivo POM do projeto.
-
-#### Existem diferentes escopos disponíveis no Maven, incluindo:
-`compile` 
-Este é o escopo padrão do Maven e indica que a dependência é necessária para compilar e executar o projeto. As dependências com este escopo são incluídas no classpath do projeto e também são empacotadas no arquivo JAR ou WAR final.
-
-<details>
-<summary>Código exemplo:</summary>
+| Escopo | Disponível para compilar | Para testar | Ao rodar | Vai no pacote final? | Exemplo |
+| --- | --- | --- | --- | --- | --- |
+| `compile` (padrão) | ✅ | ✅ | ✅ | ✅ | `commons-lang3`, `spring-web` |
+| `provided` | ✅ | ✅ | ❌ (o servidor fornece) | ❌ | `jakarta.servlet-api`, Lombok |
+| `runtime` | ❌ | ✅ | ✅ | ✅ | Drivers JDBC (`postgresql`) |
+| `test` | ❌ (só o código de teste) | ✅ | ❌ | ❌ | JUnit, Mockito |
+| `system` | ✅ | ✅ | ❌ | ❌ | `.jar` local via `<systemPath>` (**evite**) |
+| `import` | — | — | — | — | Importa um **BOM** dentro de `<dependencyManagement>` |
 
 ```xml
-<dependencies>
-    <dependency>
-        <groupId>org.apache.commons</groupId>
-        <artifactId>commons-lang3</artifactId>
-        <version>3.12.0</version>
-        <scope>compile</scope>
-    </dependency>
-</dependencies>
+<dependency>
+    <groupId>org.postgresql</groupId>
+    <artifactId>postgresql</artifactId>
+    <version>42.7.7</version>
+    <scope>runtime</scope>          <!-- o código não usa a classe direto; só precisa ao rodar -->
+</dependency>
+
+<dependency>
+    <groupId>org.junit.jupiter</groupId>
+    <artifactId>junit-jupiter</artifactId>
+    <version>5.13.4</version>
+    <scope>test</scope>
+</dependency>
 ```
 
-</details>
+### `import` e BOMs
 
-<br>
-
-`provided:`
-Este escopo indica que a dependência é fornecida pelo ambiente em tempo de execução. Por exemplo, o Servlet API em um servidor de aplicativos Java EE. Essas dependências não são incluídas no arquivo JAR ou WAR final, mas ainda são necessárias para compilar e testar o código do projeto.
-
-<details>
-<summary>Código exemplo:</summary>
-
-```xml
-<dependencies>
-    <dependency>
-        <groupId>javax.servlet</groupId>
-        <artifactId>javax.servlet-api</artifactId>
-        <version>3.1.0</version>
-        <scope>provided</scope>
-    </dependency>
-</dependencies>
-```
-
-</details>
-
-<br>
-
-`runtime`
-
-Este escopo indica que a dependência é necessária apenas em tempo de execução. Essas dependências não são necessárias para compilar o código, mas são necessárias para executá-lo. As dependências com este escopo não são empacotadas no arquivo JAR ou WAR final.
-
-<details>
-<summary>Código exemplo:</summary>
-
-```xml
-<dependencies>
-    <dependency>
-        <groupId>com.oracle.database.jdbc</groupId>
-        <artifactId>ojdbc8</artifactId>
-        <version>19.3.0.0</version>
-        <scope>runtime</scope>
-    </dependency>
-</dependencies>
-```
-
-</details>
-
-
-<br>
-
-`test`
-
-Este escopo indica que a dependência é necessária apenas para testes unitários e de integração. Essas dependências não são incluídas no arquivo JAR ou WAR final.
-
-<details>
-<summary>Código exemplo:</summary>
-
-```xml
-<dependencies>
-    <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <version>4.13.2</version>
-        <scope>test</scope>
-    </dependency>
-</dependencies>
-```
-
-</details>
-
-
-<br>
-
-`system`
-
-Este escopo indica que a dependência está presente no sistema de arquivos local. É necessário fornecer a localização exata da dependência usando o elemento **`<systemPath>`** no arquivo POM. Esse escopo não é recomendado porque as dependências do sistema podem variar de uma máquina para outra.
-
-<details>
-<summary>Código exemplo:</summary>
-
-```xml
-<dependencies>
-    <dependency>
-        <groupId>com.example</groupId>
-        <artifactId>my-library</artifactId>
-        <version>1.0</version>
-        <scope>system</scope>
-        <systemPath>/path/to/my-library.jar</systemPath>
-    </dependency>
-</dependencies>
-```
-
-</details>
-
-
-<br>
-
-`import` 
-
-Este escopo é usado apenas em arquivos POM e permite que você inclua dependências de outros arquivos POM no projeto. As dependências importadas são incluídas no classpath do projeto e não são empacotadas no arquivo JAR ou WAR final.
-
-<details>
-<summary>Código</summary>
+Um **BOM** (*Bill of Materials*) é um POM que só define versões compatíveis entre si. Importando-o, você declara as dependências **sem versão**:
 
 ```xml
 <dependencyManagement>
     <dependencies>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-framework-bom</artifactId>
-            <version>5.3.13.RELEASE</version>
+            <groupId>org.junit</groupId>
+            <artifactId>junit-bom</artifactId>
+            <version>5.13.4</version>
             <type>pom</type>
             <scope>import</scope>
         </dependency>
     </dependencies>
 </dependencyManagement>
+
+<dependencies>
+    <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter</artifactId>   <!-- versão vem do BOM -->
+        <scope>test</scope>
+    </dependency>
+</dependencies>
 ```
 
-</details>
+> [!TIP]
+> É exatamente assim que o **Spring Boot** funciona: o `spring-boot-starter-parent` traz as versões de centenas de bibliotecas testadas juntas, e você quase nunca precisa escrever `<version>`.
 
+## ❔ Dependências opcionais
 
-<br>
-
-### Escopo opcional
-
-As bibliotecas opcionais no Maven são dependências que não são necessárias para compilar ou executar o projeto, mas são opcionais e podem ser usadas se necessário. Um exemplo de implementação de uma biblioteca opcional no pom.xmlé usando o elemento <optional> dentro da tag <dependency>. 
-
-<details>
-<summary>Código exemplo</summary>
+Marcar `<optional>true</optional>` significa: "**eu** preciso dela, mas quem usar a minha biblioteca **não** vai recebê-la automaticamente". É usado por quem publica bibliotecas com recursos opcionais.
 
 ```xml
-<dependencies>
-  <dependency>
-    <groupId>com.example</groupId>
-    <artifactId>my-library</artifactId>
+<dependency>
+    <groupId>com.exemplo</groupId>
+    <artifactId>suporte-a-pdf</artifactId>
     <version>1.0</version>
     <optional>true</optional>
-  </dependency>
-</dependencies>
+</dependency>
 ```
 
-> 💡OBS: Para incluir essa dependência opcional manualmente, é possível usar o comando: 
+Quem quiser o recurso precisa declarar a dependência explicitamente no próprio `pom.xml`.
 
-```bash
-**#**para incluir todas as dependências opcionais
-**mvn install -DincludeOptional=true
+## ✂️ Exclusões
 
-#para resolver apenas as dependências opcionais.**
-**mvn dependency:resolve -DincludeOptional=true**
-```
-
-</details>
-
-<br>
-
-### Exclusions
-
-O elemento **`exclusions`** é usado no arquivo **`pom.xml`** do Maven para excluir uma ou mais dependências transitivas de um determinado artefato. Isso é útil quando uma dependência transitiva está causando conflitos ou problemas de compatibilidade.
-
-- Por exemplo, imagine que um projeto precisa da dependência **`my-library`**, que por sua vez depende da biblioteca **`old-library`**. No entanto, o projeto precisa usar uma versão mais recente da biblioteca **`new-library`**, que é incompatível com a **`old-library`**. Nesse caso, é possível usar a tag **`exclusions`** para excluir a **`old-library`** da dependência **`my-library`**.
-
-<details>
-<summary>Código exemplo de uso do elemento exclusions no pom.xml:</summary>
+Quando uma dependência transitiva causa conflito, você pode cortá-la:
 
 ```xml
-<dependencies>
-  <dependency>
-    <groupId>com.example</groupId>
-    <artifactId>my-library</artifactId>
+<dependency>
+    <groupId>com.exemplo</groupId>
+    <artifactId>minha-biblioteca</artifactId>
     <version>1.0</version>
     <exclusions>
-      <exclusion>
-        <groupId>com.example</groupId>
-        <artifactId>old-library</artifactId>
-      </exclusion>
+        <exclusion>
+            <groupId>com.exemplo</groupId>
+            <artifactId>biblioteca-antiga</artifactId>
+        </exclusion>
     </exclusions>
-  </dependency>
-</dependencies>
+</dependency>
 ```
+
+Exemplo real: excluir o Tomcat do `spring-boot-starter-web` para usar o Jetty no lugar.
+
+## 📌 Resumindo
+
+- Diretas você declara; transitivas vêm junto. Veja tudo com `mvn dependency:tree`.
+- Escopos: `compile` (padrão), `provided`, `runtime`, `test`, `system` (evite) e `import` (BOMs).
+- `optional` não repassa a dependência; `exclusions` corta uma transitiva.
+
+## 🏋️ Mão na massa
+
+**1.** Qual escopo usar para: (a) JUnit; (b) o driver do PostgreSQL; (c) a API de Servlet num projeto que roda dentro do Tomcat; (d) o Jackson (biblioteca de JSON) usado no código?
+
+<details>
+<summary>Ver resposta</summary>
+
+(a) `test`; (b) `runtime`; (c) `provided`; (d) `compile` (o padrão, nem precisa escrever).
 
 </details>
 
-<br>
+**2.** Rode `mvn dependency:tree` em um projeto Spring Boot e encontre de onde vem a biblioteca `jackson-databind`.
 
-<br>
+<details>
+<summary>Ver resposta</summary>
 
-[Voltar a Gerenciamento de dependências e build em Java com Maven](/Arquivos/Conteudo/4%20-%20Programa%C3%A7%C3%A3o%20orientada%20a%20objetos/4.5%20Gerenciamento%20de%20dependencias%20e%20build%20em%20java%20com%20maven.md)<br>
-[Voltar ao inicio](/README.md)
+A saída mostra algo como:
+
+```text
++- org.springframework.boot:spring-boot-starter-web:jar
+|  +- org.springframework.boot:spring-boot-starter-json:jar
+|  |  +- com.fasterxml.jackson.core:jackson-databind:jar
+```
+
+Ou seja, ela é transitiva: vem do `starter-web` → `starter-json`.
+
+</details>
+
+**3.** Para que serve um BOM?
+
+<details>
+<summary>Ver resposta</summary>
+
+Para centralizar as **versões** de um conjunto de bibliotecas que funcionam bem juntas. Importando o BOM (escopo `import`), você declara as dependências sem `<version>`, evitando conflitos de versão.
+
+</details>
+
+---
+
+<div align="center">
+
+[⬅️ 4.15 Criando projetos e comandos do Maven](./15-maven-comandos.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [4.17 Ciclo de vida do build (build lifecycle) ➡️](./17-maven-ciclo-de-vida.md)
+
+</div>

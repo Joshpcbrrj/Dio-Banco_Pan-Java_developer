@@ -1,0 +1,16 @@
+# Saídas geradas automaticamente (site e EPUB)
+site/
+build/
+docs/downloads/
+
+# Python
+__pycache__/
+.venv/
+
+# Java / Maven / IDEs
+target/
+out/
+*.class
+.idea/
+*.iml
+.vscode/

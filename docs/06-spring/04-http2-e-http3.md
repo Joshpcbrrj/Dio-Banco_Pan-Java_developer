@@ -1,60 +1,103 @@
-# HTTP 2.0 atualização do protocolo
+# 6.4 · HTTP/2 e HTTP/3
 
-## Diferenças entre HTTP anteriores e HTTP 2.0
+> **Em uma frase:** o **HTTP/2** deixou a web mais rápida enviando várias requisições ao mesmo tempo em uma única conexão (multiplexação) e comprimindo os cabeçalhos; o **HTTP/3** vai além trocando o TCP pelo **QUIC**, que roda sobre UDP.
 
-HTTP/2.0 é a nova versão do protocolo HTTP, a principal forma de comunicação entre servidores e clientes na web. Abaixo estão algumas das principais diferenças entre HTTP/2.0 e suas versões anteriores:
+## 🚀 O que o HTTP/2 trouxe
 
-### Multiplexação de fluxo
+### 1. Formato binário e *streams*
 
-HTTP/2.0 permite que vários fluxos de dados sejam enviados em uma única conexão, ao contrário do HTTP/1.1, onde cada solicitação e resposta exigia uma nova conexão. Isso significa que o HTTP/2.0 é capaz de lidar com várias solicitações simultaneamente e, portanto, pode carregar páginas da web mais rapidamente.
+As mensagens deixam de ser texto e passam a ser divididas em **frames** binários, cada um marcado com o ID do **stream** (a "conversa") a que pertence. O conteúdo lógico (método, cabeçalhos, corpo) continua o mesmo.
 
-### Priorização de fluxo
+### 2. Multiplexação
 
-HTTP/2.0 introduz a capacidade de priorizar fluxos de dados para evitar bloqueios de solicitações importantes por solicitações menos importantes. Isso ajuda a garantir que a página da web seja carregada mais rapidamente.
+```mermaid
+sequenceDiagram
+    participant C as Cliente
+    participant S as Servidor
+    Note over C,S: HTTP/1.1: uma resposta por vez em cada conexão
+    C->>S: GET /styles.css
+    S-->>C: styles.css
+    C->>S: GET /script.js
+    S-->>C: script.js
+    Note over C,S: HTTP/2: tudo junto, intercalado, numa só conexão
+    C->>S: stream 1: GET /styles.css
+    C->>S: stream 3: GET /script.js
+    C->>S: stream 5: GET /imagem.jpg
+    S-->>C: frames dos streams 3, 1, 5, 1, 3... (em qualquer ordem)
+```
 
-### Compactação de cabeçalho
+No HTTP/1.1, as conexões já eram **persistentes** (reaproveitadas), mas em cada uma só cabia uma resposta por vez, e os navegadores abriam várias conexões paralelas. No HTTP/2, uma única conexão carrega todas as requisições ao mesmo tempo, eliminando o *head-of-line blocking* na camada HTTP.
 
-HTTP/2.0 usa uma técnica de compactação de cabeçalho que reduz o tamanho do cabeçalho da solicitação e da resposta, o que economiza largura de banda e acelera o carregamento da página.
+### 3. Compressão de cabeçalhos (HPACK)
 
-### TLS (Transport Layer Security)
+Requisições seguidas repetem quase os mesmos cabeçalhos (`User-Agent`, `Cookie`...). O **HPACK** comprime os cabeçalhos e envia só o que mudou, economizando banda.
 
-HTTP/2.0 requer o uso do protocolo TLS, que criptografa a comunicação entre o servidor e o cliente. Isso ajuda a proteger a privacidade dos usuários e torna mais difícil para os invasores interceptar a comunicação.
+### 4. Priorização
 
-### Negociação no handshake
+O cliente pode indicar quais streams são mais importantes (por exemplo, o CSS antes das imagens).
 
-No HTTP/2.0, o handshake é negociado entre o cliente e o servidor antes do início da comunicação. Durante o handshake, o cliente e o servidor concordam em usar o HTTP/2.0 e estabelecem os parâmetros de comunicação, incluindo o protocolo de segurança a ser usado. O handshake no HTTP/2.0 é diferente do HTTP/1.1, que usa o handshake para estabelecer uma conexão TCP antes de iniciar a comunicação HTTP. No HTTP/2.0, a conexão TCP é estabelecida antes do handshake e é reutilizada para várias solicitações e respostas. Isso ajuda a melhorar o desempenho e a eficiência da comunicação. Além disso, o handshake no HTTP/2.0 inclui o envio de uma lista de recursos (conhecida como HPACK) que o servidor pode enviar para o cliente sem que o cliente os solicite. Isso é conhecido como push de servidor, e ajuda a melhorar ainda mais o desempenho da navegação na web.
+### 5. *Server push* (descontinuado)
 
-<br>
+O servidor podia enviar recursos antes de o cliente pedir. Na prática, o ganho foi pequeno e o recurso foi **removido do Chrome em 2022** e é desaconselhado. Hoje usam-se alternativas como o cabeçalho `Link: rel=preload` e a resposta `103 Early Hints`.
 
-## Push de servidor
+> [!NOTE]
+> A especificação do HTTP/2 **não exige** TLS, mas todos os navegadores só usam HTTP/2 com HTTPS. Na prática, HTTP/2 na web significa HTTPS. A versão é combinada durante o *handshake* do TLS, por uma extensão chamada **ALPN**.
 
-HTTP/2.0 permite que o servidor envie recursos para o cliente antes mesmo que ele os solicite. Isso pode ser útil para fornecer recursos que são necessários para carregar uma página, mas que o cliente ainda não solicitou, como imagens, folhas de estilo e scripts. Lembrando que não vem por default.
+## ⚡ HTTP/3 e QUIC
 
-<img src="./img/10.jpg" alt="" width="500">
+Mesmo com o HTTP/2, um único pacote TCP perdido trava **todos** os streams da conexão até ser retransmitido (o HOL blocking voltou, só que na camada de transporte). O **HTTP/3** (2022) resolve isso usando o **QUIC**:
 
-<br>
+| | HTTP/1.1 | HTTP/2 | HTTP/3 |
+| --- | --- | --- | --- |
+| Transporte | TCP | TCP | **QUIC (sobre UDP)** |
+| Formato | Texto | Binário | Binário |
+| Várias requisições por conexão | Uma de cada vez | Multiplexadas | Multiplexadas e independentes |
+| Perda de pacote trava tudo? | Sim | Sim (no TCP) | **Não**: só o stream afetado |
+| Criptografia | Opcional (HTTPS) | Na prática, sempre | **Obrigatória** (TLS 1.3 embutido) |
+| Estabelecer conexão | TCP + TLS (vários envios) | TCP + TLS | Mais rápido (1 ida e volta, ou 0 se reconectar) |
 
-#### Ilustração de formato de requisição HTTP 1.1 (Baseado no modelo OSI)
+> [!TIP]
+> Na aba **Network** do DevTools, ative a coluna **Protocol**: `http/1.1`, `h2` (HTTP/2) e `h3` (HTTP/3). Sites como Google e YouTube já usam `h3`.
 
-<img src="./img/11.jpg" alt="" width="700">
+## 📌 Resumindo
 
-<br>
+- HTTP/2: binário, multiplexação numa só conexão, compressão de cabeçalhos (HPACK) e priorização.
+- O *server push* foi abandonado.
+- HTTP/3: usa QUIC sobre UDP, elimina o bloqueio por perda de pacote e tem TLS 1.3 embutido.
 
-#### Ilustração de formato de requisição HTTP 2.0 (Baseado no modelo OSI) 
+## 🏋️ Mão na massa
 
-<img src="./img/12.jpg" alt="" width="700">
+**1.** Qual problema a multiplexação do HTTP/2 resolve?
 
-<br>
+<details>
+<summary>Ver resposta</summary>
 
-### Ilustração da diferença de requisições HTTP 1.1 vs HTTP 2.0
+A necessidade de esperar uma resposta terminar para receber a próxima na mesma conexão (o *head-of-line blocking* do HTTP). Com a multiplexação, várias requisições e respostas trafegam ao mesmo tempo numa única conexão.
 
-<img src="./img/13.webp" alt="" width="700">
+</details>
 
-<br>
+**2.** Por que o HTTP/3 usa UDP, se o UDP "não garante entrega"?
 
-<br>
+<details>
+<summary>Ver resposta</summary>
 
-<br>
+Porque o **QUIC** implementa por conta própria as garantias (entrega, ordem, controle de congestionamento), mas **por stream**. Assim, a perda de um pacote só afeta o stream dele, sem travar os outros, como acontece com o TCP.
 
-[Voltar a Principais protocolos de comunicação da internet](/Arquivos/Conteudo/6%20-%20Ganhando%20produtividade%20com%20spring%20framwork/6.1%20Principais%20protocolos%20de%20comunicacao%20na%20internet.md)<br>
-[Voltar ao inicio](/README.md)
+</details>
+
+**3.** Descubra, pelo DevTools, qual versão do HTTP o site `https://www.google.com` usa.
+
+<details>
+<summary>Ver resposta</summary>
+
+Abra **F12 → Network**, ative a coluna **Protocol** (clique com o botão direito nos títulos das colunas) e recarregue a página. A maioria das requisições aparece como `h3` ou `h2`.
+
+</details>
+
+---
+
+<div align="center">
+
+[⬅️ 6.3 Cookies, cache e proxy](./03-cookies-cache-proxy.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [6.5 Servidores web e de aplicação ➡️](./05-servidores-web.md)
+
+</div>

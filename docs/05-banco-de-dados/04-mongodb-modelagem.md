@@ -1,110 +1,140 @@
-# Schema design e boas práticas
+# 5.4 · MongoDB: modelagem (*embedding* × referência) e boas práticas
 
-### Embedding
+> **Em uma frase:** no MongoDB você escolhe entre **embutir** dados relacionados dentro do mesmo documento (*embedding*) ou guardar só uma **referência** ao documento de outra coleção; a regra de ouro é modelar pensando em **como os dados serão lidos**.
 
-Embedding no MongoDB refere-se à capacidade de armazenar documentos relacionados dentro de um único documento pai. Isso é feito por meio da criação de um array de documentos embutidos dentro de um documento pai. Essa abordagem é útil em muitos casos, especialmente quando se trabalha com dados que se relacionam de forma hierárquica.
+## 🎭 "Schemaless"?
 
-- Por exemplo, suponha que você esteja criando um aplicativo de blog e queira armazenar os comentários de cada postagem em seu próprio documento. Em vez de criar uma coleção separada para os comentários e usar referências, você pode incorporar os documentos de comentários diretamente no documento de postagem. Dessa forma, você pode recuperar todos os dados relacionados de uma postagem (incluindo seus comentários) com apenas uma consulta ao banco de dados.
+Dizem que o MongoDB é *schemaless* (sem esquema), mas é mais preciso dizer **esquema flexível**: o banco não obriga, mas sua aplicação sempre espera uma estrutura. Você pode até impor regras com **validação de esquema** (`$jsonSchema`) na criação da coleção.
 
-Embora o embedding possa ser uma abordagem poderosa e útil, existem algumas boas práticas que você deve seguir para garantir um bom desempenho e escalabilidade do seu aplicativo.
+## 📦 Embedding (documentos embutidos)
 
-#### Importante!
-1. Pense cuidadosamente no design do seu esquema - antes de incorporar documentos, certifique-se de que a estrutura de dados faça sentido e atenda às necessidades do seu aplicativo. Também é importante pensar no desempenho e na escalabilidade do seu esquema.
-2. Limite o tamanho dos documentos incorporados - documentos incorporados podem se tornar muito grandes, o que pode impactar o desempenho do seu aplicativo. Tente limitar o tamanho dos documentos incorporados e evite armazenar dados não estruturados ou grandes quantidades de dados em um único documento.
-3. Considere a atualização de documentos incorporados - se você precisar atualizar um documento incorporado, pode ser necessário atualizar vários documentos pai, o que pode ser ineficiente e causar bloqueios. Considere como suas consultas e atualizações afetarão o desempenho e a escalabilidade do seu aplicativo.
-4. Pense na consulta de documentos incorporados - embutir documentos pode tornar a consulta de dados mais eficiente em muitos casos, mas também pode tornar as consultas mais complexas e difíceis de otimizar. Pense cuidadosamente na consulta de dados e considere usar índices para melhorar o desempenho.
-5. Use documentos incorporados com moderação - enquanto o embedding pode ser útil em muitos casos, não é a solução para todos os problemas de modelagem de dados. Use documentos incorporados com moderação e considere outras opções, como referências, quando apropriado.
+Os dados relacionados ficam **dentro** do documento pai:
 
-Em resumo, o embedding é uma técnica poderosa e útil para modelar dados hierárquicos no MongoDB. No entanto, é importante pensar cuidadosamente no design do seu esquema e seguir as boas práticas recomendadas para garantir um bom desempenho e escalabilidade do seu aplicativo.
+```json
+{
+  "_id": ObjectId("609aeec3aa1a68ca982b47d7"),
+  "titulo": "Aprendendo MongoDB",
+  "comentarios": [
+    { "autor": "Ana", "texto": "Ótimo post!" },
+    { "autor": "Bia", "texto": "Muito útil." }
+  ]
+}
+```
 
-#### Pros de uso:
-- Consulta informações em uma única query
-- Atualiza o registro em uma única operação
-  
-#### Contras:
-- Possui tamanho limite de 16mb por documento
+| ✅ Prós | ❌ Contras |
+| --- | --- |
+| Uma única consulta traz tudo | Documento tem limite de **16 MB** |
+| Atualização atômica em um só documento | Dados podem ficar duplicados |
+| Ótimo desempenho de leitura | Arrays que crescem sem limite viram problema |
 
-<br>
+## 🔗 Referência
 
-## Referencia
+Guarda-se só o `_id` do outro documento, numa coleção separada:
 
-Referências no MongoDB são uma técnica de modelagem de dados que envolve a criação de relacionamentos entre documentos em coleções diferentes. Ao contrário do embedding, onde os documentos relacionados são armazenados dentro de um único documento, as referências permitem que você armazene a referência a outro documento em uma coleção separada.
+```json
+// coleção "pessoas"
+{ "_id": ObjectId("609a..."), "nome": "Patrick", "enderecos": [ObjectId("123"), ObjectId("1234")] }
 
-Por exemplo, suponha que você esteja criando um aplicativo de blog e queira armazenar informações do autor de cada postagem. Em vez de incorporar todos os dados do autor diretamente no documento de postagem, você pode criar uma coleção separada para os autores e usar referências para se relacionar com a coleção de postagens. Dessa forma, você pode recuperar informações sobre o autor de uma postagem com uma consulta ao banco de dados.
+// coleção "enderecos"
+{ "_id": ObjectId("123"),  "rua": "Av. das Conchas", "numero": 102 }
+{ "_id": ObjectId("1234"), "rua": "Rua das Pérolas", "numero": 100 }
+```
 
-Existem algumas boas práticas que você deve seguir ao usar referências no MongoDB:
+| ✅ Prós | ❌ Contras |
+| --- | --- |
+| Documentos menores | Precisa de duas consultas ou de `$lookup` |
+| Sem duplicação de dados | Leitura mais lenta |
+| Bom quando os dados nem sempre são lidos juntos | |
 
-#### Importante!
-1. Identifique as coleções relacionadas - antes de criar referências, certifique-se de identificar quais coleções estão relacionadas e como elas se relacionam. Isso ajudará a garantir que seu esquema seja bem projetado e atenda às necessidades do seu aplicativo.
-2. Crie índices nas chaves de referência - ao criar referências, é importante criar índices nas chaves de referência para garantir o desempenho das consultas. Isso ajuda o MongoDB a localizar rapidamente os documentos relacionados.
-3. Use o método `$lookup` para fazer junções - ao consultar documentos relacionados, use o método $lookup para fazer junções entre as coleções. Isso permite que você combine os documentos de várias coleções em uma única consulta.
-4. Considere o desempenho e a escalabilidade - ao usar referências, é importante pensar no desempenho e na escalabilidade do seu aplicativo. Certifique-se de que suas consultas sejam eficientes e que o número de referências seja gerenciável.
-5. Evite aninhamento excessivo - evite criar uma hierarquia muito profunda de referências. Isso pode tornar as consultas mais complexas e difíceis de otimizar.
+## 🧭 Recomendações por tipo de relacionamento
 
-Em resumo, as referências são uma técnica de modelagem de dados poderosa e útil no MongoDB. Elas permitem que você crie relacionamentos entre documentos em coleções diferentes e são uma boa opção quando os documentos relacionados são muito grandes para serem incorporados. No entanto, é importante seguir as boas práticas recomendadas para garantir um bom desempenho e escalabilidade do seu aplicativo.
+| Relacionamento | Recomendação | Exemplo |
+| --- | --- | --- |
+| **Um para um** | Campos no próprio documento (ou um subdocumento) | Pessoa → CPF |
+| **Um para poucos** | **Embedding** | Pessoa → 2 ou 3 endereços |
+| **Um para muitos** / **muitos para muitos** | **Referência** | Produto → milhares de avaliações; alunos ↔ cursos |
 
-### Pros de uso:
+```mermaid
+flowchart TD
+    A{"Os dados são lidos<br/>sempre juntos?"} -- sim --> B{"A lista é pequena<br/>e limitada?"}
+    B -- sim --> E["Embedding"]
+    B -- não --> R["Referência"]
+    A -- não --> R
+```
 
-- Documentos pequenos
-- Não duplica informações
-- Usado quando os dados não são acessados em todas as consultas
+## ✅ Boas práticas
 
-### Contra :
-- Duas ou mais queries ou utilização do $lookup
+- **Modele pelas consultas**: pense primeiro em como a aplicação vai ler os dados.
+- Evite documentos muito grandes e arrays que crescem sem limite.
+- Use nomes de campos curtos e claros (eles são repetidos em cada documento).
+- Crie **índices** nos campos usados em filtros e nas referências (aula [5.6](./06-mongodb-indices-e-agregacoes.md)).
+- Analise as consultas com `.explain()`.
+- Atualize só os campos alterados (`$set`), em vez de substituir o documento inteiro.
+- Evite filtros com negação (`$ne`, `$nin`), que costumam não aproveitar índices.
 
-<br>
+## 🔣 JSON × BSON
 
-## Representação schema design
+| | JSON | BSON |
+| --- | --- | --- |
+| Formato | Texto, legível por humanos | Binário |
+| Uso típico | Trocar dados entre sistemas (APIs) | Armazenamento interno do MongoDB |
+| Tipos | string, número, booleano, null, array, objeto | Todos os do JSON + `Date`, `ObjectId`, `Decimal128`, `Int32`/`Int64`, binários... |
+| Vantagem | Simples e universal | Mais rápido de percorrer e com tipos ricos |
 
-<img src="./img/03.jpg" alt="" width="600">
+Você escreve e lê os documentos como JSON; o driver e o banco convertem para BSON automaticamente.
 
-<img src="./img/04.jpg" alt="" width="600">
+## 📌 Resumindo
 
-<img src="./img/05.jpg" alt="" width="600">
+- Esquema flexível não significa ausência de modelagem.
+- **Embedding** para dados lidos juntos e listas pequenas; **referência** para relações grandes ou N:N.
+- Limite de 16 MB por documento; índices nos campos consultados.
+- BSON é o JSON binário com tipos extras.
 
-<br>
+## 🏋️ Mão na massa
 
-<br>
+**1.** Um blog tem posts e comentários; um post famoso pode ter 50 mil comentários. Embedding ou referência?
 
-### Boas práticas gerais no uso do MongoDB
+<details>
+<summary>Ver resposta</summary>
 
-- Evite documentos muito grandes (Quanto maior o documento, maior o overhead de busca).
-- Use nome campos e objetivos curtos.
-- Analise as suas queries utilizando o explain().
-- Atualize apenas os campos alterados.
-- Evite negações em queries (Isso força o escaneamento completo da quer).
-- Lists/ Arrays dentro de documentos não podem crescer ilimitadamente.
+**Referência** (uma coleção `comentarios` com o `postId`). Com 50 mil comentários embutidos, o documento do post cresceria sem limite e poderia passar dos 16 MB.
 
-<br>
+</details>
 
-## Diferenças entre Json e Bson
+**2.** Modele um pedido de e-commerce com seus itens (normalmente poucos) e o cliente (que também faz outros pedidos).
 
-### Estrutura de dados
+<details>
+<summary>Ver resposta</summary>
 
-- JSON (JavaScript Object Notation) é uma forma de representar dados em formato de texto. Ele usa uma estrutura de dados baseada em objetos, que consiste em pares de chave-valor.
-- BSON (Binary JSON) é uma extensão do formato JSON que codifica os dados em binário. Ele também usa uma estrutura de dados baseada em objetos, mas adiciona suporte para tipos de dados adicionais que não estão presentes em JSON (Ex: Date e ObjectID).
+```json
+{
+  "_id": ObjectId("..."),
+  "clienteId": ObjectId("..."),
+  "data": ISODate("2026-10-18T10:00:00Z"),
+  "itens": [
+    { "produto": "Teclado", "quantidade": 1, "preco": NumberDecimal("149.90") },
+    { "produto": "Mouse", "quantidade": 2, "preco": NumberDecimal("59.90") }
+  ]
+}
+```
 
-### Armazenamento de dados
+Os **itens** são embutidos (fazem parte do pedido e são lidos juntos). O **cliente** é uma referência, porque existe por conta própria e tem vários pedidos.
 
-- JSON é amplamente utilizado para transferência de dados em aplicativos web e móveis, bem como para armazenamento de dados em bancos de dados NoSQL como o MongoDB. Quando armazenado em um banco de dados, o JSON é geralmente armazenado como um documento BSON, que permite uma melhor compactação e suporte a tipos de dados adicionais.
-- BSON é usado principalmente para armazenamento de dados em bancos de dados NoSQL, como o MongoDB. Ele é projetado para ser compacto e eficiente em termos de espaço de armazenamento e velocidade de processamento.
+</details>
 
-### Suporte a tipos de dados
+**3.** Por que o BSON tem um tipo `Decimal128` se o JSON já tem números?
 
-- JSON suporta tipos de dados básicos, como string, número, booleano, null, array e objeto. No entanto, ele não suporta tipos de dados binários, como imagens ou arquivos de áudio.
-- BSON suporta todos os tipos de dados que o JSON suporta, além de tipos de dados binários, como BinData e UUID. Ele também suporta tipos de dados adicionais, como data e timestamp.
+<details>
+<summary>Ver resposta</summary>
 
-### Desempenho
+Porque os números do JSON costumam ser tratados como ponto flutuante (impreciso). O `Decimal128` guarda decimais **exatos**, essencial para valores monetários.
 
-- JSON é um formato de texto simples e legível por humanos, o que significa que é fácil de entender e depurar. No entanto, ele pode ser ineficiente em termos de espaço de armazenamento e processamento devido à sua estrutura de texto.
-- BSON é um formato binário compacto que é otimizado para leitura e gravação de dados em bancos de dados NoSQL. Ele é mais eficiente em termos de espaço de armazenamento e processamento do que JSON.
+</details>
 
-<br>
+---
 
-<br>
+<div align="center">
 
-<br>
+[⬅️ 5.3 Conceitos e instalação](./03-mongodb.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [5.5 Comandos essenciais (CRUD) ➡️](./05-mongodb-comandos.md)
 
-[Voltar a MongoDB](/Arquivos/Conteudo/5%20-%20Trabalhando%20com%20banco%20de%20dados%20sql%20e%20nosql/5.2.2%20Mongodb.md)<br>
-[Voltar a Introdução ao MongoDB](/Arquivos/Conteudo/5%20-%20Trabalhando%20com%20banco%20de%20dados%20sql%20e%20nosql/5.2%20Introducao%20ao%20mongodb.md)<br>
-[Voltar ao inicio](/README.md)
+</div>

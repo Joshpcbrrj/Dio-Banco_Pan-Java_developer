@@ -1,106 +1,109 @@
-# Pilhas (Stacks) 
+# 2.25 · Pilhas prontas do Java: `Stack` e `Deque`
 
-Em Java, uma stack (pilha) é uma estrutura de dados que segue o modelo LIFO (Last In, First Out), ou seja, o último elemento adicionado à pilha é o primeiro a ser removido.
+> **Em uma frase:** o Java já traz pilhas prontas; a classe antiga é a `Stack`, mas hoje o recomendado é usar a interface `Deque` com a implementação `ArrayDeque`.
 
-**Na** classe java.util.Stack, que implementa a interface java.util.Deque, temos os seguintes métodos principais:
-
-- **`push(E e)`**: adiciona um elemento à pilha no topo.
-- **`pop()`**: remove e retorna o elemento do topo da pilha. Se a pilha estiver vazia, gera uma exceção **`EmptyStackException`**.
-- **`peek()`**: retorna o elemento do topo da pilha, sem removê-lo. Se a pilha estiver vazia, gera uma exceção **`EmptyStackException`**.
-- **`empty()`**: retorna **`true`** se a pilha estiver vazia, **`false`** caso contrário.
-- **`search(Object o)`**: retorna a posição do objeto na pilha, onde o topo da pilha é a posição 1. Se o objeto não estiver na pilha, retorna -1.
-  
-<br>
-
-### Mostrando em código:
-<details>
-<summary>Código</summary>
+## 🧰 `Stack` (a clássica)
 
 ```java
-//Class "main"
-package com.projeto.Stack;
-
 import java.util.Stack;
 
-public class Main {
-    public static void main(String[] args) {
-        //Criando pilhas do objeto "Carro" (pilha_de_carros)
-        Stack<Carro> pilha_de_carros = new Stack<>();
+Stack<String> pilha = new Stack<>();
+pilha.push("Ford");
+pilha.push("Toyota");
+pilha.push("Fiat");                       // topo
 
-        //Método push (Adicionando carros na "pilha_de_carros")
-        pilha_de_carros.push(new Carro("Ford"));
-        pilha_de_carros.push(new Carro("Toyota"));
-        pilha_de_carros.push(new Carro("Fiat")); //último adicionado vai pro topo da pilha
-
-        //Mostrando "pilha_de_carros" na tela
-        System.out.println("Lista de carros: " + pilha_de_carros);
-
-        //Método pop (Mostrando objeto removido do topo da pilha)
-        System.out.println(pilha_de_carros.pop());
-
-        //Método peek (Pega e mostra o elemento do topo sem remover)
-        System.out.println("Novo top da lista: " + pilha_de_carros.peek());
-
-        //Método isEmpty (Testa se a pilha esta vazia)
-        System.out.println("A pilha esta vazia ? " + pilha_de_carros.empty());
-
-    }
-}
+System.out.println(pilha);                // [Ford, Toyota, Fiat]
+System.out.println(pilha.pop());          // Fiat (remove o topo)
+System.out.println(pilha.peek());         // Toyota (só olha)
+System.out.println(pilha.empty());        // false
+System.out.println(pilha.search("Ford")); // 2 (posição contando do topo, começando em 1)
 ```
 
+| Método | O que faz | Pilha vazia |
+| --- | --- | --- |
+| `push(e)` | Empilha | — |
+| `pop()` | Remove e devolve o topo | `EmptyStackException` |
+| `peek()` | Devolve o topo sem remover | `EmptyStackException` |
+| `empty()` | Está vazia? | — |
+| `search(o)` | Posição a partir do topo (1 = topo), ou `-1` | — |
+
+> [!NOTE]
+> A `Stack` herda de `Vector` (e não implementa `Deque`, como às vezes se diz). Por herdar de `Vector`, ela é sincronizada (mais lenta) e expõe métodos que quebram a ideia de pilha, como `get(índice)`. Por isso a documentação oficial recomenda usar `Deque`.
+
+## ✅ `Deque` + `ArrayDeque` (o recomendado)
+
+`Deque` (*double-ended queue*, fila de duas pontas) serve tanto como **pilha** quanto como **fila**.
+
 ```java
-//Class "Carros"
-package com.projeto.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
-import java.util.Objects;
+Deque<String> pilha = new ArrayDeque<>();
+pilha.push("Ford");
+pilha.push("Toyota");
+pilha.push("Fiat");
 
-public class Carro {
-    String marca;
+System.out.println(pilha.pop());      // Fiat
+System.out.println(pilha.peek());     // Toyota
+System.out.println(pilha.isEmpty());  // false
+```
 
-    //Construtor
-    public Carro(String marca) {
-        this.marca = marca;
-    }
+> [!TIP]
+> Diferenças práticas: no `ArrayDeque`, `peek()` devolve `null` se estiver vazia (e `pop()` lança `NoSuchElementException`). Ele também **não aceita `null`** como elemento.
 
-    //Getters e setters
-    public String getMarca() {
-        return marca;
-    }
-    public void setMarca(String marca) {
-        this.marca = marca;
-    }
+## 📌 Resumindo
 
-    //Método "Equals"
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Carro carro = (Carro) o;
-        return Objects.equals(marca, carro.marca);
-    }
-    //Método "hashCode"
-    @Override
-    public int hashCode() {
-        return Objects.hash(marca);
-    }
-    //Método "toString"
-    @Override
-    public String toString() {
-        return "Carro{" +
-                "marca='" + marca + '\'' +
-                '}';
-    }
-}
+- `Stack` funciona, mas é antiga (herda de `Vector`).
+- Prefira `Deque<T> pilha = new ArrayDeque<>()` com `push`, `pop` e `peek`.
+
+## 🏋️ Mão na massa
+
+**1.** Reescreva o exemplo com `Stack` usando `ArrayDeque`.
+
+<details>
+<summary>Ver resposta</summary>
+
+```java
+Deque<String> pilha = new ArrayDeque<>();
+pilha.push("Ford");
+pilha.push("Toyota");
+pilha.push("Fiat");
+System.out.println(pilha.pop());   // Fiat
+System.out.println(pilha.peek());  // Toyota
 ```
 
 </details>
 
-<br>
+**2.** Implemente um "histórico do navegador": cada página visitada é empilhada, e o botão "voltar" desempilha.
 
-<br>
+<details>
+<summary>Ver resposta</summary>
 
-<br>
+```java
+Deque<String> historico = new ArrayDeque<>();
+historico.push("google.com");
+historico.push("github.com");
+historico.push("dio.me");
 
-[Voltar a Principais implementações das estruturas de dados em Java](/Arquivos/Conteudo/2%20-%20Conhecendo%20a%20linguagem%20Java/2.5.8%20Principais%20implementacoes.md)<br>
-[Voltar a Estrutura de dados em Java](/Arquivos/Conteudo/2%20-%20Conhecendo%20a%20linguagem%20Java/2.5%20Estrutura%20de%20dados%20em%20java.md)<br>
-[Voltar para inicio](/README.md)
+historico.pop();                         // voltar: sai de dio.me
+System.out.println(historico.peek());    // github.com (página atual)
+```
+
+</details>
+
+**3.** O que acontece ao chamar `pop()` numa `Stack` vazia? E num `ArrayDeque` vazio?
+
+<details>
+<summary>Ver resposta</summary>
+
+Na `Stack`, lança `EmptyStackException`. No `ArrayDeque`, lança `NoSuchElementException`. Em ambos, confira `isEmpty()` antes (ou use `poll()`, que no `ArrayDeque` devolve `null` em vez de lançar exceção).
+
+</details>
+
+---
+
+<div align="center">
+
+[⬅️ 2.24 equals() e hashCode()](./24-equals-e-hashcode.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [2.26 Filas prontas do Java ➡️](./26-queue.md)
+
+</div>

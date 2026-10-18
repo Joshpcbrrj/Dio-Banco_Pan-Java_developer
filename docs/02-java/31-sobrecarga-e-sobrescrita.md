@@ -1,49 +1,44 @@
-# Sobrecarga de métodos
+# 2.31 · Sobrecarga × sobrescrita
 
-Sobrecarga de métodos é um recurso da linguagem de programação Java que permite que um mesmo nome de método seja utilizado para executar diferentes ações, dependendo dos argumentos passados para ele. Isso significa que é possível ter dois ou mais métodos com o mesmo nome em uma classe, desde que eles tenham uma assinatura diferente, ou seja, um conjunto diferente de parâmetros de entrada. Por exemplo, considere uma classe que tenha dois métodos com o nome "soma", um que recebe dois números inteiros como parâmetros e outro que recebe dois números decimais. Ambos os métodos teriam o mesmo nome, mas teriam assinaturas diferentes, permitindo que o compilador Java distinguisse entre eles. 
+> **Em uma frase:** **sobrecarga** é ter vários métodos com o **mesmo nome e parâmetros diferentes** na mesma classe; **sobrescrita** é uma classe filha **reescrever** um método herdado da classe pai, com a mesma assinatura.
 
-A sobrecarga de métodos é útil para criar interfaces mais intuitivas e fáceis de usar, reduzir a complexidade do código e melhorar a legibilidade do programa. Além disso, ela pode ajudar a evitar erros comuns, como a passagem de argumentos de tipos diferentes para um método que espera um tipo específico de entrada.
+## 🔁 Sobrecarga (*overloading*)
 
-### Sobrecarga x sobrescrita
-- A sobrecarga de métodos, como descrito anteriormente, permite que um mesmo nome de método seja utilizado para executar diferentes ações, dependendo dos argumentos passados para ele. Isso significa que vários métodos com o mesmo nome podem coexistir em uma classe, desde que tenham diferentes assinaturas.
-- Por outro lado, a sobrescrita de métodos ocorre quando uma subclasse redefine um método que já foi definido em sua classe pai. Isso significa que a subclasse fornece sua própria implementação para o método, substituindo a implementação herdada da classe pai.
-- Na sobrescrita de métodos, o nome, os parâmetros e o tipo de retorno do método na subclasse devem ser idênticos aos da classe pai, e a subclasse não pode reduzir a visibilidade do método (por exemplo, mudar de public para private).
-
-#### Exemplo de código de Sobrecarga:
-<details>
-<summary>Código</summary>
+O mesmo nome, com **listas de parâmetros diferentes** (quantidade, tipo ou ordem). O compilador escolhe qual chamar pelos argumentos.
 
 ```java
-public class ExemploSobrecarga {
+public class Calculadora {
+
+    public static int somar(int a, int b) {
+        return a + b;
+    }
+
+    public static double somar(double a, double b) {
+        return a + b;
+    }
+
+    public static int somar(int a, int b, int c) {
+        return a + b + c;
+    }
 
     public static void main(String[] args) {
-        int somaInteiros = soma(2, 3);
-        System.out.println("A soma dos inteiros é: " + somaInteiros);
-
-        double somaDecimais = soma(2.5, 3.7);
-        System.out.println("A soma dos decimais é: " + somaDecimais);
-    }
-
-    // Método de sobrecarga para soma de inteiros
-    public static int soma(int a, int b) {
-        int resultado = a + b;
-        return resultado;
-    }
-
-    // Método de sobrecarga para soma de decimais
-    public static double soma(double a, double b) {
-        double resultado = a + b;
-        return resultado;
+        System.out.println(somar(2, 3));        // usa somar(int, int) → 5
+        System.out.println(somar(2.5, 3.7));    // usa somar(double, double) → 6.2
+        System.out.println(somar(1, 2, 3));     // usa somar(int, int, int) → 6
     }
 }
 ```
 
-</details>
+> [!NOTE]
+> Você usa sobrecarga o tempo todo: `System.out.println` tem versões para `int`, `double`, `String`, `boolean`, `Object`... Construtores também podem ser sobrecarregados.
 
+## ✍️ Sobrescrita (*overriding*)
 
-#### Exemplo de código de sobrescrita:
-<details>
-<summary>Código</summary>
+A classe filha fornece **sua própria versão** de um método herdado. Regras:
+
+- mesmo **nome**, mesmos **parâmetros** e retorno compatível;
+- **não pode reduzir a visibilidade** (um `public` não pode virar `private`);
+- use a anotação **`@Override`**: o compilador avisa se você errar a assinatura.
 
 ```java
 class Animal {
@@ -55,28 +50,91 @@ class Animal {
 class Cachorro extends Animal {
     @Override
     public void fazerBarulho() {
-        System.out.println("O cachorro faz 'Au Au!'");
+        System.out.println("Au au!");
     }
 }
 
-public class ExemploSobrescrita {
+public class Main {
     public static void main(String[] args) {
         Animal animal = new Animal();
-        animal.fazerBarulho(); // Saída: O animal faz algum barulho.
+        animal.fazerBarulho();     // O animal faz algum barulho.
 
-        Cachorro cachorro = new Cachorro();
-        cachorro.fazerBarulho(); // Saída: O cachorro faz 'Au Au!'
+        Animal rex = new Cachorro();
+        rex.fazerBarulho();        // Au au! (vale a versão do objeto real)
+    }
+}
+```
+
+Esse comportamento, em que a versão executada depende do **objeto real** (e não do tipo da variável), é o **polimorfismo**, aprofundado na aula [4.2](../04-poo/02-heranca-e-polimorfismo.md).
+
+## ⚖️ Comparando
+
+| | Sobrecarga | Sobrescrita |
+| --- | --- | --- |
+| Onde | Na **mesma** classe | Entre classe **pai e filha** |
+| Assinatura | **Diferente** (parâmetros mudam) | **Igual** |
+| Decidida em | Tempo de **compilação** | Tempo de **execução** |
+| Anotação | — | `@Override` |
+
+## 📌 Resumindo
+
+- Sobrecarga: mesmo nome, parâmetros diferentes, mesma classe.
+- Sobrescrita: filha reescreve método do pai com a mesma assinatura; use `@Override`.
+- A sobrescrita é a base do polimorfismo.
+
+## 🏋️ Mão na massa
+
+**1.** Crie a classe `Area` com três métodos `calcular` sobrecarregados: quadrado (lado), retângulo (base, altura) e trapézio (base maior, base menor, altura).
+
+<details>
+<summary>Ver resposta</summary>
+
+```java
+public class Area {
+    public static double calcular(double lado) {
+        return lado * lado;
+    }
+    public static double calcular(double base, double altura) {
+        return base * altura;
+    }
+    public static double calcular(double baseMaior, double baseMenor, double altura) {
+        return (baseMaior + baseMenor) * altura / 2;
     }
 }
 ```
 
 </details>
 
-<br>
+**2.** O que acontece se você escrever `@Override public void fazerbarulho()` (com "b" minúsculo) na classe `Cachorro`?
 
-<br>
+<details>
+<summary>Ver resposta</summary>
 
-<br>
+**Erro de compilação**: o `@Override` avisa que não existe um método `fazerbarulho()` na classe pai para sobrescrever. Sem a anotação, o erro passaria despercebido e você teria criado um método novo.
 
-[Voltar a métodos em Java](/Arquivos/Conteudo/2%20-%20Conhecendo%20a%20linguagem%20Java/2.6%20Metodos%20em%20java.md)<br>
-[Voltar ao inicio](/README.md)
+</details>
+
+**3.** Crie uma classe `Gato` que sobrescreva `fazerBarulho()` e chame a versão da classe pai antes de miar.
+
+<details>
+<summary>Ver resposta</summary>
+
+```java
+class Gato extends Animal {
+    @Override
+    public void fazerBarulho() {
+        super.fazerBarulho();          // executa a versão do pai
+        System.out.println("Miau!");
+    }
+}
+```
+
+</details>
+
+---
+
+<div align="center">
+
+[⬅️ 2.30 Métodos](./30-metodos-conceitos.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [2.32 Retorno de métodos ➡️](./32-retorno-de-metodos.md)
+
+</div>

@@ -1,100 +1,122 @@
-# Equals and hashCode
+# 2.24 · `equals()` e `hashCode()`
 
-`equals()` e `hashCode()` são métodos da classe `Object` em Java, que permitem comparar e identificar objetos com base em seus valores.
+> **Em uma frase:** `equals()` diz se dois objetos são "iguais" para o seu programa, e `hashCode()` gera um número que as coleções usam para encontrar objetos rápido; quando você sobrescreve um, **precisa** sobrescrever o outro.
 
-- O método `equals()` é usado para comparar dois objetos para determinar se eles são iguais ou não. Quando você chama o método **`equals()`**em um objeto, ele compara o objeto atual com outro objeto passado como parâmetro e retorna verdadeiro se ambos os objetos tiverem valores iguais.
-- O método `hashCode()` é usado para obter um código hash de um objeto. Um código hash é um número inteiro que é usado para identificar um objeto em uma coleção, como um HashMap ou HashSet. O código hash é gerado a partir dos valores dos atributos do objeto, e é importante que objetos iguais tenham o mesmo código hash, para que possam ser armazenados e recuperados corretamente de coleções.
+## 🤔 O problema
 
-<br>
-
-### Exemplificndo em código:
-<details>
-<summary>Código</summary>
+Por padrão, dois objetos só são "iguais" se forem **o mesmo objeto** na memória:
 
 ```java
-//Class "main"
-package com.projeto.Equals_and_hasCode;
+Carro c1 = new Carro("Ford");
+Carro c2 = new Carro("Ford");
+System.out.println(c1 == c2);        // false: objetos diferentes
+System.out.println(c1.equals(c2));   // false também, se Carro não sobrescrever equals
+```
 
-import java.util.ArrayList;
-import java.util.List;
+Para o seu sistema, porém, dois carros da mesma marca podem ser "o mesmo carro". Quem define isso é você, sobrescrevendo `equals()`.
 
-public class Main {
-    public static void main(String[] args) {
-        //Criando lista de carros
-        List<Carro> lista_de_carros = new ArrayList<>();
+## 📏 O contrato
 
-        //Acrescentando objetos carros na "lista_de_carros"
-        lista_de_carros.add(new Carro("Ford"));
-        lista_de_carros.add(new Carro("Chevrolet"));
-        lista_de_carros.add(new Carro("Volkswagen"));
+1. Se `a.equals(b)` é `true`, então `a.hashCode() == b.hashCode()` **obrigatoriamente**.
+2. Se os hashes são iguais, os objetos **não** são necessariamente iguais (pode haver colisão).
+3. `equals` deve ser reflexivo (`a.equals(a)`), simétrico e consistente, e `a.equals(null)` deve ser `false`.
 
-        //Verificando se contém na lista um carro de marca "Ford" (Usando equals para comparar)
-        System.out.println("Contém marca 'Ford' na lista ? " + lista_de_carros.contains(new Carro("Ford")));
+> [!CAUTION]
+> Sobrescrever só o `equals` e esquecer o `hashCode` quebra o `HashSet` e o `HashMap`: eles procuram primeiro pelo hash, então dois objetos "iguais" com hashes diferentes são tratados como diferentes, gerando duplicatas e buscas que não acham nada.
 
-        //Verificando o hashCode da marca "Ford"
-        System.out.println("HashCode da marca Ford: " + new Carro("Ford").hashCode());
+## 🛠️ Implementando
 
-        //Criando objetos do tipo "Carro"
-        Carro carro_1 = new Carro("Ford");
-        Carro carro_2 = new Carro("Toyota");
+```java
+import java.util.Objects;
 
-        //Comparando os objetos "carro_1" e "carro_2
-        System.out.println(carro_1.equals(carro_2));
+public class Carro {
+    private final String marca;
 
-        //Vendo os hashCode de "carro_1" e "carro_2" (Números totalmente diferentes)
-        System.out.println("hashCode carro_1: " + carro_1.hashCode());
-        System.out.println("hashCode carro_2: " + carro_2.hashCode());
+    public Carro(String marca) { this.marca = marca; }
 
+    public String getMarca() { return marca; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;                     // mesmo objeto
+        if (!(o instanceof Carro outro)) return false;  // tipo diferente ou null
+        return Objects.equals(marca, outro.marca);      // compara os campos
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(marca);                     // mesmos campos do equals
+    }
+
+    @Override
+    public String toString() { return "Carro{" + marca + "}"; }
 }
 ```
 
 ```java
-//Class "Carro"
-package com.projeto.Equals_and_hasCode;
+List<Carro> carros = new ArrayList<>(List.of(new Carro("Ford"), new Carro("Fiat")));
+System.out.println(carros.contains(new Carro("Ford")));   // true (usa equals)
 
-import java.util.Objects;
+Carro a = new Carro("Ford");
+Carro b = new Carro("Ford");
+System.out.println(a.equals(b));                    // true
+System.out.println(a.hashCode() == b.hashCode());   // true
+```
 
-public class Carro {
-    String marca;
+> [!TIP]
+> Não escreva isso na mão: no IntelliJ, `Alt+Insert` → **equals() and hashCode()** gera os dois juntos. E se a classe só carrega dados, um **`record`** já vem com `equals`, `hashCode` e `toString` prontos: `public record Carro(String marca) { }`.
 
-    //Construtor
-    public Carro(String marca) {
-        this.marca = marca;
-    }
+## 📌 Resumindo
 
-    //Getters e setters
-    public String getMarca() {
-        return marca;
-    }
-    public void setMarca(String marca) {
-        this.marca = marca;
-    }
+- `==` compara referências; `equals()` compara o que você definir como "igual".
+- `hashCode()` é usado por `HashSet`/`HashMap` para encontrar objetos rápido.
+- Objetos iguais **devem** ter o mesmo hash: sempre sobrescreva os dois juntos, usando os mesmos campos.
 
-    //Método "Equals"
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Carro carro = (Carro) o;
-        return Objects.equals(marca, carro.marca);
-    }
-    //Método "hashCode"
-    @Override
-    public int hashCode() {
-        return Objects.hash(marca);
-    }
+## 🏋️ Mão na massa
+
+**1.** Implemente `equals` e `hashCode` em uma classe `Pessoa` considerando que duas pessoas são iguais quando têm o mesmo CPF.
+
+<details>
+<summary>Ver resposta</summary>
+
+```java
+@Override
+public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof Pessoa outra)) return false;
+    return Objects.equals(cpf, outra.cpf);
+}
+
+@Override
+public int hashCode() {
+    return Objects.hash(cpf);
 }
 ```
 
 </details>
 
-<br>
+**2.** Você colocou dois objetos "iguais" num `HashSet`, mas o tamanho do set ficou 2. O que provavelmente aconteceu?
 
-<br>
+<details>
+<summary>Ver resposta</summary>
 
-<br>
+A classe sobrescreveu o `equals`, mas **não o `hashCode`** (ou usou campos diferentes nos dois). Com hashes diferentes, o `HashSet` nem chega a comparar com `equals` e guarda os dois.
 
-[Voltar a Principais implementações das estruturas de dados em Java](/Arquivos/Conteudo/2%20-%20Conhecendo%20a%20linguagem%20Java/2.5.8%20Principais%20implementacoes.md)<br>
-[Voltar a Estrutura de dados em Java](/Arquivos/Conteudo/2%20-%20Conhecendo%20a%20linguagem%20Java/2.5%20Estrutura%20de%20dados%20em%20java.md)<br>
-[Voltar para inicio](/README.md)
+</details>
+
+**3.** Dois objetos com o mesmo `hashCode` são sempre iguais?
+
+<details>
+<summary>Ver resposta</summary>
+
+**Não.** Objetos diferentes podem ter o mesmo hash (colisão). A regra só vale no outro sentido: objetos iguais precisam ter o mesmo hash.
+
+</details>
+
+---
+
+<div align="center">
+
+[⬅️ 2.23 Árvores e árvores binárias de busca](./23-arvores-binarias.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [2.25 Pilhas prontas do Java ➡️](./25-stack-e-deque.md)
+
+</div>

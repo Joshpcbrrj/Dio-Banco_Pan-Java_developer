@@ -1,75 +1,138 @@
-# História do java e alguns conceitos importantes
+# 2.1 · História do Java, JVM, JRE e JDK
 
-A história do Java começa com a criação do projeto Green, liderado por James Gosling na Sun Microsystems, com o objetivo de criar uma linguagem de programação que pudesse ser executada em diversos dispositivos, independentemente do sistema operacional.
+> **Em uma frase:** o Java compila seu código para **bytecode**, que roda em qualquer computador que tenha uma **JVM**; para **rodar** programas basta o JRE, e para **criar** programas você precisa do **JDK**.
 
-O nome original da linguagem era Oak, em homenagem a uma árvore que ficava do lado de fora do escritório de Gosling. No entanto, em 1995, quando a Sun Microsystems estava procurando um nome para a linguagem, Oak já havia sido registrado por outra empresa, então o nome foi alterado para Java.
+## 📖 Um pouco de história
 
-Java foi lançado oficialmente em maio de 1995. Desde então, a linguagem se tornou uma das mais populares do mundo, sendo usada em uma grande variedade de aplicativos e sistemas, desde desktops e servidores até dispositivos móveis e embarcados.
+- **1991:** na Sun Microsystems, a equipe de **James Gosling** (com Mike Sheridan e Patrick Naughton) inicia o *Green Project*, para criar uma linguagem que rodasse em vários aparelhos eletrônicos.
+- A linguagem se chamava **Oak** (carvalho, a árvore em frente ao escritório), mas o nome já era registrado e virou **Java** (gíria americana para café ☕).
+- **1995:** lançamento oficial do Java.
+- **2010:** a **Oracle** compra a Sun e passa a cuidar do Java.
+- **Hoje:** uma versão nova sai **a cada 6 meses** (março e setembro), e a cada 2 anos uma delas é **LTS** (*Long-Term Support*, com suporte estendido).
 
-### Aplicações e Softwares
-Alguns dos principais softwares que usam Java incluem o Minecraft, o IntelliJ IDEA, o Eclipse, o Apache Tomcat e o Android Studio. Java também é a base da plataforma Java Enterprise Edition (Java EE), que é usada para criar aplicativos corporativos complexos.
+| Versões LTS | Destaque |
+| --- | --- |
+| Java 8 (2014) | Lambdas e Stream API |
+| Java 11 (2018) | `var` em lambdas, novo cliente HTTP |
+| Java 17 (2021) | `record`, `sealed`, *pattern matching* com `instanceof` |
+| Java 21 (2023) | *Virtual threads*, *pattern matching* no `switch` |
+| Java 25 (2025) | LTS mais recente |
 
-### Autores e Aquisição
-Entre os autores do Java estão James Gosling, Mike Sheridan e Patrick Naughton, que lideraram o projeto Green na Sun Microsystems.
+> [!TIP]
+> Para estudar e para projetos novos, use uma versão **LTS recente** (21 ou 25). Muitas empresas ainda usam o Java 8, 11 ou 17, então vale saber que elas existem.
 
-Em 2010, a Sun Microsystems foi adquirida pela Oracle Corporation, que se tornou a proprietária da linguagem Java. Atualmente, Java é uma das linguagens de programação mais populares e amplamente utilizadas do mundo.
+Java está em todo lugar: sistemas de bancos (como o do próprio Banco Pan), o **Android**, o **Minecraft**, ferramentas como **IntelliJ** e **Eclipse**, e servidores como o **Tomcat**.
 
-### Características da Linguagem
-Java é uma linguagem de programação que possui uma sintaxe semelhante à linguagem C. Isso se deve ao fato de James Gosling, um dos criadores do Java, já ter trabalhado com a linguagem C e desejar que a nova linguagem fosse fácil de aprender para programadores que já conheciam C.
+## ⚙️ Como um programa Java roda
 
-Embora Java seja similar a C em muitos aspectos, como estruturas de controle de fluxo, tipos de dados e operadores, a linguagem possui algumas diferenças significativas. Por exemplo, Java é uma linguagem orientada a objetos, enquanto C é uma linguagem procedural. Isso significa que, em Java, tudo é um objeto e a programação é feita em torno de objetos e suas interações, enquanto em C, o foco está nas funções e procedimentos.
+Em linguagens como C, o compilador gera código de máquina específico para **um** sistema operacional. No Java, o compilador gera **bytecode**, um código intermediário que a **JVM** (Máquina Virtual Java) de cada sistema sabe executar.
 
-Outra diferença importante entre Java e C é que Java é uma linguagem compilada e interpretada, enquanto C é apenas compilada. Isso significa que o código Java é primeiro compilado para bytecode e, em seguida, interpretado pela máquina virtual Java (JVM). Já o código C é compilado diretamente para o código de máquina.
+```mermaid
+flowchart LR
+    A["Main.java<br/>(código-fonte)"] -- "javac<br/>(compila)" --> B["Main.class<br/>(bytecode)"]
+    B --> J1["JVM no Windows"]
+    B --> J2["JVM no Linux"]
+    B --> J3["JVM no macOS"]
+```
 
-<br>
+Esse é o famoso lema **"Write once, run anywhere"**: escreva uma vez, rode em qualquer lugar.
 
-## Write Once, Run Anywhere (Escreva uma vez, execute em qualquer lugar)
-Um dos princípios fundamentais do Java é o conceito de "Write Once, Run Anywhere" (Escreva uma vez, execute em qualquer lugar). Isso significa que, ao desenvolver um programa em Java, você pode escrever o código uma vez e ele poderá ser executado em qualquer plataforma que possua uma máquina virtual Java (JVM) instalada.
+> [!NOTE]
+> A JVM não apenas "interpreta" o bytecode: ela usa um compilador **JIT** (*Just-In-Time*) que transforma os trechos mais usados em código de máquina enquanto o programa roda. Por isso o Java é rápido.
 
-Isso é possível graças à abordagem de compilação e interpretação do Java. Primeiro, o código fonte Java é compilado em bytecode, uma forma intermediária de código que é independente de plataforma. Em seguida, o bytecode é interpretado pela JVM, que é responsável por executar o programa.
+### C × Java
 
-A JVM é um componente essencial do ambiente de execução Java e está disponível para várias plataformas, como Windows, macOS e Linux. Isso significa que, uma vez que um programa Java tenha sido compilado em bytecode, ele pode ser executado em qualquer sistema operacional que possua uma JVM compatível.
+| | C / C++ | Java |
+| --- | --- | --- |
+| Compila para | Código de máquina de um sistema | Bytecode (independente de sistema) |
+| Roda em | Só no sistema para o qual foi compilado | Qualquer sistema com JVM |
+| Memória | Você aloca e libera manualmente | O **Garbage Collector** libera sozinho |
+| Paradigma | C é procedural | Orientado a objetos |
 
-Esse conceito de "Write Once, Run Anywhere" trouxe uma grande vantagem para o desenvolvimento de software em Java. Ele permite que os desenvolvedores criem aplicativos independentes de plataforma, evitando a necessidade de reescrever o código para cada sistema operacional específico. Isso economiza tempo e esforço, além de facilitar a portabilidade dos programas Java.
+## 📦 JVM, JRE e JDK
 
-Graças ao "Write Once, Run Anywhere", o Java se tornou uma linguagem de programação amplamente adotada em diversas áreas, desde aplicações de desktop e servidores até dispositivos móveis e embarcados. Ele oferece flexibilidade e eficiência no desenvolvimento de software, permitindo que os programas sejam executados em diferentes plataformas sem grandes modificações no código-fonte original.
+```mermaid
+flowchart TB
+    subgraph JDK["JDK · Java Development Kit (para desenvolver)"]
+        T["Ferramentas: javac, java, jar, javadoc, jdb..."]
+        subgraph JRE["JRE · Java Runtime Environment (para executar)"]
+            L["Bibliotecas padrão (java.lang, java.util...)"]
+            subgraph JVM["JVM · Java Virtual Machine"]
+                V["Executa o bytecode, JIT, Garbage Collector"]
+            end
+        end
+    end
+```
 
-### Plataforma java x linguagem java
+| Sigla | Para quem | O que contém |
+| --- | --- | --- |
+| **JVM** | — | A máquina virtual que executa o bytecode |
+| **JRE** | Quem só quer **rodar** programas | JVM + bibliotecas padrão |
+| **JDK** | Quem vai **programar** | JRE + compilador (`javac`) e outras ferramentas |
 
-- A linguagem Java é conhecida por ser portátil e independente de plataforma, o que significa que o mesmo código Java pode ser executado em diferentes sistemas operacionais e plataformas.
-- A plataforma Java é um conjunto de programas e tecnologias que permitem que aplicativos Java sejam executados em diferentes dispositivos e sistemas operacionais. A plataforma Java consiste em três componentes principais: a Máquina Virtual Java (JVM), as bibliotecas Java padrão e o compilador Java.
+> [!IMPORTANT]
+> Como você vai programar, instale sempre o **JDK**. Há várias distribuições gratuitas do OpenJDK: [Eclipse Temurin (Adoptium)](https://adoptium.net/), [Azul Zulu](https://www.azul.com/downloads/), [Amazon Corretto](https://aws.amazon.com/corretto/) e a da [Oracle](https://www.oracle.com/java/technologies/downloads/). Qualquer uma serve.
 
-### Esquema de execução do programa em Java
+## 🗂️ As plataformas Java
 
-<img src="./img/01.jpg" alt="" width="700">
+| Plataforma | Uso |
+| --- | --- |
+| **Java SE** (*Standard Edition*) | A base da linguagem: o que você vai aprender aqui. |
+| **Jakarta EE** (antigo Java EE) | Especificações para aplicações corporativas e web. Desde 2017 é mantida pela Eclipse Foundation. |
+| **Java ME** (*Micro Edition*) | Dispositivos com poucos recursos (praticamente em desuso). |
+| **JavaFX** | Interfaces gráficas para desktop. |
+| **Java Card** | Cartões inteligentes, como chips de cartão de banco. |
 
-### Ciclo de uma aplicação em C vs Java
+> [!NOTE]
+> No mercado, o desenvolvimento web/back-end em Java hoje é feito majoritariamente com **Spring Boot** (assunto do [Módulo 6](../06-spring/10-spring-framework.md)), que usa várias especificações do Jakarta EE por baixo.
 
-<img src="./img/02.jpg" alt="" width="800">
+## 📌 Resumindo
 
+- Java foi criado por James Gosling na Sun (1995) e hoje é da Oracle; há versões LTS a cada 2 anos.
+- O `javac` compila `.java` em bytecode `.class`, que roda em qualquer **JVM**.
+- **JVM** executa; **JRE** = JVM + bibliotecas; **JDK** = JRE + ferramentas de desenvolvimento.
+- Para programar, instale um **JDK** LTS recente.
 
+## 🏋️ Mão na massa
 
-#### Principais edições do Java
+**1.** Instale um JDK LTS (21 ou 25) e confira no terminal.
 
-- Java SE → Usado para desenvolvimento de aplicativos de desktop e aplicativos baseados em servidor
-- Java EE → Usado principalmente para desenvolvimento de aplicativos corporativos (Web)
-- Java ME → Usado para desenvolvimento de aplicativos em dispositivos móveis e embarcados.
-- Java FX → Usado para desenvolver aplicativos de interface do usuário ricos e interativos para desktop, celular e web
-- Java Card → projetado para executar aplicativos em dispositivos inteligentes com restrições de memória e recursos
-- Java TV → uma plataforma projetada para permitir que desenvolvedores criem aplicativos para televisões digitais.
+<details>
+<summary>Ver resposta</summary>
 
+Depois de instalar (por exemplo, o Temurin em [adoptium.net](https://adoptium.net/)), rode:
 
-### Kits do java
+```bash
+java -version
+javac -version
+```
 
-<img src="./img/03.jpg" alt="" width="500">
+Os dois devem mostrar a mesma versão. Se o `javac` não for encontrado, você instalou só um JRE ou o `PATH` não foi configurado.
 
-- JVM → Máquina virtual que interpreta o código.
-- JRE → Para rodar programas Java.
-- JDK → Para desenvolvimento de apps em Java.
+</details>
 
-<br>
+**2.** O que é bytecode e por que ele torna o Java portável?
 
-<br>
+<details>
+<summary>Ver resposta</summary>
 
-[Voltar a Dominando IDE’s Java](/Arquivos/Conteudo/2%20-%20Conhecendo%20a%20linguagem%20Java/2.1%20Dominando%20ide.md)<br>
-[Voltar para inicio](/README.md)
+É o código intermediário gerado pelo `javac` (arquivos `.class`). Ele não depende do sistema operacional: cada sistema tem sua própria JVM capaz de executá-lo. Por isso o mesmo `.class` roda no Windows, no Linux e no macOS.
+
+</details>
+
+**3.** Um colega só quer **executar** um programa `.jar` que você criou. Ele precisa do JDK?
+
+<details>
+<summary>Ver resposta</summary>
+
+Não necessariamente: um **JRE** (ou o próprio JDK, que o inclui) basta para executar. O JDK só é obrigatório para **compilar** código.
+
+</details>
+
+---
+
+<div align="center">
+
+[⬅️ 1.11 Ferramentas para times ágeis](../01-principios/11-ferramentas-ageis.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [2.2 IDEs ➡️](./02-ides.md)
+
+</div>

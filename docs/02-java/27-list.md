@@ -1,130 +1,98 @@
-# Listas (List)
+# 2.27 · Listas prontas: a interface `List`
 
-A interface `List` em Java define uma coleção de elementos ordenados que permite o acesso aos seus elementos por meio de um índice (posição). A interface `List` é uma subinterface da interface `Collection` e estende a mesma, portanto, ela herda todos os métodos da interface `Collection`. Além disso, a interface `List` adiciona métodos específicos para trabalhar com listas:
+> **Em uma frase:** uma `List` é uma coleção **ordenada** que aceita **repetidos** e permite acessar elementos pelo **índice**; a implementação mais usada é o `ArrayList`.
 
-- **`add(E element)`**: adiciona um elemento ao final da lista.
-- **`add(int index, E element)`**: adiciona um elemento em uma posição específica na lista.
-- **`get(int index)`**: retorna o elemento na posição especificada na lista.
-- **`set(int index, E element)`**: substitui o elemento na posição especificada na lista pelo elemento fornecido.
-- **`remove(int index)`**: remove o elemento na posição especificada na lista.
-- **`indexOf(Object o)`**: retorna o índice da primeira ocorrência do elemento especificado na lista.
-- **`lastIndexOf(Object o)`**: retorna o índice da última ocorrência do elemento especificado na lista.
-- **`size()`**: retorna o número de elementos na lista.
-- **`isEmpty()`**: retorna **`true`** se a lista estiver vazia, ou seja, não contiver nenhum elemento.
-- **`contains(Object o)`**: retorna **`true`** se a lista contiver o elemento especificado.
-- **`toArray()`**: retorna um array contendo todos os elementos da lista na ordem em que aparecem.
-- **`addAll(Collection<? extends E> c)`**: adiciona todos os elementos da coleção especificada à lista, na ordem em que aparecem na coleção.
-- **`clear()`**: remove todos os elementos da lista.
-- **`subList(int fromIndex, int toIndex)`**: retorna uma sub lista contendo os elementos da lista original entre os índices **`fromIndex`** e **`toIndex`**. A sub lista é uma visão da lista original, o que significa que as alterações feitas na sub lista serão refletidas na lista original e vice-versa.
+## 🧰 Principais métodos
 
-### As classes que implementam a interface `List` em Java incluem:
+| Método | O que faz |
+| --- | --- |
+| `add(e)` / `add(i, e)` | Adiciona no fim / na posição `i` |
+| `get(i)` | Devolve o elemento da posição `i` |
+| `set(i, e)` | Substitui o elemento da posição `i` |
+| `remove(i)` / `remove(objeto)` | Remove pela posição / pelo valor |
+| `indexOf(o)` / `lastIndexOf(o)` | Primeira / última posição do valor (ou `-1`) |
+| `contains(o)` | Contém o valor? (usa `equals`) |
+| `size()` / `isEmpty()` / `clear()` | Tamanho / está vazia? / esvazia |
+| `subList(de, até)` | Uma "janela" da lista (o `até` não entra) |
+| `addAll(colecao)` | Adiciona todos de outra coleção |
+| `toArray()` | Converte em array |
 
-**`ArrayList`** → que é uma implementação de lista baseada em matriz.
+## 🏗️ Implementações
 
-**`LinkedList` →** que é uma implementação de lista baseada em lista ligada. 
-
-**`Vector`** → que é uma implementação de lista semelhante à **`ArrayList`**mas é sincronizada (ou seja, pode ser usada em ambientes multithread).
-
-<br>
-
-### Mostrando em código
-<details>
-<summary>Código</summary>
+| Classe | Por dentro | Bom para |
+| --- | --- | --- |
+| **`ArrayList`** | Array que cresce sozinho | **Uso geral**; acesso por índice muito rápido |
+| **`LinkedList`** | Lista duplamente encadeada | Muitas inserções/remoções nas pontas |
+| `Vector` | Como o `ArrayList`, mas sincronizado | Código legado (evite) |
 
 ```java
-//Class "main"
-package com.projeto.List;
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class Main {
-    public static void main(String[] args) {
+List<Carro> carros = new ArrayList<>();
+carros.add(new Carro("Ford"));
+carros.add(new Carro("Kia"));
+carros.add(new Carro("Mercedes-Benz"));
+carros.add(new Carro("BMW"));
 
-        //Criando lista de carros "lista_de_carros"
-        List<Carro> lista_de_carros = new ArrayList<>();
-
-        //Método add (Adicionando elementos a lista "lista_de_carros"
-        lista_de_carros.add(new Carro("Ford"));
-        lista_de_carros.add(new Carro("Kia"));
-        lista_de_carros.add(new Carro("Mercedes Benz"));
-        lista_de_carros.add(new Carro("BMW"));
-        lista_de_carros.add(new Carro("Nissan"));
-
-        //Mostrando "lista_de_carros" na tela
-        System.out.println("Lista de carros: " + lista_de_carros);
-
-        //Método contains (Verificando se a lista contém determinado elemento
-        System.out.println("Contem marca 'Kia': " + lista_de_carros.contains(new Carro("Kia")));
-
-        //Método get (Mostrando apenas uma posição de acordo com o índice
-        System.out.println("Carro indice 2: " + lista_de_carros.get(2));
-
-        //Método indeceOf (Verificar qual é o indice de um elemento na fila
-        System.out.println("Qual o indice: " + lista_de_carros.indexOf(new Carro("Kia")));
-
-        //Método remove (Removendo elemento da lista de acordo com o indice)
-        System.out.println("Elemento removido: " + lista_de_carros.remove(1));
-
-        //Mostrando a "lista_de_carros" na tela novamente
-        System.out.println("Lista de carros com um item removido: " + lista_de_carros);
-
-    }
-}
+System.out.println(carros);                              // [Carro{Ford}, Carro{Kia}, ...]
+System.out.println(carros.contains(new Carro("Kia")));   // true (graças ao equals)
+System.out.println(carros.get(2));                       // Carro{Mercedes-Benz}
+System.out.println(carros.indexOf(new Carro("Kia")));    // 1
+System.out.println(carros.remove(1));                    // Carro{Kia}
 ```
 
+> [!TIP]
+> Declare a variável pelo **tipo da interface** (`List<Carro> carros = new ArrayList<>()`). Assim, se um dia quiser trocar por `LinkedList`, muda só uma palavra.
+
+> [!NOTE]
+> `List.of("a", "b", "c")` cria uma lista **imutável** (não aceita `add` nem `remove`). Para uma lista que você vai alterar, use `new ArrayList<>(List.of(...))`.
+
+Esta aula é uma introdução. Ordenação, `Comparator`, iteradores e muitos exercícios estão na aula [4.8 · List](../04-poo/08-list.md).
+
+## 📌 Resumindo
+
+- `List`: ordenada, aceita repetidos, acesso por índice.
+- `ArrayList` é a escolha padrão; `LinkedList` para muitas operações nas pontas.
+- Declare pela interface (`List<T>`); `contains`/`indexOf`/`remove(objeto)` usam `equals`.
+
+## 🏋️ Mão na massa
+
+**1.** Crie uma lista com os nomes `"Ana"`, `"Bia"`, `"Caio"`, insira `"Beto"` na posição 1 e imprima.
+
+<details>
+<summary>Ver resposta</summary>
+
 ```java
-//Class "Carro"
-package com.projeto.List;
-
-import java.util.Objects;
-public class Carro {
-    String marca;
-
-    //Construtor
-    public Carro(String marca) {
-        this.marca = marca;
-    }
-
-    //Getters e setters
-    public String getMarca() {
-        return marca;
-    }
-    public void setMarca(String marca) {
-        this.marca = marca;
-    }
-
-    //Método "Equals"
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Carro carro = (Carro) o;
-        return Objects.equals(marca, carro.marca);
-    }
-    //Método "hashCode"
-    @Override
-    public int hashCode() {
-        return Objects.hash(marca);
-    }
-    //Método "toString"
-    @Override
-    public String toString() {
-        return "Carro{" +
-                "marca='" + marca + '\'' +
-                '}';
-    }
-}
+List<String> nomes = new ArrayList<>(List.of("Ana", "Bia", "Caio"));
+nomes.add(1, "Beto");
+System.out.println(nomes);   // [Ana, Beto, Bia, Caio]
 ```
 
 </details>
 
-<br>
+**2.** Numa `List<Integer> numeros` com `[10, 20, 30]`, o que faz `numeros.remove(1)`? E como remover o **valor** 10?
 
-<br>
+<details>
+<summary>Ver resposta</summary>
 
-<br>
+`remove(1)` remove pelo **índice**: tira o `20`. Para remover o valor 10, é preciso passar um objeto: `numeros.remove(Integer.valueOf(10))`.
 
-[Voltar a Principais implementações das estruturas de dados em Java](/Arquivos/Conteudo/2%20-%20Conhecendo%20a%20linguagem%20Java/2.5.8%20Principais%20implementacoes.md)<br>
-[Voltar a Estrutura de dados em Java](/Arquivos/Conteudo/2%20-%20Conhecendo%20a%20linguagem%20Java/2.5%20Estrutura%20de%20dados%20em%20java.md)<br>
-[Voltar para inicio](/README.md)
+</details>
+
+**3.** Por que `List.of(1, 2, 3).add(4)` dá erro?
+
+<details>
+<summary>Ver resposta</summary>
+
+Porque `List.of` cria uma lista **imutável**, e qualquer tentativa de alterá-la lança `UnsupportedOperationException`.
+
+</details>
+
+---
+
+<div align="center">
+
+[⬅️ 2.26 Filas prontas do Java](./26-queue.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [2.28 Conjuntos ➡️](./28-set.md)
+
+</div>

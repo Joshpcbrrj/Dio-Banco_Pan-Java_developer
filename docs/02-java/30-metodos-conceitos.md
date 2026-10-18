@@ -1,141 +1,182 @@
-# Conceitos importantes de métodos
+# 2.30 · Métodos: assinatura, construtores e passagem de parâmetros
 
-## Definição de método
+> **Em uma frase:** a **assinatura** (nome + tipos dos parâmetros) identifica um método; o **construtor** é o método especial que inicializa um objeto; e em Java os parâmetros são sempre passados **por valor**, mesmo quando são objetos.
 
-- Em Java, o termo "método" é usado para se referir a uma função ou procedimento que é definido dentro de uma classe. Um método em Java é uma coleção de instruções que realizam uma determinada tarefa.
-- Os métodos são usados para encapsular a lógica de um programa, de modo que ela possa ser facilmente reutilizada em vários pontos do programa. Um método pode receber argumentos de entrada, processar esses argumentos e retornar um valor ou simplesmente realizar uma ação sem retornar nada.
-- Para chamar um método em Java, é necessário primeiro criar uma instância da classe que contém o método e, em seguida, chamar o método usando o nome do método e os argumentos necessários.
-- Em resumo, um método em Java é um bloco de código que pode ser chamado várias vezes a partir de diferentes partes do programa, tornando o código mais modular, organizado e reutilizável.
+## 🧩 Anatomia completa
 
-### Como criar métodos
 ```java
-
-public <visibilidade op> <tipo op> <modificador op> <retorno> <nome> 
-<parametros op> throws <excecoesop> {
-    // Corpo do método
+public static final double calcularJuros(double valor, int meses) throws IllegalArgumentException {
+    // corpo
 }
 ```
 
-#### Explicando as partes:
-- **`<visibilidade>`**: especifica a visibilidade do método, ou seja, quem pode acessá-lo. Pode ser **`public`**, **`private`** ou **`protected`**, ou pode ser omitido para tornar o método acessível apenas dentro do pacote em que ele está definido.
-- **`<tipo>`**: especifica o tipo de dado que o método retorna, ou **`void`** se o método não retorna valor.
-- **`<modificador>`**: especifica um modificador adicional para o método, como **`final`**, **`static`**, **`synchronized`**, entre outros.
-- **`<retorno>`**: palavra-chave que indica o valor que o método deve retornar. Pode ser omitido se o método não retornar valor.
-- **`<nome>`**: nome do método, utilizado para chamá-lo posteriormente.
-- **`<parametros>`**: lista de parâmetros do método, separados por vírgulas, que especifica os valores que o método irá receber como entrada.
-- **`<excecoes>`**: lista de exceções que o método pode lançar, separadas por vírgulas.
-- **`corpo`**: o bloco de código que define as instruções que o método irá executar.
+| Parte | Exemplo | Obrigatório? |
+| --- | --- | --- |
+| Visibilidade | `public`, `protected`, `private` ou nada (pacote) | Não (padrão = pacote) |
+| Modificadores | `static`, `final`, `abstract`, `synchronized` | Não |
+| Tipo de retorno | `double`, `String`, `void`... | **Sim** |
+| Nome | `calcularJuros` | **Sim** |
+| Parâmetros | `(double valor, int meses)` | Sim (podem ser vazios: `()`) |
+| Exceções declaradas | `throws IllegalArgumentException` | Não |
+| Corpo | `{ ... }` | Sim (exceto métodos `abstract`) |
 
-<br>
+## ✍️ Assinatura
 
-## Conceitos chave 
-
-### Assinatura do método
-
-A assinatura de método em Java é a combinação única do nome do método e dos tipos e ordem dos parâmetros que ele recebe. A assinatura do método é usada pelo compilador Java para determinar qual método deve ser chamado quando há vários métodos com o mesmo nome em uma classe ou em suas superclasses. A assinatura de um método inclui o nome do método e os tipos de seus parâmetros, mas não inclui o tipo de retorno do método. Por exemplo, o seguinte método tem a assinatura "exibir(String, int)":
+A **assinatura** é a combinação do **nome** com os **tipos e a ordem** dos parâmetros. O tipo de retorno **não** faz parte dela.
 
 ```java
-public void exibir(String texto, int numero) {
-  // código do método
-}
-	
-/* A assinatura do método acima é determinada pelo nome "exibir" e pelos tipos de seus 
-	 parâmetros "String" e "int". Se houvesse outro método com o nome "exibir" na mesma 
-	 classe, mas com parâmetros diferentes, o compilador Java poderia escolher o método 
-   correto com base em suas assinaturas. */
-
+void exibir(String texto, int numero) { }   // assinatura: exibir(String, int)
+void exibir(int numero, String texto) { }   // outra assinatura: exibir(int, String)
+int  exibir(String texto, int numero) { }   // ❌ erro: mesma assinatura do primeiro
 ```
 
-### Construtor e destrutor
+É pela assinatura que o compilador escolhe qual método chamar quando há vários com o mesmo nome (sobrecarga, próxima aula).
 
-#### Construtor
-Em Java, construtor e destrutor são conceitos relacionados à criação e destruição de objetos. O construtor é um método especial que é chamado automaticamente quando um objeto é criado. Ele é responsável por inicializar os valores dos campos do objeto e executar outras ações necessárias para deixar o objeto em um estado válido. O construtor tem o mesmo nome da classe e não tem tipo de retorno, nem mesmo void.
+## 🏗️ Construtores
+
+O **construtor** é chamado automaticamente pelo `new` para deixar o objeto pronto para uso.
+
+- Tem **o mesmo nome da classe**.
+- **Não tem tipo de retorno**, nem `void`.
+- Se você não escrever nenhum, o Java cria um construtor vazio padrão.
 
 ```java
-//Class "Pessoa" (Geralmente classes tem primeira letra em maiúsculo)
 public class Pessoa {
     private String nome;
     private int idade;
 
-		//Construtor
     public Pessoa(String nome, int idade) {
-        this.nome = nome;
+        this.nome = nome;     // this.nome = atributo; nome = parâmetro
         this.idade = idade;
     }
 }
-/* O construtor acima recebe dois parâmetros, um para o nome e outro para a idade, 
-	 e atribui esses valores aos campos correspondentes. */
+
+Pessoa ana = new Pessoa("Ana", 30);
 ```
 
-#### Destrutor 
-- Já o destrutor em Java é chamado de "garbage collector" e é executado automaticamente pelo sistema para destruir objetos que não estão mais sendo usados pelo programa. O garbage collector é responsável por liberar a memória ocupada por esses objetos e torná-la disponível para outros usos.
-- Não é necessário implementar um destrutor em Java, pois o garbage collector cuida dessa tarefa automaticamente. No entanto, é possível fornecer um método "finalize()" em uma classe, que será chamado pelo garbage collector antes de destruir o objeto correspondente. Esse método pode ser usado para executar ações de limpeza ou liberação de recursos associados ao objeto, por exemplo.
+### E o "destrutor"?
 
-### Passagem de parâmetro
+Java **não tem destrutor**. Quando um objeto não é mais referenciado por ninguém, o **Garbage Collector** (coletor de lixo) libera a memória automaticamente.
 
-- Em programação, "passagem de parâmetros" se refere ao processo de transmitir argumentos ou valores para um método ou função. Os parâmetros são informações que o método precisa para executar uma determinada ação. A passagem de parâmetros é uma das formas mais comuns de comunicação entre diferentes partes de um programa.
-- Em geral, a passagem de parâmetros pode ser feita de duas formas: por valor(Cópia) ou por referência(Endereço na memória) . Na passagem por valor, uma cópia do valor do argumento é passada para o método. Já na passagem por referência, é passada uma referência ou endereço de memória do argumento para o método, o que permite que o método altere o valor do argumento original.
-- Em Java, a passagem de parâmetros é feita sempre por valor, mesmo quando se trata de tipos de referência. Isso significa que, quando um objeto é passado como argumento para um método, na verdade está sendo passada uma cópia da referência do objeto e não do objeto em si. Se o método altera o estado do objeto, essa alteração será refletida também no objeto original, já que ambas as referências apontam para o mesmo objeto na memória. Porém, se o método atribui um novo objeto à referência, essa alteração não será refletida fora do método.
+> [!WARNING]
+> Você pode encontrar o método `finalize()` em materiais antigos. Ele está **descontinuado** (desde o Java 9) e marcado para remoção. Para liberar recursos como arquivos e conexões, use `try-with-resources` (aula [4.13](../04-poo/13-excecoes.md)).
+
+## 📨 Passagem de parâmetros: sempre por valor
+
+Em Java, o método recebe uma **cópia** do que está na variável:
+
+- se for um **primitivo**, recebe uma cópia do valor → mudar dentro do método não afeta fora;
+- se for um **objeto**, recebe uma cópia da **referência** → os dois apontam para o mesmo objeto, então **alterar o objeto** afeta fora, mas **trocar a referência** não.
 
 ```java
 public class ExemploParametros {
-  
-  // Método que recebe um valor por parâmetro e o altera
-  public static void alterarValor(int valor) {
-    valor = 10;
-    System.out.println("Dentro do método alterarValor: " + valor);
-  }
-  
-  // Método que recebe um objeto por parâmetro e altera um de seus atributos
-  public static void alterarObjeto(Objeto obj) {
-    obj.setValor(10);
-    System.out.println("Dentro do método alterarObjeto: " + obj.getValor());
-  }
-  
-  public static void main(String[] args) {
-    int valor = 5;
-    System.out.println("Antes do método alterarValor: " + valor);
-    alterarValor(valor);
-    System.out.println("Depois do método alterarValor: " + valor);
-    
-    Objeto obj = new Objeto(5);
-    System.out.println("Antes do método alterarObjeto: " + obj.getValor());
-    alterarObjeto(obj);
-    System.out.println("Depois do método alterarObjeto: " + obj.getValor());
-  }
+
+    static void alterarNumero(int valor) {
+        valor = 10;                       // muda só a cópia
+    }
+
+    static void alterarObjeto(Caixa caixa) {
+        caixa.valor = 10;                 // altera o objeto original
+    }
+
+    static void trocarObjeto(Caixa caixa) {
+        caixa = new Caixa(99);            // troca só a cópia da referência
+    }
+
+    public static void main(String[] args) {
+        int numero = 5;
+        alterarNumero(numero);
+        System.out.println(numero);       // 5
+
+        Caixa caixa = new Caixa(5);
+        alterarObjeto(caixa);
+        System.out.println(caixa.valor);  // 10
+
+        trocarObjeto(caixa);
+        System.out.println(caixa.valor);  // 10 (não virou 99)
+    }
 }
 
-class Objeto {
-  private int valor;
- 
-	//Construtor 
-  public Objeto(int valor) {
-    this.valor = valor;
-  }
-  
- //Getters e setters
-  public int getValor() {
-    return valor;
-  }
-  public void setValor(int valor) {
-    this.valor = valor;
-  }
+class Caixa {
+    int valor;
+    Caixa(int valor) { this.valor = valor; }
 }
 ```
 
-<br>
+> [!TIP]
+> **Analogia:** passar um objeto é como entregar uma **cópia da chave** da sua casa. Quem recebeu pode mudar os móveis (alterar o objeto), mas se jogar a chave fora e pegar a de outra casa, a sua continua igual.
 
-### Algumas dicas de boas práticas: 🛩️
+## ✅ Boas práticas
 
-- Métodos devem ter nomes curtos e descritivos.
-- As notações mais comuns são: camelCase e snake_case.
-- Deve ter de 80 a 120 linhas (geralmente).
-- Evite lista de parâmetros muito longas.
-- Visibilidade adequada a funcionalidade (Se o método vai ser publico ou só para uso privado).
+- Nomes curtos e descritivos, verbos em `camelCase`.
+- Métodos **pequenos**, com uma responsabilidade (se passar de ~20 a 30 linhas, desconfie).
+- **Poucos parâmetros** (até 3 ou 4); mais que isso, agrupe em um objeto.
+- A visibilidade mais restrita possível: comece com `private` e abra só se precisar.
 
-<br>
+## 📌 Resumindo
 
-<br>
+- Assinatura = nome + tipos e ordem dos parâmetros (sem o retorno).
+- Construtor: mesmo nome da classe, sem retorno, chamado pelo `new`.
+- Java não tem destrutor: o Garbage Collector cuida da memória.
+- Parâmetros são passados por valor; com objetos, copia-se a referência.
 
-[Voltar a métodos em Java](/Arquivos/Conteudo/2%20-%20Conhecendo%20a%20linguagem%20Java/2.6%20Metodos%20em%20java.md)<br>
-[Voltar ao inicio](/README.md)
+## 🏋️ Mão na massa
+
+**1.** Estes dois métodos podem existir na mesma classe? `int somar(int a, int b)` e `double somar(int x, int y)`.
+
+<details>
+<summary>Ver resposta</summary>
+
+**Não.** Os dois têm a mesma assinatura, `somar(int, int)`: os nomes dos parâmetros e o tipo de retorno não contam.
+
+</details>
+
+**2.** O que este código imprime?
+
+```java
+static void dobrar(int[] numeros) {
+    for (int i = 0; i < numeros.length; i++) numeros[i] *= 2;
+}
+// no main:
+int[] valores = {1, 2, 3};
+dobrar(valores);
+System.out.println(Arrays.toString(valores));
+```
+
+<details>
+<summary>Ver resposta</summary>
+
+`[2, 4, 6]`. O array é um objeto: o método recebe uma cópia da referência e altera o **mesmo** array.
+
+</details>
+
+**3.** Crie uma classe `Produto` com construtor que receba nome e preço, e um segundo construtor que receba só o nome e use preço zero.
+
+<details>
+<summary>Ver resposta</summary>
+
+```java
+public class Produto {
+    private final String nome;
+    private final double preco;
+
+    public Produto(String nome, double preco) {
+        this.nome = nome;
+        this.preco = preco;
+    }
+
+    public Produto(String nome) {
+        this(nome, 0.0);   // chama o outro construtor
+    }
+}
+```
+
+</details>
+
+---
+
+<div align="center">
+
+[⬅️ 2.29 Mapas](./29-map.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [2.31 Sobrecarga × sobrescrita ➡️](./31-sobrecarga-e-sobrescrita.md)
+
+</div>

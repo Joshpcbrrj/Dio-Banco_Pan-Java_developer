@@ -1,25 +1,109 @@
-# Pacotes
+# 4.5 · Pacotes
 
-Os pacotes em programação Java servem para organizar classes relacionadas em uma única unidade lógica. Eles permitem agrupar classes que têm funcionalidades e objetivos semelhantes e facilitam a modularidade, a manutenção e a reutilização de código. Além disso, os pacotes ajudam a evitar conflitos de nome de classe, uma vez que os nomes de classes em um pacote são únicos em todo o sistema.
+> **Em uma frase:** pacotes são as "pastas" do código Java: agrupam classes relacionadas, evitam conflito de nomes (duas classes `Cliente` podem existir em pacotes diferentes) e definem quem enxerga o quê.
 
-### Exemplificando uma hierarquia de pacotes:
+## 📁 Como funcionam
 
-```mermaid
-graph LR
-    P((com.empresa.produto)) -- contém --> C1[Classe Produto]
-    P -- contém --> C2[Classe Venda]
-    P -- contém --> C3[Classe Compra]
-    P1((com.empresa.financeiro)) -- contém --> C4[Classe Financeiro]
-    P1 -- contém --> C5[Classe Fatura]
-    C3 -- herda --> C1
-    C5 -- implementa --> C4
+- A primeira linha do arquivo declara o pacote: `package com.minhaempresa.banco.modelo;`
+- O pacote corresponde a **pastas**: `com/minhaempresa/banco/modelo/Cliente.java`.
+- Por convenção, o nome começa pelo **domínio invertido** da empresa e é todo em minúsculas.
+- Para usar uma classe de outro pacote, faça `import`:
+
+```java
+package com.minhaempresa.banco;
+
+import com.minhaempresa.banco.modelo.Cliente;   // uma classe
+import java.util.*;                             // todas as classes de java.util (evite)
+
+public class Main {
+    public static void main(String[] args) {
+        Cliente cliente = new Cliente("Ana");
+    }
+}
 ```
 
-<br>
+> [!NOTE]
+> As classes do pacote `java.lang` (`String`, `Math`, `System`, `Integer`...) são importadas automaticamente.
 
-<br>
+## 🗂️ Organização típica de um projeto
 
-<br>
+```text
+src/main/java/com/minhaempresa/banco/
+├── BancoApplication.java
+├── controller/      ← recebe as requisições (Módulo 6)
+│   └── ContaController.java
+├── service/         ← regras de negócio
+│   └── ContaService.java
+├── repository/      ← acesso ao banco de dados
+│   └── ContaRepository.java
+├── model/           ← entidades (Conta, Cliente)
+│   ├── Cliente.java
+│   └── Conta.java
+└── exception/
+    └── SaldoInsuficienteException.java
+```
 
-[Voltar a Programação orientada a objetos com Java](/Arquivos/Conteudo/4%20-%20Programa%C3%A7%C3%A3o%20orientada%20a%20objetos/4.1%20Programacao%20orientada%20a%20objetos%20com%20java.md)<br>
-[Voltar ao inicio](/README.md)
+```mermaid
+flowchart LR
+    C["controller"] --> S["service"] --> R["repository"] --> M["model"]
+    S --> M
+    C --> M
+```
+
+> [!TIP]
+> Duas formas comuns de organizar: **por camada** (como acima: `controller`, `service`...) ou **por funcionalidade** (`conta/`, `cliente/`, `cartao/`, cada uma com suas camadas). Em projetos grandes, organizar por funcionalidade costuma escalar melhor.
+
+## 🔐 Pacotes e visibilidade
+
+Membros **sem modificador de acesso** (o "padrão" ou *package-private*) só são visíveis para classes do **mesmo pacote**. Isso permite esconder detalhes internos de uma parte do sistema. Veja a tabela completa na [próxima aula](./06-modificadores-de-acesso.md).
+
+## 📌 Resumindo
+
+- Pacote = pasta; declarado com `package` na primeira linha.
+- Nome em minúsculas, começando pelo domínio invertido (`com.empresa.projeto`).
+- `import` traz classes de outros pacotes; `java.lang` é automático.
+- Organize por camada ou por funcionalidade.
+
+## 🏋️ Mão na massa
+
+**1.** Qual o nome **qualificado** de uma classe `Conta` no pacote `br.com.pan.banco.model`? E em qual pasta fica o arquivo?
+
+<details>
+<summary>Ver resposta</summary>
+
+Nome qualificado: `br.com.pan.banco.model.Conta`. Arquivo: `br/com/pan/banco/model/Conta.java` (dentro da pasta de código-fonte, como `src/main/java`).
+
+</details>
+
+**2.** Você precisa usar duas classes `Date`: `java.util.Date` e `java.sql.Date`. Como fazer no mesmo arquivo?
+
+<details>
+<summary>Ver resposta</summary>
+
+Importe uma delas e use o nome qualificado completo para a outra:
+
+```java
+import java.util.Date;
+
+Date agora = new Date();
+java.sql.Date dataSql = new java.sql.Date(agora.getTime());
+```
+
+</details>
+
+**3.** No `treino-java`, reorganize suas classes nos pacotes `model` e `app`.
+
+<details>
+<summary>Ver resposta</summary>
+
+No IntelliJ: botão direito em `src` → **New → Package** (`com.treino.model` e `com.treino.app`) e arraste as classes para lá. A IDE atualiza as declarações `package` e os `import`s automaticamente.
+
+</details>
+
+---
+
+<div align="center">
+
+[⬅️ 4.4 Interfaces](./04-interfaces.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [4.6 Modificadores de acesso ➡️](./06-modificadores-de-acesso.md)
+
+</div>

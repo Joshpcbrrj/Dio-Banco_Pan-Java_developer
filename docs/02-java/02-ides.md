@@ -1,75 +1,124 @@
-# Eclipse
+# 2.2 · IDEs: IntelliJ, Eclipse e VS Code
 
-### Links úteis:
-[Dowload Eclipse](https://www.eclipse.org/downloads/)<br>
-[Dowload JDK Zulu](https://www.azul.com/downloads/?package=jdk#zulu)<br>
-[DevSuperior - Tutorial de instalação JDK 17](https://www.youtube.com/watch?v=QekeJBShCy4&ab_channel=DevSuperior)
+> **Em uma frase:** uma IDE é um editor "turbinado" que compila, executa, depura e ainda sugere e corrige o código para você; para Java, as mais usadas são o **IntelliJ IDEA**, o **Eclipse** e o **VS Code** com extensões.
 
-<br>
+## 🧰 As opções
 
-## Breve história da criação do Eclipse
-O Eclipse é uma das IDEs (Integrated Development Environments) mais populares e amplamente utilizadas para desenvolvimento de software. Foi criado inicialmente pela IBM em 2001 como um projeto de código aberto, e desde então tem sido mantido e desenvolvido pela Eclipse Foundation, uma organização sem fins lucrativos.
+| IDE | Quem faz | Destaques |
+| --- | --- | --- |
+| [**IntelliJ IDEA**](https://www.jetbrains.com/idea/download/) | JetBrains (2001) | A mais usada no mercado Java. A versão gratuita (antiga *Community*) atende tudo deste curso. |
+| [**Eclipse**](https://www.eclipse.org/downloads/) | Criado pela IBM em 2001, hoje mantido pela Eclipse Foundation | Gratuito, open source e baseado em plugins. Ainda comum em empresas. |
+| [**VS Code**](https://code.visualstudio.com/docs/languages/java) | Microsoft | Leve; vira uma boa IDE Java com o *Extension Pack for Java*. |
 
-A história do Eclipse remonta ao projeto de um ambiente de desenvolvimento para Java chamado "VisualAge for Java", desenvolvido pela IBM. No entanto, a IBM decidiu criar uma nova plataforma para substituir o VisualAge, com o objetivo de fornecer uma ferramenta de desenvolvimento aberta e extensível.
+> [!TIP]
+> Se você está começando, use o **IntelliJ IDEA**. A [JetBrains Toolbox](https://www.jetbrains.com/toolbox-app/) facilita instalar e atualizar. Antes, instale um **JDK** (aula [2.1](./01-historia-e-plataforma.md)); o IntelliJ também consegue baixar um JDK para você em **File → Project Structure → SDK → Download JDK**.
 
-Em novembro de 2001, a IBM anunciou a liberação do código-fonte do novo ambiente de desenvolvimento, que foi chamado de Eclipse. A ideia era criar uma plataforma que pudesse ser estendida por meio de plug-ins, permitindo que desenvolvedores personalizassem e estendessem as funcionalidades do ambiente de acordo com suas necessidades.
+## 🚀 Criando o projeto de treino
 
-O nome "Eclipse" foi escolhido para refletir a ideia de que o ambiente de desenvolvimento poderia fornecer uma "eclipsagem" das ferramentas existentes, oferecendo uma solução abrangente e flexível para desenvolvedores de diversas linguagens.
+Os exercícios deste módulo usam um projeto chamado **`treino-java`**.
 
-O Eclipse foi projetado para ser uma plataforma multiplataforma, o que significa que pode ser executado em diferentes sistemas operacionais, como Windows, macOS e Linux. Essa característica ajudou a impulsionar sua popularidade, pois permitiu que desenvolvedores de diferentes ambientes de trabalho utilizassem a mesma ferramenta.
+1. No IntelliJ: **New Project → Java**, nome `treino-java`, *Build system*: **IntelliJ** (ou Maven, mais adiante), JDK 21 ou superior.
+2. Clique com o botão direito na pasta `src` → **New → Java Class** → `Main`.
+3. Digite `psvm` e aperte **Tab**: o IntelliJ gera o método `main`. Dentro dele, digite `sout` + **Tab** para gerar um `System.out.println()`.
 
-Ao longo dos anos, o Eclipse evoluiu e se tornou muito mais do que apenas uma IDE para Java. Com o suporte de uma ampla comunidade de desenvolvedores e empresas, o Eclipse se expandiu para suportar uma variedade de linguagens de programação, incluindo C/C++, Python, PHP, JavaScript e muitas outras. Além disso, o Eclipse também se tornou uma plataforma para o desenvolvimento de ferramentas e aplicativos em geral.
+```java
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("Olá, Java!");
+    }
+}
+```
 
-A criação do Eclipse teve um impacto significativo no mundo do desenvolvimento de software, proporcionando uma IDE poderosa e flexível que permite aos desenvolvedores escrever, testar e depurar seus códigos de maneira eficiente. Sua arquitetura extensível e a grande quantidade de plug-ins disponíveis tornaram o Eclipse uma escolha popular tanto para desenvolvedores individuais quanto para equipes de desenvolvimento em larga escala.
+4. Clique no ▶️ verde ao lado do `main` (ou **Shift+F10**).
 
-Atualmente, o Eclipse continua a ser mantido e atualizado pela Eclipse Foundation, que trabalha em conjunto com uma comunidade ativa de desenvolvedores para manter o projeto em constante evolução e fornecer uma plataforma confiável e inovadora para o desenvolvimento de software.
+## ⌨️ Atalhos essenciais
 
+| Ação | IntelliJ (Windows/Linux) | Eclipse | VS Code |
+| --- | --- | --- | --- |
+| Executar | `Shift+F10` (`Ctrl+Shift+F10` na 1ª vez) | `Ctrl+F11` | `F5` / ▶️ |
+| Gerar construtor, getters, setters... | `Alt+Insert` | `Alt+Shift+S` | `Ctrl+.` (*Source Action*) |
+| Sugestão / correção rápida | `Alt+Enter` | `Ctrl+1` | `Ctrl+.` |
+| Autocompletar | `Ctrl+Space` | `Ctrl+Space` | `Ctrl+Space` |
+| Formatar código | `Ctrl+Alt+L` | `Ctrl+Shift+F` | `Shift+Alt+F` |
+| Organizar imports | `Ctrl+Alt+O` | `Ctrl+Shift+O` | `Shift+Alt+O` |
+| Comentar linha / bloco | `Ctrl+/` · `Ctrl+Shift+/` | `Ctrl+/` | `Ctrl+/` |
+| Duplicar linha | `Ctrl+D` | `Ctrl+Alt+↓` | `Shift+Alt+↓` |
+| Apagar linha | `Ctrl+Y` | `Ctrl+D` | `Ctrl+Shift+K` |
+| Mover linha | `Alt+Shift+↑/↓` | `Alt+↑/↓` | `Alt+↑/↓` |
+| Extrair variável | `Ctrl+Alt+V` | `Alt+Shift+L` | `Ctrl+.` |
+| Renomear (refatorar) | `Shift+F6` | `Alt+Shift+R` | `F2` |
+| Buscar classe | `Ctrl+N` | `Ctrl+Shift+T` | `Ctrl+P` |
+| Ir para a declaração | `Ctrl+B` | `F3` | `F12` |
+| Buscar em tudo | `Shift` `Shift` | `Ctrl+3` | `Ctrl+Shift+P` |
 
-## Alguns atalhos úteis
+> [!NOTE]
+> No macOS, troque `Ctrl` por `Cmd` na maioria dos atalhos. No IntelliJ, **Help → Keyboard Shortcuts PDF** abre a lista completa oficial.
 
-### Para mudar perspectiva para a do GIT:
-`control + 3` 
-- Pesquisa por “Git perspective” (Podemos mudar pra outras como exemplo: debug perspective)
+> [!TIP]
+> Os atalhos que mais economizam tempo no começo são **`Alt+Enter`** (resolve quase qualquer sublinhado vermelho, como imports faltando) e **`Alt+Insert`** (gera construtores, getters e setters).
 
-### Criar novo projeto:
-`control + n`
-- Pesquisa por “project”
+## 📌 Resumindo
 
-### Ver menu de ações:
-`control + space`
+- IntelliJ IDEA é a IDE mais usada para Java; Eclipse e VS Code também são boas opções.
+- Antes da IDE, instale um JDK.
+- Atalhos-chave no IntelliJ: `Alt+Enter`, `Alt+Insert`, `Shift+F10`, `Ctrl+Alt+L`, `Shift+F6`.
 
-### Rodar programa com atalho:
-`alt + shift + x`
+## 🏋️ Mão na massa
 
-### Para criar um construtor:
-`control + 3`
-- pesquisa por “constructor” (Podemos usar para criar getters e setters, hash code and equals, toString)
+**1.** Crie o projeto `treino-java` e faça o programa imprimir seu nome.
 
-### Para apagar uma linha:
-`control + d` 
+<details>
+<summary>Ver resposta</summary>
 
-### Mudar blocos de lugar:
-1. Selecione o bloco desejado
-2. `alt` + seta para cima ou `alt` + seta para baixo
+```java
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("Meu nome é Fulano");
+    }
+}
+```
 
-### Para formatar o código automaticamente:
-`alt + shift + f`
+Execute com o ▶️ ou `Shift+F10`.
 
-### Importar classes necessárias para o código: 
-`control + shift + o` (Quando for detectado erro de import)
+</details>
 
-### Para duplicar linha de código:
-`control + alt` + seta pra baixo ou `control + alt` + seta pra cima
+**2.** Use o atalho de "gerar código" para criar um construtor e os getters de uma classe `Pessoa` com `nome` e `idade`.
 
-### Criando automaticamente variável para guardar retorno de função:
-`Control + 1`
+<details>
+<summary>Ver resposta</summary>
 
-### Procurar classes e packages do projeto 
-`Control + shift + t`
+Crie a classe com os atributos, posicione o cursor dentro dela e aperte `Alt+Insert` → **Constructor** (selecione os dois campos) e depois `Alt+Insert` → **Getter**:
 
-<br>
+```java
+public class Pessoa {
+    private String nome;
+    private int idade;
 
-<br>
+    public Pessoa(String nome, int idade) {
+        this.nome = nome;
+        this.idade = idade;
+    }
 
-[Voltar a Dominando IDE’s Java](/Arquivos/Conteudo/2%20-%20Conhecendo%20a%20linguagem%20Java/2.1%20Dominando%20ide.md)<br>
-[Voltar para inicio](/README.md)
+    public String getNome() { return nome; }
+    public int getIdade() { return idade; }
+}
+```
+
+</details>
+
+**3.** Bagunce a indentação do `Main.java` de propósito e conserte com um atalho.
+
+<details>
+<summary>Ver resposta</summary>
+
+No IntelliJ, `Ctrl+Alt+L` reformata o arquivo inteiro (no Eclipse, `Ctrl+Shift+F`; no VS Code, `Shift+Alt+F`).
+
+</details>
+
+---
+
+<div align="center">
+
+[⬅️ 2.1 História do Java, JVM, JRE e JDK](./01-historia-e-plataforma.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [2.3 Anatomia de uma classe e convenções de nomes ➡️](./03-anatomia-das-classes.md)
+
+</div>

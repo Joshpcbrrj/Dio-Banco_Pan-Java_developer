@@ -1,262 +1,176 @@
-# Estrutura básica de OO
+# 4.1 · Classes, objetos, atributos, métodos e encapsulamento
 
-## Classes:
-Em programação orientada a objetos com Java, uma classe é um tipo de estrutura de dados que descreve um conjunto de objetos com as mesmas propriedades e comportamentos. Ela serve como um modelo ou plano para a criação de objetos, que são instâncias dessa classe.
+> **Em uma frase:** uma **classe** é a "planta" ou a "forma de bolo" que descreve atributos e comportamentos; um **objeto** é cada bolo feito com essa forma, com seus próprios valores.
 
-- Uma classe é composta por atributos, que definem as propriedades dos objetos, e métodos, que definem o comportamento dos objetos. Por exemplo, uma classe "Pessoa" pode ter atributos como nome, idade e altura, e métodos como "andar" e "falar". Quando um objeto é criado a partir dessa classe, ele herda esses atributos e métodos e pode usá-los para realizar tarefas específicas.
-- As classes são importantes porque permitem a reutilização de código, permitindo que diferentes objetos possam ser criados a partir da mesma classe com comportamentos e propriedades semelhantes. Além disso, elas também ajudam a organizar o código, tornando-o mais legível e fácil de manter.
+## 🍰 Classe × objeto
 
-<details>
-<summary>Código Exemplo</summary>
+| Conceito | Analogia | Em código |
+| --- | --- | --- |
+| **Classe** | A planta de uma casa / a forma de bolo | `public class ContaBancaria { ... }` |
+| **Objeto** (instância) | Cada casa construída / cada bolo | `new ContaBancaria("1234-5", 1000)` |
+| **Atributo** | Características (cor da casa, sabor do bolo) | `private double saldo;` |
+| **Método** | Ações (abrir a porta, fatiar o bolo) | `public void depositar(double valor)` |
+| **Mensagem** | Pedir para um objeto fazer algo | `conta.depositar(500);` |
 
-```java
-//Classe "Pessoa" -> Geralmente o nome da classe tem a primeira letra em maiúsculo
-public class Pessoa {
-
-    // Atributos da classe Pessoa
-    private String nome;
-    private int idade;
-    private double altura;
-    
-    // Construtor da classe Pessoa
-    public Pessoa(String nome, int idade, double altura) {
-        this.nome = nome;
-        this.idade = idade;
-        this.altura = altura;
+```mermaid
+classDiagram
+    class ContaBancaria {
+        -String numero
+        -double saldo
+        +ContaBancaria(String numero, double saldoInicial)
+        +depositar(double valor) void
+        +sacar(double valor) boolean
+        +getSaldo() double
+        +getNumero() String
     }
-    
-    // Métodos da classe Pessoa
-    public String getNome() {
-        return nome;
-    }
-    
-    public int getIdade() {
-        return idade;
-    }
-    
-    public double getAltura() {
-        return altura;
-    }
-}
 ```
 
-</details>
-
-<br>
-
-## Atributo:
-Em programação orientada a objetos na linguagem Java, um atributo é uma variável que está associada a uma classe ou objeto e que representa uma característica ou propriedade do objeto em questão. Atributos são definidos dentro da classe e são usados para armazenar valores específicos para cada objeto que é criado a partir da classe.
-
-- Por exemplo, em uma classe "Pessoa", os atributos poderiam ser "nome", "idade", "altura", etc. Cada objeto criado a partir dessa classe teria seus próprios valores atribuídos a esses atributos. Esses valores podem ser acessados ou modificados por meio de métodos específicos da classe “Pessoa”.
-
-<details>
-<summary>Código exemplo</summary>
+## 🛠️ Na prática
 
 ```java
-public class Pessoa {
-
-    // Atributos da classe Pessoa
-    public String nome;
-    public int idade;
-    public double altura;
-}
-```
-
-</details>
-
-<br>
-
-## Método:
-Em programação orientada a objetos em Java, um método é um bloco de código que realiza uma ação específica em um objeto ou classe. Métodos são usados para executar operações, manipular dados e fornecer comportamento específico para objetos.
-
-- Um método pode receber zero ou mais parâmetros como entrada, e pode ou não retornar um valor de saída. O valor de retorno é definido pelo tipo de dado que o método é declarado para retornar.
-<details>
-<summary>Código exemplo</summary>
-
-```java
-public class Retangulo {
-    private int largura;
-    private int altura;
-    
-    // Construtor da classe Retangulo (Note que o construtor tem o mesmo nome da classe)
-    public Retangulo(int largura, int altura) {
-        this.largura = largura;
-        this.altura = altura;
-    }
-    
-    // Método que calcula a área do retângulo
-    public int calcularArea() {
-        return largura * altura;
-    }
-}
-
-public class Main {
-    public static void main(String[] args) {
-        Retangulo retangulo = new Retangulo(5, 10);
-        int area = retangulo.calcularArea(); // Usando o método "calculaArea"
-        System.out.println("A área do retângulo é: " + area);
-    }
-}
-```
-
-</details>
-
-<br>
-
-## Objeto:
-
-Em programação orientada a objetos, um objeto é uma instância de uma classe. Uma classe define a estrutura e comportamento de um objeto, enquanto um objeto é uma representação concreta de uma entidade específica, com seus próprios valores de dados e estado de comportamento. Os objetos geralmente têm atributos que representam dados e métodos que definem o comportamento do objeto. Os objetos podem interagir uns com os outros por meio de mensagens, que acionam a execução de métodos e podem modificar o estado do objeto receptor.
-
-- Por exemplo, um programa de gerenciamento de banco pode ter uma classe "Conta Bancária" que define a estrutura e comportamento de uma conta bancária. Cada conta bancária criada a partir dessa classe seria um objeto separado com seus próprios valores de dados, como saldo e número da conta.
-    - Ao criar um objeto a partir de uma classe, usamos o construtor da classe para inicializar os valores de seus atributos. Em seguida, podemos chamar os métodos definidos na classe para interagir com o objeto e realizar operações em seus dados.
-
-<details>
-<summary>Código exemplo</summary>
-
-```jsx
 public class ContaBancaria {
-    private String numero;
+
+    // atributos: o ESTADO de cada objeto
+    private final String numero;
     private double saldo;
-    
+
+    // construtor: deixa o objeto pronto para uso
     public ContaBancaria(String numero, double saldoInicial) {
         this.numero = numero;
         this.saldo = saldoInicial;
     }
-    
+
+    // métodos: o COMPORTAMENTO
     public void depositar(double valor) {
+        if (valor <= 0) {
+            throw new IllegalArgumentException("O depósito deve ser positivo");
+        }
         saldo += valor;
     }
-    
-    public void sacar(double valor) {
-        if (saldo >= valor) {
-            saldo -= valor;
-        } else {
-            System.out.println("Saldo insuficiente!");
-        }
-    }
-    
-    public double consultarSaldo() {
-        return saldo;
-    }
-    
-    public String getNumero() {
-        return numero;
-    }
-}
 
-public class GerenciamentoDeBanco {
-    public static void main(String[] args) {
-        // Criação de duas contas bancárias
-        ContaBancaria conta1 = new ContaBancaria("1234-5", 1000.0);
-        ContaBancaria conta2 = new ContaBancaria("5678-9", 500.0);
-        
-        // Depósito na primeira conta
-        conta1.depositar(500.0);
-        
-        // Saque na segunda conta
-        conta2.sacar(100.0);
-        
-        // Consulta de saldo na primeira conta
-        System.out.println("Saldo da conta " + conta1.getNumero() + ": " + conta1.consultarSaldo());
-        
-        // Consulta de saldo na segunda conta
-        System.out.println("Saldo da conta " + conta2.getNumero() + ": " + conta2.consultarSaldo());
+    public boolean sacar(double valor) {
+        if (valor <= 0 || valor > saldo) {
+            return false;            // saque recusado
+        }
+        saldo -= valor;
+        return true;
     }
+
+    public double getSaldo() { return saldo; }
+    public String getNumero() { return numero; }
 }
 ```
-
-</details>
-
-<br>
-
-## Mensagem:
-
-Em programação orientada a objetos, a mensagem é a forma de comunicação entre objetos. Quando um objeto precisa que outro objeto execute uma operação específica, ele envia uma mensagem para esse objeto. A mensagem é composta pelo nome do método a ser executado e pelos argumentos que o método precisa para realizar a operação. O objeto receptor da mensagem é responsável por receber a mensagem e executar o método solicitado.
-
-- A mensagem é importante na programação orientada a objetos porque permite que os objetos interajam e cooperem uns com os outros, realizando operações específicas e trocando informações entre si. Com a utilização de mensagens, os objetos podem se comunicar e trabalhar juntos para realizar tarefas mais complexas e completas.
-
-<details>
-<summary>Código exemplo</summary>
 
 ```java
-public class Pessoa {
-    private String nome;
-    
-    public Pessoa(String nome) {
-        this.nome = nome;
-    }
-    
-    public void dizerOla() {
-        System.out.println("Olá, meu nome é " + nome);
-    }
-}
-
-public class Saudacao {
+public class Banco {
     public static void main(String[] args) {
-        Pessoa pessoa1 = new Pessoa("João");
-        Pessoa pessoa2 = new Pessoa("Maria");
-        
-				//Vamos usar o nome do objeto + . + nome do método
-        pessoa1.dizerOla(); // mensagem enviada para o objeto pessoa1
-        pessoa2.dizerOla(); // mensagem enviada para o objeto pessoa2
+        ContaBancaria conta1 = new ContaBancaria("1234-5", 1000.0);
+        ContaBancaria conta2 = new ContaBancaria("5678-9", 500.0);
+
+        conta1.depositar(500.0);     // mensagem para conta1
+        conta2.sacar(100.0);         // mensagem para conta2
+
+        System.out.println(conta1.getNumero() + ": " + conta1.getSaldo());  // 1500.0
+        System.out.println(conta2.getNumero() + ": " + conta2.getSaldo());  // 400.0
     }
 }
 ```
 
-</details>
+Cada objeto tem **seu próprio** saldo: depositar em `conta1` não muda `conta2`.
 
-<br>
+> [!NOTE]
+> Para simplificar os exemplos, usamos `double` no saldo. Em um sistema bancário de verdade, use `BigDecimal` (aula [2.4](../02-java/04-tipos-e-variaveis.md)).
 
-<br>
+## 🔒 Encapsulamento
 
-### Exercício prático:
-Crie uma classe carro com os atributos “cor”, “modelo” e “capacidade do tanque”. A classe deve ter um método para calcular o valor que será gasto para encher o tanque. Instancie alguns objetos a partir da classe carro e manipule seus atributos e use seu método.
+Repare que os atributos são `private` e que o saldo só muda pelos métodos `depositar` e `sacar`. Isso é **encapsulamento**: o objeto **protege seu estado** e só permite alterações que respeitam as regras (não dá para depositar valor negativo nem sacar mais que o saldo).
+
+Se o atributo fosse `public`, qualquer parte do código poderia fazer `conta.saldo = -1000000;`.
+
+> [!TIP]
+> **Regra prática:** atributos `private`; crie **getters** só para o que precisa ser lido e **setters** só para o que realmente pode mudar livremente. Muitas vezes, um método com nome de negócio (`depositar`) é melhor que um `setSaldo`.
+
+## 🧱 Os 4 pilares da Orientação a Objetos
+
+| Pilar | Ideia | Onde estudar |
+| --- | --- | --- |
+| **Abstração** | Representar só o que importa do mundo real (uma conta tem número e saldo; a cor da agência não importa). | Esta aula |
+| **Encapsulamento** | Esconder o estado e expor só operações seguras. | Esta aula |
+| **Herança** | Reaproveitar características de uma classe em outra ("é um"). | [4.2](./02-heranca-e-polimorfismo.md) |
+| **Polimorfismo** | O mesmo comando se comporta de jeitos diferentes conforme o objeto. | [4.2](./02-heranca-e-polimorfismo.md) |
+
+## 📌 Resumindo
+
+- Classe = molde; objeto = instância criada com `new`.
+- Atributos guardam o estado; métodos definem o comportamento.
+- Encapsulamento: atributos `private` e alterações só por métodos que validam as regras.
+- Pilares da OO: abstração, encapsulamento, herança e polimorfismo.
+
+## 🏋️ Mão na massa
+
+**1.** Crie a classe `Carro` com cor, modelo e capacidade do tanque, e um método que calcule quanto custa encher o tanque a partir do preço do litro.
 
 <details>
-<summary>Código resposta</summary>
+<summary>Ver resposta</summary>
 
-```jsx
-//Class main
-package estrutura_basica;
+```java
+public class Carro {
+    private String cor;
+    private String modelo;
+    private int capacidadeTanque;
 
-public class Main {
-    public static void main(String[] args) {
-
-        //Criando objeto da classe "Carro" com construtor vazio (Construtor default)
-        Carro carro_1 = new Carro();
-
-        //Definindo atributos de "carro_1" com os setters
-        carro_1.setCor("Prata");
-        carro_1.setModelo("Toyota Etius");
-        carro_1.setCapacidade_tanque(50);
-
-        //Mostrando atributos de "carro_1" com os Getters
-        System.out.println("carro_1");
-        System.out.println("Cor: " + carro_1.getCor());
-        System.out.println("Modelo: " + carro_1.getModelo());
-        System.out.println("Capacidade do tanque: " + carro_1.getCapacidade_tanque());
-        System.out.println("Encho o tanque com: R$ " + carro_1.total_para_encher_tanque(5.51)+ "\n");
-
-        //Criando objeto "carro_2" e passando os atributos no construtor
-        Carro carro_2 = new Carro("Preto", "Mercedez-Benz Classe C", 66);
-
-        //Mostrando os atributos de "carro_2"
-        System.out.println("carro_2");
-        System.out.println("Cor: " + carro_2.getCor());
-        System.out.println("Modelo: " + carro_2.getModelo());
-        System.out.println("Capacidade do tanque: " + carro_2.getCapacidade_tanque());
-        System.out.println("Encho o tanque com: R$ " + carro_2.total_para_encher_tanque(5.51));
+    public Carro(String cor, String modelo, int capacidadeTanque) {
+        this.cor = cor;
+        this.modelo = modelo;
+        this.capacidadeTanque = capacidadeTanque;
     }
+
+    public double custoParaEncher(double precoLitro) {
+        return capacidadeTanque * precoLitro;
+    }
+
+    public String getModelo() { return modelo; }
 }
+
+// no main:
+Carro carro = new Carro("Prata", "Toyota Etios", 50);
+System.out.println("Encher o tanque: R$ " + carro.custoParaEncher(5.89));
 ```
 
 </details>
 
-<br>
+**2.** Por que é ruim deixar o atributo `saldo` da conta como `public`?
 
-<br>
+<details>
+<summary>Ver resposta</summary>
 
-<br>
+Porque qualquer código poderia alterar o saldo diretamente (`conta.saldo = -999`), ignorando as regras de negócio. Com `private` + métodos, toda alteração passa por validações.
 
-[Voltar a Programação orientada a objetos com Java](/Arquivos/Conteudo/4%20-%20Programa%C3%A7%C3%A3o%20orientada%20a%20objetos/4.1%20Programacao%20orientada%20a%20objetos%20com%20java.md)<br>
-[Voltar ao inicio](/README.md)
+</details>
+
+**3.** Acrescente à `ContaBancaria` um método `transferir(ContaBancaria destino, double valor)`.
+
+<details>
+<summary>Ver resposta</summary>
+
+```java
+public boolean transferir(ContaBancaria destino, double valor) {
+    if (!sacar(valor)) {
+        return false;          // saldo insuficiente ou valor inválido
+    }
+    destino.depositar(valor);
+    return true;
+}
+```
+
+O método reaproveita `sacar` e `depositar`, mantendo as validações num lugar só.
+
+</details>
+
+---
+
+<div align="center">
+
+[⬅️ 3.5 Fibonacci](../03-desafios-basicos/05-fibonacci.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [4.2 Herança, upcast/downcast e polimorfismo ➡️](./02-heranca-e-polimorfismo.md)
+
+</div>

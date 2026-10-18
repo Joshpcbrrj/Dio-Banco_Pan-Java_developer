@@ -1,108 +1,144 @@
-# Debugging
+# 4.12 · Debugging: encontrando erros no código
 
-O debugging é o processo de encontrar e corrigir erros em um código. No Java, podemos utilizar diversas ferramentas para debuggar nosso código, como o Eclipse, IntelliJ IDEA, NetBeans, entre outros.
+> **Em uma frase:** depurar (*debugar*) é investigar um programa enquanto ele roda: você pausa a execução em **breakpoints**, inspeciona as variáveis e avança linha por linha até achar onde o comportamento foge do esperado.
 
-Algumas das principais técnicas de debugging incluem:
+## 🧰 As ferramentas
 
-- Usar pontos de interrupção (breakpoints) para pausar a execução do programa em um determinado ponto e examinar variáveis, estado do programa e executar o código linha a linha;
-- Usar ferramentas de inspeção de variáveis para examinar valores de variáveis em tempo de execução;
-- Usar logging para registrar mensagens de depuração em diferentes níveis de gravidade para ajudar a identificar onde ocorre um problema;
-- Usar ferramentas de profiling para identificar gargalos de desempenho no código.
+| Técnica | Para quê |
+| --- | --- |
+| **Breakpoints** | Pausar a execução numa linha específica. |
+| **Inspeção de variáveis** | Ver o valor de cada variável naquele momento. |
+| **Execução passo a passo** | Avançar linha por linha e entrar (ou não) nos métodos chamados. |
+| **Logs** | Registrar o que acontece, com níveis (`DEBUG`, `INFO`, `WARN`, `ERROR`). |
+| **Profilers** | Descobrir gargalos de desempenho (onde o programa gasta tempo e memória). |
 
+## 🐞 Debugando no IntelliJ
 
-## Depuração/Debugging
-- Linguagens de alto nível tornam a depuração mais fácil, pois fornecem mais ferramentas para identificar erros, como o tratamento de exceções.
+1. Clique na **margem esquerda** da linha para criar um breakpoint (aparece uma bolinha vermelha).
+2. Execute em modo debug: **🐞 Debug** (ou `Shift+F9`).
+3. Quando parar, use os comandos:
 
-- Os depuradores funcionam assumindo o controle do tempo de execução de um programa e permitindo que você o observe e controle. Para fazer isso, ele mostra a pilha do programa e permite que você a atravesse em qualquer direção. Quando você está em um depurador, obtém uma imagem mais completa de um quadro de pilha do que quando olha os rastreamentos de pilha em uma mensagem de log.
+| Comando | Atalho | O que faz |
+| --- | --- | --- |
+| **Step Over** | `F8` | Executa a linha atual e vai para a próxima (sem entrar nos métodos). |
+| **Step Into** | `F7` | **Entra** no método chamado na linha atual. |
+| **Step Out** | `Shift+F8` | Termina o método atual e volta para quem o chamou. |
+| **Resume** | `F9` | Continua até o próximo breakpoint. |
+| **Evaluate Expression** | `Alt+F8` | Calcula qualquer expressão com os valores atuais. |
 
-### Pilha de Execução de um Programa Java/Stack Trace
+> [!TIP]
+> Clique com o botão direito no breakpoint para criar um **breakpoint condicional** (ex.: `i == 500`). Ele só para quando a condição for verdadeira, ótimo para laços longos. No Eclipse e no VS Code os conceitos são os mesmos (`F5`/`F6`/`F7`/`F8` no Eclipse).
 
-#### Pilha de Execução
+## 📚 A pilha de execução e o *stack trace*
 
-Toda invocação de método é empilhada em uma estrutura de dados que isola a área de memória de cada um. Quando um método termina (retorna), ele volta para o método que o invocou.
-
-#### Stack Trace
-
-É a matriz onde encontramos a pilha de execução da exceção. Em outras palavras, podemos dizer que o rastreamento da pilha busca (rastreio) para a próxima linha onde a exceção pode surgir.
-
-##### Exemplo de pilha Thread.dumpStack
-
-<details>
-<summary>Código</summary>
-
-#### Classe Debugging
+Cada vez que um método chama outro, a JVM **empilha** a chamada (lembra da [pilha](../02-java/18-pilhas.md)?). Quando o método termina, ele é **desempilhado** e a execução volta para quem chamou.
 
 ```java
-public class Debugging {
-    public static void main(String[] args) {
-        System.out.println("Entrou no método 'main'");
-        a();
-        System.out.println("Finalizou o programa no método 'main'");
-    }
-
-    public static void a(){
-        System.out.println("Entrou no método 'a'");
-        b();
-        System.out.println("Finalizou o método 'a'");
-    }
-    public static void b(){
-        System.out.println("Entrou no método 'b'");
-        for(int i = 0; i <= 5; i++){
-            System.out.println(i);
-        }
-        c();
-        System.out.println("Finalizou o método 'b'");
-    }
-    public static void c(){
-        System.out.println("Entrou no método 'a'");
-        //Mostrando pilha de processos (Sempre vamos ler de baixo pra cima
-        Thread.dumpStack();
-        System.out.println("Finalizou o método 'c'");
-    }
+public class Pilha {
+    public static void main(String[] args) { a(); }
+    static void a() { b(); }
+    static void b() { c(); }
+    static void c() { Thread.dumpStack(); }   // imprime a pilha atual
 }
 ```
 
-#### Classe main
+```text
+java.lang.Exception: Stack trace
+    at java.base/java.lang.Thread.dumpStack(Thread.java:...)
+    at Pilha.c(Pilha.java:5)       ← topo: onde estamos agora
+    at Pilha.b(Pilha.java:4)
+    at Pilha.a(Pilha.java:3)
+    at Pilha.main(Pilha.java:2)    ← base: onde tudo começou
+```
+
+Quando uma exceção acontece, o Java imprime esse mesmo formato: o **stack trace**. Leia de **cima para baixo**: a primeira linha diz o **tipo do erro** e a mensagem; as linhas `at` mostram o caminho, começando pelo lugar exato onde o erro aconteceu.
+
+> [!IMPORTANT]
+> Procure a primeira linha `at` que aponta para **o seu código** (e não para classes do Java ou de bibliotecas). Quase sempre o problema está ali.
+
+## 🔍 Um bug para caçar
 
 ```java
 import java.util.Scanner;
 
-public class main {
+public class MediaTurma {
     public static void main(String[] args) {
-        Scanner scan = new Scanner(System.in);
-        String [] alunos = {"Josué", "Camila", "Bruna", "Lucas"};
-
-       double media = Calculadora_media_turma(alunos, scan);
-        System.out.printf("A média da turma é %d", media);
+        Scanner entrada = new Scanner(System.in);
+        String[] alunos = {"Josué", "Camila", "Bruna", "Lucas"};
+        double media = calcularMedia(alunos, entrada);
+        System.out.printf("A média da turma é %d", media);   // 🐞
     }
 
-    public static double Calculadora_media_turma(String[] alunos, Scanner scanner){
+    static double calcularMedia(String[] alunos, Scanner entrada) {
         double soma = 0;
-        for (String aluno: alunos){
-            System.out.printf("Nota do aluno %s: ", aluno);
-            double nota = scanner.nextInt();
-            soma += nota;
+        for (String aluno : alunos) {
+            System.out.printf("Nota de %s: ", aluno);
+            soma += entrada.nextInt();                       // 🐞
         }
-
         return soma / alunos.length;
     }
 }
 ```
 
+Este código tem dois problemas:
+
+1. `%d` é para inteiros; com um `double`, o programa quebra com `IllegalFormatConversionException`. O correto é `%.2f`.
+2. `nextInt()` não aceita notas como `7.5` (`InputMismatchException`). O correto é `nextDouble()`.
+
+O stack trace do primeiro erro aponta direto para a linha do `printf` no `main`.
+
+## 📌 Resumindo
+
+- Breakpoints pausam; `F8` avança, `F7` entra, `Shift+F8` sai, `F9` continua.
+- O stack trace é a pilha de chamadas no momento do erro: leia de cima para baixo e procure a primeira linha do seu código.
+- Logs e profilers complementam o debugger.
+
+## 🏋️ Mão na massa
+
+**1.** Corrija os dois bugs do programa `MediaTurma`.
+
+<details>
+<summary>Ver resposta</summary>
+
+Troque `entrada.nextInt()` por `entrada.nextDouble()` e o `printf` por:
+
+```java
+System.out.printf("A média da turma é %.2f%n", media);
+```
+
 </details>
 
-<br>
+**2.** Neste stack trace, em qual linha do **seu** código está o erro?
 
-### Rererências úteis:
-[Alura - Exceções e controle de erros](https://www.alura.com.br/apostila-java-orientacao-objetos/excecoes-e-controle-de-erros#exercicio-para-comecar-com-os-conceitos)<br>
-[SentinelOne - Java stack trace](https://www.sentinelone.com/blog/java-stack-trace-understanding/)<br>
-[Alura - Java Exceções](https://www.alura.com.br/conteudo/java-excecoes)<br>
-[Hostgator - O que é debug ?](https://www.hostgator.com.br/blog/debug-desenvolvimento-web/)
+```text
+Exception in thread "main" java.lang.NullPointerException: Cannot invoke "String.length()" because "nome" is null
+    at br.com.treino.Cadastro.validar(Cadastro.java:18)
+    at br.com.treino.Cadastro.salvar(Cadastro.java:10)
+    at br.com.treino.Main.main(Main.java:6)
+```
 
-<br>
+<details>
+<summary>Ver resposta</summary>
 
-<br>
+Na linha **18** do arquivo `Cadastro.java`, no método `validar`: a variável `nome` é `null` e alguém chamou `nome.length()`. As outras linhas mostram o caminho até lá (`main` → `salvar` → `validar`).
 
-<br>
+</details>
 
-[Voltar ao inicio](/README.md)
+**3.** Coloque um breakpoint condicional dentro de um `for` de 1 a 1000 para parar só quando `i == 777`.
+
+<details>
+<summary>Ver resposta</summary>
+
+Crie o breakpoint na linha dentro do laço, clique nele com o botão direito, preencha **Condition** com `i == 777` e rode em modo Debug. A execução só para naquela volta.
+
+</details>
+
+📚 Para ir além: [Alura: exceções e controle de erros](https://www.alura.com.br/apostila-java-orientacao-objetos/excecoes-e-controle-de-erros) · [Entendendo o stack trace (em inglês)](https://www.sentinelone.com/blog/java-stack-trace-understanding/) · [Debugger do IntelliJ (documentação)](https://www.jetbrains.com/help/idea/debugging-code.html)
+
+---
+
+<div align="center">
+
+[⬅️ 4.11 Lambdas, referências de método e Stream API](./11-stream-api.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [4.13 Tratamento de exceções ➡️](./13-excecoes.md)
+
+</div>

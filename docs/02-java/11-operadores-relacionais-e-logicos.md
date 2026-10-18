@@ -1,100 +1,154 @@
-# Operadores lógicos
+# 2.11 · Operadores relacionais e lógicos a fundo
 
-São símbolos especiais que são capazes de realizar comparações lógicas entre operandos lógicos ou expressões e, em seguida, retornar um resultado.
+> **Em uma frase:** operadores relacionais comparam valores e geram `true` ou `false`; operadores lógicos combinam essas respostas, e as **tabelas-verdade** mostram o resultado de cada combinação.
 
-## Tipos 
+## ⚖️ Relacionais
 
-### Conjunção:
-
-Operação lógica que só é verdadeira quando ambos os operandos ou expressões envolvidas são verdadeiras. (Operador && ou `and` lógico).
-
-| Operando 1 | Operando 2 | Resultado |
-| --- | --- | --- |
-| Verdadeiro | Verdadeiro | Verdadeiro |
-| Verdadeiro | Falso | Falso |
-| Falso | Verdadeiro | Falso |
-| Falso | Falso | Falso |
-
-<br>
-
-### Disjunção:
-Operação que só é falsa quando ambos os operandos ou expressões envolvidas são falsas. (Operador || ou or lógico).
-
-| Operando 1 | Operando 2 | Resultado |
-| --- | --- | --- |
-| Verdadeiro | Verdadeiro | Verdadeiro |
-| Verdadeiro | Falso | Verdadeiro |
-| Falso | Verdadeiro | Verdadeiro |
-| Falso | Falso | Falso |
-
-<br>
-
-### Disjunção exclusiva
-
-Operação só é verdadeira quando ambos os operandos ou expressões são opostas entre si. (Operador ^ ou `xor` lógico)
-
-| Operando 1 | Operando 2 | Resultado |
-| --- | --- | --- |
-| Verdadeiro | Verdadeiro | Falso |
-| Verdadeiro | Falso | Verdadeiro |
-| Falso | Verdadeiro | Verdadeiro |
-| Falso | Falso | Falso |
-
-<br>
-
-### Negação
-
-Operação que inverte o valor lógico de um operando ou expressão (operador unário). (Operador ! ou `not` lógico).
-
-| Operando | Resultado |
+| Grupo | Operadores |
 | --- | --- |
-| Verdadeiro | Falso |
-| Falso | Verdadeiro |
+| Igualdade | `==` (igual), `!=` (diferente) |
+| Tamanho | `>`, `>=`, `<`, `<=` |
 
-💡 **Curiosidades**:
-    Temos operações que por vezes podem confundir os alunos iniciantes. Essas operações são usadas para casos específicos e não podemos considerar como operadores lógicos.
-- Operador bitwise: & ou | → O operador bitwise em Java realiza operações bit a bit em valores inteiros e booleanos. Os operadores bitwise são usados para manipular valores binários (bits) em um nível mais baixo do que operações comuns de adição, subtração, multiplicação e divisão.
-    
-- Operador Shift ~ ou >> ou >>> ou << → O operador shift em Java é usado para deslocar os bits de um valor inteiro ou longo para a esquerda ou para a direita.
-
-<br>
-
-### Prática: Criando um código que demonstre o uso de operadores lógico
 ```java
-public class ExercicioOperadoresLogicos {
+int i1 = 10, i2 = 20;
+char c1 = 'x', c2 = 'y';
+
+System.out.println(i1 == i2);   // false
+System.out.println(i1 != i2);   // true
+System.out.println(i1 < i2);    // true
+System.out.println(c1 < c2);    // true: chars são comparados pelo código Unicode
+```
+
+> [!CAUTION]
+> Para **objetos** (incluindo `String`, `Integer`, `BigDecimal`), `==` compara se são o **mesmo objeto**, não o conteúdo. Use `.equals()`. Comparar decimais com `==` também é arriscado por causa da imprecisão do `double`.
+
+## 🔗 Lógicos e tabelas-verdade
+
+### E (`&&`): verdadeiro só se **as duas** forem verdadeiras
+
+| A | B | A `&&` B |
+| --- | --- | --- |
+| V | V | **V** |
+| V | F | F |
+| F | V | F |
+| F | F | F |
+
+### OU (`||`): falso só se **as duas** forem falsas
+
+| A | B | A OU B |
+| --- | --- | --- |
+| V | V | V |
+| V | F | V |
+| F | V | V |
+| F | F | **F** |
+
+### OU exclusivo (`^`): verdadeiro se forem **diferentes**
+
+| A | B | A `^` B |
+| --- | --- | --- |
+| V | V | F |
+| V | F | **V** |
+| F | V | **V** |
+| F | F | F |
+
+### NÃO (`!`): inverte
+
+| A | `!`A |
+| --- | --- |
+| V | F |
+| F | V |
+
+## ⚡ Curto-circuito: `&&` × `&` e `||` × `|`
+
+Os operadores **duplos** são de **curto-circuito**: se o primeiro lado já decide o resultado, o segundo **nem é avaliado**.
+
+- Em `A && B`, se `A` for falso, o resultado já é falso → `B` é ignorado.
+- Em `A || B`, se `A` for verdadeiro, o resultado já é verdadeiro → `B` é ignorado.
+
+Os **simples** (`&` e `|`) avaliam sempre os dois lados:
+
+```java
+int numero1 = 1, numero2 = 1;
+
+if (numero1 == 2 & numero2++ == 2) { }
+System.out.println(numero2);   // 2: o numero2++ rodou
+
+numero2 = 1;
+if (numero1 == 2 && numero2++ == 2) { }
+System.out.println(numero2);   // 1: o lado direito nem foi avaliado
+```
+
+O curto-circuito é muito útil para evitar erros:
+
+```java
+if (texto != null && texto.length() > 5) { ... }
+// se texto for null, o length() nem é chamado (evita NullPointerException)
+```
+
+> [!NOTE]
+> Com números inteiros, `&`, `|` e `^` viram operadores **bit a bit** (*bitwise*), que operam sobre cada bit. Também existem os de **deslocamento** (`<<`, `>>`, `>>>`) e o complemento (`~`). São usados em casos específicos, como criptografia e otimizações.
+
+## 🧪 Prática
+
+```java
+public class OperadoresLogicos {
     public static void main(String[] args) {
-        //Criando algumas variáveis
-        boolean b1 = true;
-        boolean b2 = false;
-        boolean b3 = true;
-        boolean b4 = false;
+        boolean b1 = true, b2 = false;
+        int i1 = 10, i2 = 5;
+        float f1 = 20F, f2 = 50F;
 
-        int i1 = 10;
-        int i2 = 5;
-        float f1 = 20F;
-        float f2 = 50f;
+        System.out.println("and: " + (b1 && b2));   // false
+        System.out.println("or:  " + (b1 || b2));   // true
+        System.out.println("xor: " + (b1 ^ b2));    // true
+        System.out.println("not: " + !b1);          // false
 
-        //realizando comparações com operadores
-        System.out.println("Operador and: "+ (b1 && b2) );
-        System.out.println("Operador and: "+ (b1 && b3) );
-        System.out.println("Operador or: " + (b1 || b2));
-        System.out.println("Operador or: " + (b2 || b4));
-        System.out.println("Operador xor: " + (b1 ^ b2));
-        System.out.println("Operador xor: " + (b2 ^ b4));
-        System.out.println("Operador not: " + !b1);
-        System.out.println("Operador not: " + !b2);
-
-        //Realizando comparações com expressões
-        System.out.println((i1 + i2) < (f2 - f1) && true);
-        System.out.println((i1 > i2) || (f2 < f1));
-
+        System.out.println((i1 + i2) < (f2 - f1) && true);   // 15 < 30 && true → true
+        System.out.println((i1 > i2) || (f2 < f1));          // true || false → true
     }
 }
 ```
 
-<br>
+## 📌 Resumindo
 
-<br>
+- Relacionais (`== != > >= < <=`) produzem booleanos; objetos se comparam com `.equals()`.
+- `&&` é verdadeiro só com os dois verdadeiros; `||` é falso só com os dois falsos; `^` é verdadeiro quando são diferentes.
+- `&&` e `||` fazem curto-circuito; prefira-os a `&` e `|` em condições.
 
-[Voltar a Lógica condicional e controle de fluxos em Java](/Arquivos/Conteudo/2%20-%20Conhecendo%20a%20linguagem%20Java/2.3%20Logica%20condicional%20e%20controle%20de%20fluxo%20java.md)<br>
-[Voltar ao inicio](/README.md)
+## 🏋️ Mão na massa
+
+**1.** Qual o resultado de `!(5 > 3) || (2 == 2 && 4 != 4)`?
+
+<details>
+<summary>Ver resposta</summary>
+
+`!(true)` = `false`; `(true && false)` = `false`; `false || false` = **`false`**.
+
+</details>
+
+**2.** Por que `if (lista.size() > 0 && lista != null)` pode dar erro, e como corrigir?
+
+<details>
+<summary>Ver resposta</summary>
+
+Se `lista` for `null`, o `lista.size()` é avaliado primeiro e lança `NullPointerException`. Basta inverter a ordem para aproveitar o curto-circuito: `if (lista != null && lista.size() > 0)`.
+
+</details>
+
+**3.** Escreva uma condição que seja verdadeira quando um ano for bissexto (divisível por 4 e não por 100, ou divisível por 400).
+
+<details>
+<summary>Ver resposta</summary>
+
+```java
+boolean bissexto = (ano % 4 == 0 && ano % 100 != 0) || ano % 400 == 0;
+```
+
+</details>
+
+---
+
+<div align="center">
+
+[⬅️ 2.10 Compilando e executando pelo terminal](./10-terminal.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [2.12 Controle de fluxo ➡️](./12-controle-de-fluxo.md)
+
+</div>

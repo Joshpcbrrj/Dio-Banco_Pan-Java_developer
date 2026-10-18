@@ -1,108 +1,117 @@
-# Desafio animal 
+# 7.1 · Desafio: Animal
 
-## DESAFIO
+> **Em uma frase:** a partir de três palavras (classe, grupo e alimentação), descobrir qual animal foi escolhido seguindo uma árvore de decisões.
 
-Neste problema, você deverá ler 3 palavras que definem o tipo de animal possível segundo o esquema abaixo, da esquerda para a direita. Em seguida conclua qual dos animais seguintes foi escolhido, através das três palavras fornecidas.
+## 📋 Enunciado
 
-<img src="./img/01.png" alt="" width="500">
+Leia 3 palavras, uma por linha, todas em minúsculas, e imprima o animal correspondente segundo o esquema:
 
-<br>
+```mermaid
+flowchart LR
+    V["vertebrado"] --> AV["ave"]
+    V --> MA["mamifero"]
+    I["invertebrado"] --> IN["inseto"]
+    I --> AN["anelideo"]
+    AV --> A1["carnivoro → aguia"]
+    AV --> A2["onivoro → pomba"]
+    MA --> M1["onivoro → homem"]
+    MA --> M2["herbivoro → vaca"]
+    IN --> I1["hematofago → pulga"]
+    IN --> I2["herbivoro → lagarta"]
+    AN --> N1["hematofago → sanguessuga"]
+    AN --> N2["onivoro → minhoca"]
+```
 
-### Entrada
-
-A entrada contém 3 palavras, uma em cada linha, necessárias para identificar o animal segundo a figura acima, com todas as letras minúsculas.
-
-### Saída
-
-Imprima o nome do animal correspondente à entrada fornecida.
-
-| Exemplos de Entrada | Exemplos de Saída |
+| Entrada | Saída |
 | --- | --- |
-| vertebrado | homem |
-| mamifero |  |
-| onivoro |  |
+| `vertebrado` `mamifero` `onivoro` | `homem` |
+| `vertebrado` `ave` `carnivoro` | `aguia` |
+| `invertebrado` `anelideo` `onivoro` | `minhoca` |
 
-| Exemplos de Entrada | Exemplos de Saída |
-| --- | --- |
-| vertebrado | aguia |
-| ave |  |
-| carnivoro |  |
+## 🧠 Como pensar
 
-| Exemplos de Entrada | Exemplos de Saída |
-| --- | --- |
-| invertebrado | minhoca |
-| anelideo |  |
-| onivoro |  |
-
-<br>
-
-### Dicas para resolução:
-1. O programa usa a classe Scanner para ler a entrada do usuário a partir do console.
-2. O programa define três variáveis AN1, AN2 e AN3 para armazenar as três palavras inseridas pelo usuário.
-3. O programa usa a estrutura condicional if-else para classificar o animal com base nas três palavras inseridas pelo usuário.
-4. O primeiro nível da estrutura condicional if-else verifica se a primeira palavra é "vertebrado" ou "invertebrado".
-5. O segundo nível da estrutura condicional if-else verifica se a segunda palavra é "ave" ou "mamifero" (se a primeira palavra é "vertebrado") ou "inseto" ou "anelideo" (se a primeira palavra é "invertebrado").
-6. O terceiro nível da estrutura condicional if-else verifica se a terceira palavra é "carnivoro", "onivoro" ou "herbivoro" (se a primeira palavra é "vertebrado" e a segunda palavra é "ave"), "onivoro" ou "herbivoro" (se a primeira palavra é "vertebrado" e a segunda palavra é "mamifero"), "hematofago" ou "herbivoro" (se a primeira palavra é "invertebrado" e a segunda palavra é "inseto"), ou "hematofago" ou "onivoro" (se a primeira palavra é "invertebrado" e a segunda palavra é "anelideo").
-7. Com base na combinação de palavras, o programa imprime o nome do animal correspondente.
-
----
+São três níveis de decisão. Dá para resolver com `if`s aninhados, mas como a resposta depende da **combinação** das três palavras, uma solução mais elegante junta as palavras numa chave e usa um `switch` (ou um `Map`).
 
 <details>
-<summary>Código com resolução:</summary>
+<summary>Ver resposta</summary>
 
 ```java
-// Para ler e escrever dados em Java, aqui na DIO padronizamos da seguinte forma:
-// - new Scanner(System.in): cria um leitor de Entradas, com métodos úteis com prefixo "next";
-// - System.out.println:.imprime um texto de Saída (Output) e pulando uma linha.
-
-import java.io.IOException;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
+        Scanner entrada = new Scanner(System.in);
+        String classe = entrada.nextLine().trim();
+        String grupo = entrada.nextLine().trim();
+        String alimentacao = entrada.nextLine().trim();
 
-        String AN1, AN2, AN3;
-
-        AN1 = sc.nextLine();
-        AN2 = sc.nextLine();
-        AN3 = sc.nextLine();
-
-        if (AN1.equals("vertebrado") && AN2.equals("ave")) {
-            if (AN3.equals("carnivoro")) {
-                System.out.println("aguia");
-            } else if (AN3.equals("onivoro")) {
-                System.out.println("pomba");
-            }
-        } else if (AN1.equals("vertebrado") && AN2.equals("mamifero")) {
-            if (AN3.equals("onivoro")) {
-                System.out.println("homem");
-            } else if (AN3.equals("herbivoro")) {
-                System.out.println("vaca");
-            }
-        } else if (AN1.equals("invertebrado") && AN2.equals("inseto")) {
-            if (AN3.equals("hematofago")) {
-                System.out.println("pulga");
-            } else if (AN3.equals("herbivoro")) {
-                System.out.println("lagarta");
-            }
-        } else if (AN1.equals("invertebrado") && AN2.equals("anelideo")) {
-            if (AN3.equals("hematofago")) {
-                System.out.println("sanguessuga");
-            } else if (AN3.equals("onivoro")) {
-                System.out.println("minhoca");
-            }
-        }
+        String animal = switch (classe + "/" + grupo + "/" + alimentacao) {
+            case "vertebrado/ave/carnivoro"        -> "aguia";
+            case "vertebrado/ave/onivoro"          -> "pomba";
+            case "vertebrado/mamifero/onivoro"     -> "homem";
+            case "vertebrado/mamifero/herbivoro"   -> "vaca";
+            case "invertebrado/inseto/hematofago"  -> "pulga";
+            case "invertebrado/inseto/herbivoro"   -> "lagarta";
+            case "invertebrado/anelideo/hematofago"-> "sanguessuga";
+            case "invertebrado/anelideo/onivoro"   -> "minhoca";
+            default -> "desconhecido";
+        };
+        System.out.println(animal);
     }
+}
+```
+
+A solução do curso, com `if`s aninhados, também funciona:
+
+```java
+if (a1.equals("vertebrado") && a2.equals("ave")) {
+    if (a3.equals("carnivoro")) System.out.println("aguia");
+    else if (a3.equals("onivoro")) System.out.println("pomba");
+} else if (a1.equals("vertebrado") && a2.equals("mamifero")) {
+    // ...
 }
 ```
 
 </details>
 
-<br>
+## 🏋️ Mão na massa
 
-<br>
+**1.** Por que comparar as Strings com `.equals()` e não com `==`?
 
-<br>
+<details>
+<summary>Ver resposta</summary>
 
-[Voltar ao inicio](/README.md)
+Porque `==` compara se são o **mesmo objeto** na memória. Textos lidos do teclado são objetos novos, então `==` daria `false` mesmo com o mesmo conteúdo. `.equals()` compara o conteúdo.
+
+</details>
+
+**2.** Reescreva a solução usando um `Map<String, String>`.
+
+<details>
+<summary>Ver resposta</summary>
+
+```java
+Map<String, String> animais = Map.of(
+        "vertebrado/ave/carnivoro", "aguia",
+        "vertebrado/ave/onivoro", "pomba",
+        "vertebrado/mamifero/onivoro", "homem",
+        "vertebrado/mamifero/herbivoro", "vaca",
+        "invertebrado/inseto/hematofago", "pulga",
+        "invertebrado/inseto/herbivoro", "lagarta",
+        "invertebrado/anelideo/hematofago", "sanguessuga",
+        "invertebrado/anelideo/onivoro", "minhoca");
+
+System.out.println(animais.getOrDefault(classe + "/" + grupo + "/" + alimentacao, "desconhecido"));
+```
+
+Com o mapa, acrescentar um animal novo é só uma linha a mais.
+
+</details>
+
+---
+
+<div align="center">
+
+[⬅️ 6.27 Padrões de projeto com Spring (ViaCEP + Feign)](../06-spring/27-padroes-com-spring.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [7.2 Quitanda do Seu Zé ➡️](./02-quitanda.md)
+
+</div>

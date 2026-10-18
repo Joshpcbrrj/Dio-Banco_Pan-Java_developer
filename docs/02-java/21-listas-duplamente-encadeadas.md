@@ -1,203 +1,179 @@
-# Listas duplamente encadeadas
+# 2.21 · Listas duplamente encadeadas
 
-<img src="./img/30.jpg" alt="" width="700">
+> **Em uma frase:** na lista duplamente encadeada, cada nó conhece o **próximo e o anterior**, então dá para percorrer nos dois sentidos e inserir ou remover nas duas pontas de forma rápida.
 
-Uma lista duplamente encadeada em Java é uma estrutura de dados onde cada nó contém uma referência para os nós anterior e posterior na lista. Isso permite a inserção e remoção eficientes de nós tanto no início quanto no final da lista.
+## ↔️ Estrutura
 
-- A lista começa com um nó inicial (conhecido como cabeça) e termina com um nó final (conhecido como cauda). Os nós da lista são encadeados em ambas as direções, permitindo que a lista seja percorrida em ambas as direções.
-
-- As listas duplamente encadeadas são úteis quando precisamos percorrer a lista em ambas as direções, ou quando precisamos inserir ou remover elementos em posições arbitrárias da lista de maneira eficiente. No entanto, elas ocupam mais espaço em memória do que as listas simplesmente encadeadas, pois cada nó contém duas referências adicionais.
-
-<br>
-
-### Mostrando em código:
-<details>
-<summary>Código</summary>
-
-```java
-//Class "Main"
-package com.projeto.Lista_duplamente_encadeada;
-
-public class Main {
-    public static void main(String[] args) {
-        //Criando uma lista duplamente encadeada do tipo "String"
-        ListaDuplamenteEncadeada<String> minha_lista_enc = new ListaDuplamenteEncadeada<>();
-
-        //Adicionando objetos a "minha_lista_enc"
-        minha_lista_enc.add("c1");
-        minha_lista_enc.add("c2");
-        minha_lista_enc.add("c3");
-        minha_lista_enc.add("c4");
-        minha_lista_enc.add("c5");
-        minha_lista_enc.add("c6");
-        minha_lista_enc.add("c7");
-
-        //Imprimindo a lista com todos os objetos e referências
-        System.out.println(minha_lista_enc);
-
-        //Removendo um elemento da lista
-        minha_lista_enc.remove(3);
-
-        //Adicionando novo elemento na lista
-        minha_lista_enc.add(3, "99");
-
-        //Verificando se o elemento novo entrou na lista
-        System.out.println("Novo elemento: " + minha_lista_enc.get(3));
-
-        //Imprimindo a lista novamente
-        System.out.println(minha_lista_enc);
-    }
-}
+```mermaid
+flowchart LR
+    NA["null"] ~~~ A
+    A["c1"] <--> B["c2"] <--> C["c3"]
+    C ~~~ NB["null"]
+    P["primeiro"] --> A
+    U["último"] --> C
 ```
 
-```java
-//Class "NoDuplo"
-package com.projeto.Lista_duplamente_encadeada;
+Cada **nó duplo** tem três partes: a referência para o **anterior**, o **conteúdo** e a referência para o **próximo**. A lista guarda o **primeiro** e o **último** nó.
 
+| | Lista simples | Lista dupla |
+| --- | --- | --- |
+| Percorrer de trás para frente | ❌ | ✅ |
+| Inserir/remover no fim | Precisa achar o penúltimo (O(n)) | O(1) |
+| Memória por nó | 1 referência | 2 referências |
+
+> [!NOTE]
+> A `LinkedList` do Java é uma lista **duplamente** encadeada.
+
+## 🛠️ Implementação
+
+```java
 public class NoDuplo<T> {
-    private T conteudo;
-    private NoDuplo<T> no_proximo;
-    private NoDuplo<T> no_previo;
+    T conteudo;
+    NoDuplo<T> anterior;
+    NoDuplo<T> proximo;
 
-    //Construtor
-    public NoDuplo(T conteudo){
-        this.conteudo = conteudo;
-    }
+    NoDuplo(T conteudo) { this.conteudo = conteudo; }
+}
+```
 
-    //Getters e setters para "conteudo"
-    public T getConteudo() {
-        return conteudo;
-    }
-    public void setConteudo(T conteudo) {
-        this.conteudo = conteudo;
-    }
-    //Getters e setters para "no_proximo"
-    public NoDuplo<T> getNo_proximo() {
-        return no_proximo;
-    }
-    public void setNo_proximo(NoDuplo<T> no_proximo) {
-        this.no_proximo = no_proximo;
-    }
-    //Getters e setters para "no_previo"
-    public NoDuplo<T> getNo_previo() {
-        return no_previo;
-    }
-    public void setNo_previo(NoDuplo<T> no_previo) {
-        this.no_previo = no_previo;
+```java
+public class ListaDupla<T> {
+
+    private NoDuplo<T> primeiro;
+    private NoDuplo<T> ultimo;
+    private int tamanho;
+
+    public void add(T elemento) {                 // adiciona no fim
+        NoDuplo<T> novo = new NoDuplo<>(elemento);
+        novo.anterior = ultimo;
+        if (ultimo == null) {
+            primeiro = novo;                      // lista estava vazia
+        } else {
+            ultimo.proximo = novo;
+        }
+        ultimo = novo;
+        tamanho++;
     }
 
-    //Método "toString" para "conteúdo"
+    public void add(int indice, T elemento) {     // insere numa posição
+        if (indice == tamanho) {                  // no fim: reaproveita o add
+            add(elemento);
+            return;
+        }
+        NoDuplo<T> atual = getNo(indice);         // quem está hoje na posição
+        NoDuplo<T> novo = new NoDuplo<>(elemento);
+        novo.proximo = atual;
+        novo.anterior = atual.anterior;
+        if (atual.anterior == null) {
+            primeiro = novo;                      // inserindo no início
+        } else {
+            atual.anterior.proximo = novo;
+        }
+        atual.anterior = novo;
+        tamanho++;
+    }
+
+    public T remove(int indice) {
+        NoDuplo<T> alvo = getNo(indice);
+        if (alvo.anterior == null) primeiro = alvo.proximo;
+        else alvo.anterior.proximo = alvo.proximo;
+
+        if (alvo.proximo == null) ultimo = alvo.anterior;
+        else alvo.proximo.anterior = alvo.anterior;
+
+        tamanho--;
+        return alvo.conteudo;
+    }
+
+    public T get(int indice) { return getNo(indice).conteudo; }
+
+    public int size() { return tamanho; }
+
+    private NoDuplo<T> getNo(int indice) {
+        if (indice < 0 || indice >= tamanho) {
+            throw new IndexOutOfBoundsException("Índice inválido: " + indice);
+        }
+        // otimização: começa pela ponta mais próxima
+        if (indice < tamanho / 2) {
+            NoDuplo<T> atual = primeiro;
+            for (int i = 0; i < indice; i++) atual = atual.proximo;
+            return atual;
+        }
+        NoDuplo<T> atual = ultimo;
+        for (int i = tamanho - 1; i > indice; i--) atual = atual.anterior;
+        return atual;
+    }
 
     @Override
     public String toString() {
-        return "No_duplo{" + "conteudo=" + conteudo + '}';
+        StringBuilder sb = new StringBuilder("null ⇄ ");
+        for (NoDuplo<T> n = primeiro; n != null; n = n.proximo) {
+            sb.append(n.conteudo).append(" ⇄ ");
+        }
+        return sb.append("null").toString();
     }
 }
 ```
 
 ```java
-//Class "ListaDuplamenteEncadeada"
-package com.projeto.Lista_duplamente_encadeada;
+ListaDupla<String> lista = new ListaDupla<>();
+for (int i = 1; i <= 7; i++) lista.add("c" + i);
+System.out.println(lista);        // null ⇄ c1 ⇄ c2 ⇄ c3 ⇄ c4 ⇄ c5 ⇄ c6 ⇄ c7 ⇄ null
 
-public class ListaDuplamenteEncadeada<T> {
-    private NoDuplo<T> primeiro_no;
-    private NoDuplo<T> ultimo_no;
-    private int tamanho_lista;
+lista.remove(3);                  // remove c4
+lista.add(3, "99");               // coloca 99 no lugar
+System.out.println(lista.get(3)); // 99
+```
 
-    //Construtor
-    public ListaDuplamenteEncadeada(){
-        this.tamanho_lista = 0;
-        this.primeiro_no = null;
-        this.ultimo_no = null;
-    }
+> [!WARNING]
+> Ao inserir ou remover, é preciso atualizar **as duas** referências dos vizinhos (`anterior` e `proximo`). Esquecer uma delas é o bug mais comum: a lista "funciona" num sentido e quebra no outro.
 
-    //Método size (Verifica o tamanho da lista)
-    public int size(){
-        return this.tamanho_lista;
+## 📌 Resumindo
+
+- Cada nó tem `anterior`, `conteúdo` e `proximo`.
+- A lista guarda `primeiro` e `ultimo`: inserir e remover nas pontas é O(1).
+- Pode ser percorrida nos dois sentidos; gasta um pouco mais de memória.
+
+## 🏋️ Mão na massa
+
+**1.** Escreva um método que imprima a lista **de trás para frente**.
+
+<details>
+<summary>Ver resposta</summary>
+
+```java
+public void imprimirInvertido() {
+    for (NoDuplo<T> n = ultimo; n != null; n = n.anterior) {
+        System.out.print(n.conteudo + " ");
     }
-    //Método "getNo" (Localiza objeto específico da lista de acordo com um indice)
-    private NoDuplo<T> getNo(int indice){
-        NoDuplo<T> no_auxiliar = primeiro_no;
-        for(int i = 0; ((i < indice) && (no_auxiliar != null)); i++){
-            no_auxiliar = no_auxiliar.getNo_proximo();
-        }
-        return no_auxiliar;
-    }
-    //Método "get" (Retorna o conteúdo de um objeto específico de acordo com um indice)
-    public T get (int indice){
-        return this.getNo(indice).getConteudo();
-    }
-    //Método "add" (Adiciona novo objeto no fim da lista)
-    public void add(T elemento){
-        NoDuplo<T> novo_no = new NoDuplo<>(elemento);
-        novo_no.setNo_proximo(null);
-        novo_no.setNo_previo(ultimo_no);
-        if(primeiro_no == null){
-           primeiro_no = novo_no;
-        }
-        if(ultimo_no != null){
-           ultimo_no.setNo_proximo(novo_no);
-        }
-        ultimo_no = novo_no;
-        tamanho_lista++;
-    }
-    //Método "add" com índice (Adiciona elemento em um índice específico)
-    public void add(int indice, T elemento){
-        NoDuplo<T> no_auxiliar = getNo(indice);
-        NoDuplo<T> novo_no = new NoDuplo<>(elemento);
-        novo_no.setNo_proximo(no_auxiliar);
-        if(novo_no.getNo_proximo() != null){
-            novo_no.setNo_previo(no_auxiliar.getNo_previo());
-            novo_no.getNo_proximo().setNo_previo(novo_no);
-        }else{
-            novo_no.setNo_proximo(ultimo_no);
-            ultimo_no = novo_no;
-        }
-        if(indice == 0){
-            primeiro_no = novo_no;
-        }else {
-            novo_no.getNo_previo().setNo_proximo(novo_no);
-        }
-        this.tamanho_lista++;
-    }
-    //Método "remove" (Remove objeto da lista)
-    public void remove(int indice){
-        if (indice == 0){
-            primeiro_no = primeiro_no.getNo_proximo();
-            if (primeiro_no != null){
-                primeiro_no.setNo_previo(null);
-            }
-        }else {
-            NoDuplo<T> no_auxiliar = getNo(indice);
-            no_auxiliar.getNo_previo().setNo_proximo(no_auxiliar.getNo_proximo());
-            if (no_auxiliar != ultimo_no){
-                no_auxiliar.getNo_proximo().setNo_previo(no_auxiliar.getNo_previo());
-            }else {
-                ultimo_no = no_auxiliar;
-            }
-        }
-        this.tamanho_lista --;
-    }
-    //Método "toString" para montar a cadeia de conteúdos dos elementos
-    @Override
-    public String toString() {
-        String str_retorno = "";
-        NoDuplo<T> no_auxiliar = primeiro_no;
-        for(int i = 0; i < size(); i++){
-            str_retorno += "[No{conteúdo = " + no_auxiliar.getConteudo() +"}]--->";
-            no_auxiliar = no_auxiliar.getNo_proximo();
-        }
-        str_retorno += "null";
-        return str_retorno;
-    }
+    System.out.println();
 }
 ```
 
 </details>
 
-<br>
+**2.** Ao remover o **último** nó, quais referências precisam ser atualizadas?
 
-<br>
+<details>
+<summary>Ver resposta</summary>
 
-[Voltar a Estrutura de dados em Java](/Arquivos/Conteudo/2%20-%20Conhecendo%20a%20linguagem%20Java/2.5%20Estrutura%20de%20dados%20em%20java.md)<br>
-[Voltar para inicio](/README.md)
+O `proximo` do penúltimo nó passa a ser `null`, e o atributo `ultimo` da lista passa a apontar para esse penúltimo.
+
+</details>
+
+**3.** Por que a `getNo` começa pela ponta mais próxima do índice?
+
+<details>
+<summary>Ver resposta</summary>
+
+Porque, como dá para andar nos dois sentidos, começar pelo fim quando o índice está na segunda metade corta o caminho pela metade no pior caso. É exatamente o que a `LinkedList` do Java faz.
+
+</details>
+
+---
+
+<div align="center">
+
+[⬅️ 2.20 Listas encadeadas](./20-listas-encadeadas.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [2.22 Listas circulares ➡️](./22-listas-circulares.md)
+
+</div>

@@ -1,21 +1,161 @@
-# Autenticação com banco de dados (Auth database)
+# 6.21 · Autenticação com banco de dados
 
-Auth database é um termo usado em bancos de dados para se referir ao banco de dados que armazena informações de autenticação de usuários. Essas informações podem incluir nomes de usuário, senhas criptografadas, permissões de acesso e outros dados de segurança. Geralmente, um sistema de autenticação é implementado para verificar as credenciais do usuário e conceder acesso somente se as informações fornecidas forem válidas. O auth database é uma parte crítica do sistema de segurança de um aplicativo ou serviço, pois contém informações confidenciais que podem levar a um comprometimento de segurança se forem violadas.
+> **Em uma frase:** para buscar os usuários no banco, você implementa a interface `UserDetailsService` (método `loadUserByUsername`), e o Spring Security usa o que ela devolve para conferir a senha e as permissões.
 
-- No contexto do Spring API, auth database se refere ao banco de dados que armazena informações de autenticação de usuários, como nome de usuário e senha. Quando um usuário tenta acessar um recurso protegido, o Spring Security verifica se as informações de autenticação fornecidas correspondem às informações armazenadas no banco de dados de autenticação. Se as informações forem válidas, o acesso é concedido. O Spring Security oferece suporte a vários provedores de autenticação, incluindo autenticação de usuário em memória, autenticação por meio de JDBC e autenticação por meio de provedores de autenticação externos, como OAuth ou SAML. O banco de dados de autenticação pode ser configurado de várias maneiras, dependendo dos requisitos de segurança do aplicativo.
+## 🗄️ A ideia
 
-<br>
+```mermaid
+sequenceDiagram
+    participant C as Cliente
+    participant F as Filtro de autenticação
+    participant U as UserDetailsService (sua classe)
+    participant DB as Banco de dados
+    C->>F: login: josue / senha
+    F->>U: loadUserByUsername("josue")
+    U->>DB: SELECT ... WHERE username = 'josue'
+    DB-->>U: usuário + hash da senha + papéis
+    U-->>F: UserDetails
+    F->>F: passwordEncoder.matches(senha, hash)?
+    F-->>C: autenticado ✅ (ou 401 ❌)
+```
 
-## UserDetailService
+## 🛠️ Implementação
 
-O UserDetailsService é uma interface no Spring Security que é usada para carregar informações sobre um usuário específico para fins de autenticação e autorização. Ele fornece um método chamado "loadUserByUsername" que deve ser implementado para carregar os detalhes do usuário com base no nome de usuário fornecido durante a autenticação.
+### A entidade
 
-- Na prática, o UserDetailsService é usado pelo Spring Security para carregar as informações do usuário a partir do banco de dados ou de outro sistema de armazenamento de usuários, com o objetivo de validar as credenciais do usuário (nome de usuário e senha) e verificar se ele tem as permissões necessárias para acessar recursos específicos.
-- Ao implementar a interface UserDetailsService, é possível personalizar como os usuários são autenticados e autorizados em uma aplicação Spring. Por exemplo, é possível usar o UserDetailsService para autenticar usuários em um banco de dados de usuários personalizado ou em um provedor de autenticação externo, como o OAuth ou o LDAP.
+```java
+@Entity
+@Table(name = "usuarios")
+public class Usuario {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-<br>
+    @Column(unique = true, nullable = false)
+    private String username;
 
-<br>
+    @Column(nullable = false)
+    private String password;          // sempre o HASH, nunca a senha pura
 
-[Voltar a Adicionando segurança a uma API REST com Spring](/Arquivos/Conteudo/6%20-%20Ganhando%20produtividade%20com%20spring%20framwork/6.4%20Adicionando%20seguranca%20a%20uma%20api%20rest%20com%20spring.md)<br>
-[Voltar ao inicio](/README.md)
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> roles = new ArrayList<>();
+
+    // getters e setters
+}
+
+public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
+    Optional<Usuario> findByUsername(String username);
+}
+```
+
+### O `UserDetailsService`
+
+```java
+@Service
+public class UsuarioDetailsService implements UserDetailsService {
+
+    private final UsuarioRepository repository;
+
+    public UsuarioDetailsService(UsuarioRepository repository) {
+        this.repository = repository;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) {
+        Usuario usuario = repository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
+
+        return User.withUsername(usuario.getUsername())
+                .password(usuario.getPassword())
+                .roles(usuario.getRoles().toArray(String[]::new))
+                .build();
+    }
+}
+```
+
+Com esse bean e um `PasswordEncoder` declarados (aula [6.20](./20-autenticacao.md)), o Spring Boot já usa o banco para autenticar. Não é preciso nenhuma outra configuração.
+
+### Cadastrando um usuário inicial
+
+```java
+@Component
+public class CargaInicial implements CommandLineRunner {
+    private final UsuarioRepository repository;
+    private final PasswordEncoder encoder;
+
+    CargaInicial(UsuarioRepository repository, PasswordEncoder encoder) {
+        this.repository = repository;
+        this.encoder = encoder;
+    }
+
+    @Override
+    public void run(String... args) {
+        if (repository.findByUsername("admin").isEmpty()) {
+            Usuario admin = new Usuario();
+            admin.setUsername("admin");
+            admin.setPassword(encoder.encode("master123"));
+            admin.getRoles().add("MANAGER");
+            repository.save(admin);
+        }
+    }
+}
+```
+
+> [!TIP]
+> Para estudar, use o banco em memória **H2** (dependência `com.h2database:h2`). Com `spring.h2.console.enabled=true`, há um console web em `/h2-console` para ver as tabelas (lembre de liberar essa URL na configuração de segurança).
+
+> [!NOTE]
+> Também existem provedores prontos: `JdbcUserDetailsManager` (com um esquema de tabelas padrão), LDAP/Active Directory e provedores externos via **OAuth2/OpenID Connect** (Google, Keycloak, Microsoft Entra ID).
+
+📂 Projeto do curso: [`projetos/06-api-spring-security`](../../projetos/06-api-spring-security/) (Spring Boot 2.6, com `WebSecurityConfigurerAdapter`) e o exemplo `spring-web-security-database` em [`projetos/06-spring-boot-dio`](../../projetos/06-spring-boot-dio/).
+
+## 📌 Resumindo
+
+- Implemente `UserDetailsService.loadUserByUsername` para buscar o usuário no banco.
+- Guarde só o **hash** da senha; confira com o `PasswordEncoder`.
+- Papéis viram authorities com o prefixo `ROLE_`.
+
+## 🏋️ Mão na massa
+
+**1.** O que acontece se o `loadUserByUsername` não encontrar o usuário?
+
+<details>
+<summary>Ver resposta</summary>
+
+Ele deve lançar `UsernameNotFoundException`. O Spring Security transforma isso numa falha de autenticação (`401`), sem revelar se o problema foi o usuário ou a senha.
+
+</details>
+
+**2.** Por que a mensagem de erro do login não deve dizer "usuário não existe"?
+
+<details>
+<summary>Ver resposta</summary>
+
+Porque isso ajudaria um atacante a descobrir quais usuários existem (*user enumeration*). O ideal é uma mensagem genérica, como "usuário ou senha inválidos".
+
+</details>
+
+**3.** Adicione um usuário `user` com papel `USER` à carga inicial.
+
+<details>
+<summary>Ver resposta</summary>
+
+```java
+if (repository.findByUsername("user").isEmpty()) {
+    Usuario user = new Usuario();
+    user.setUsername("user");
+    user.setPassword(encoder.encode("user123"));
+    user.getRoles().add("USER");
+    repository.save(user);
+}
+```
+
+</details>
+
+---
+
+<div align="center">
+
+[⬅️ 6.20 Autenticação simples, usuários em memória e configuração de segurança](./20-autenticacao.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [6.22 JWT ➡️](./22-jwt.md)
+
+</div>

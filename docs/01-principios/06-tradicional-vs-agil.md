@@ -1,42 +1,94 @@
-# Gerenciamento de projetos x Gestão Ágil
+# 1.6 · Gestão tradicional × gestão ágil
 
-## Projeto vs Processo
-<img src="./img/05.jpg" alt="" width="600">
+> **Em uma frase:** no modelo **tradicional (cascata)** você planeja tudo no início e entrega no fim; no modelo **ágil** você entrega em ciclos curtos (sprints), recebendo feedback e ajustando o plano a cada volta.
 
-<br>
+## 🧩 Projeto × processo
 
-## Modelo Ágil vs Modelo Tradicional
-<img src="./img/06.png" alt="" width="600">
+| | Projeto | Processo |
+| --- | --- | --- |
+| Duração | **Temporário**: tem início e fim definidos | **Contínuo**: se repete regularmente |
+| Resultado | **Único** (ex.: lançar um app) | **Replicável** (ex.: fechar a folha de pagamento) |
+| Exemplo em TI | Criar um sistema de agendamento | Fazer o deploy semanal do sistema |
 
-<br>
+## 🌊 Modelo tradicional (cascata / *waterfall*)
 
-### Modelo tradicional (Waterfall)
-<img src="./img/07.png" alt="" width="400">
+As etapas acontecem em sequência, e cada uma só começa quando a anterior termina:
 
-- Cada etapa posterior depende que a anterior tenha sido realizada.
-- Planejamento inicial feito por: escopo → custo → Cronograma.
-- O valor só passa a ser gerado na etapa de implementação.
+```mermaid
+flowchart LR
+    A[Levantamento] --> B[Análise] --> C[Projeto] --> D[Codificação] --> E[Testes] --> F[Implantação]
+```
 
-<br>
+- O planejamento é feito no início, fixando **escopo → custo → prazo**.
+- O cliente só vê valor **no final**, na implantação.
+- Mudanças no meio do caminho são caras, porque obrigam a refazer etapas.
 
-## Representação das etapas do modelo Ágil
-<img src="./img/08.jpg" alt="" width="600">
+> [!NOTE]
+> O cascata não é "errado": funciona bem quando os requisitos são estáveis e bem conhecidos (por exemplo, obras ou sistemas regulados). O problema é que, em software, os requisitos quase sempre mudam.
 
-- Modelo baseado em ciclos de entregas, chamados de sprints.
-- O valor é entregue durante o andamento do projeto de forma contínua ao fim de cada ciclo (Valor iterativo e incremental).
-- A cada entrega de valor é feito o Feedback da sprint.
+## 🔁 Modelo ágil
 
-<br>
+O trabalho é dividido em **ciclos curtos** (no Scrum, chamados de *sprints*, de 1 a 4 semanas). Cada ciclo passa por planejamento, desenvolvimento, testes e entrega de um pedaço **funcionando** do produto.
 
-#### Resumindo as vantagens do modelo de gestão Ágil ?
-- Flexível e que se adapte às mudanças
-- Colaborativa e que gere transparência
-- Voltado ao aprendizado
-- Entrega contínua de valor
+```mermaid
+flowchart LR
+    P[Planejar] --> D[Desenvolver] --> T[Testar] --> E[Entregar] --> F[Feedback] --> P
+```
 
-<br>
+- O valor é entregue **de forma iterativa e incremental**: o produto cresce a cada ciclo.
+- Ao fim de cada ciclo há **feedback** do cliente, e o plano é ajustado.
+- No ágil, normalmente **prazo e custo** ficam fixos, e o **escopo** se adapta.
 
-<br>
+## ⚖️ Comparando
 
-[Voltar a trabalho com equipes ágeis](/Arquivos/Conteudo/1%20-%20Principio%20de%20desenvolvimento%20de%20software/1.2%20Trabalho%20com%20equipes%20ageis.md)<br>
-[Voltar para inicio](/README.md)
+| | Tradicional (cascata) | Ágil |
+| --- | --- | --- |
+| Planejamento | Todo no início | Contínuo, a cada ciclo |
+| Entrega de valor | No fim do projeto | A cada ciclo |
+| Mudanças | Caras e evitadas | Esperadas e bem-vindas |
+| Contato com o cliente | Início e fim | Constante |
+| Risco de "entregar a coisa errada" | Alto | Baixo |
+
+## 📌 Resumindo
+
+- Projeto é temporário e único; processo é contínuo e repetível.
+- Cascata: etapas em sequência, valor só no final.
+- Ágil: ciclos curtos, entregas frequentes, feedback e adaptação.
+- Vantagens do ágil: flexibilidade, transparência, aprendizado e entrega contínua de valor.
+
+## 🏋️ Mão na massa
+
+**1.** Classifique como projeto ou processo: (a) migrar o banco de dados para a nuvem; (b) responder chamados de suporte todos os dias.
+
+<details>
+<summary>Ver resposta</summary>
+
+(a) **Projeto**: é temporário e tem um resultado único. (b) **Processo**: é contínuo e se repete.
+
+</details>
+
+**2.** Em qual modelo o cliente vê o software funcionando mais cedo? Por quê?
+
+<details>
+<summary>Ver resposta</summary>
+
+No **ágil**, porque cada ciclo entrega um incremento funcionando. No cascata, o cliente só vê o sistema na etapa de implantação.
+
+</details>
+
+**3.** Cite um cenário em que o modelo cascata ainda faz sentido.
+
+<details>
+<summary>Ver resposta</summary>
+
+Quando os requisitos são muito estáveis e bem definidos desde o início e mudanças são raras ou proibidas, como em projetos com regulamentação rígida ou contratos de escopo fechado.
+
+</details>
+
+---
+
+<div align="center">
+
+[⬅️ 1.5 O Manifesto Ágil](./05-manifesto-agil.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [1.7 XP (Extreme Programming) ➡️](./07-xp.md)
+
+</div>

@@ -1,74 +1,92 @@
-# Introdução de NoSQL no mercado
+# 5.2 · NoSQL: o que é e quando usar
 
-## Uso de NoSQL no mercado
-Os bancos de dados NoSQL (Not Only SQL) foram introduzidos no mercado para atender às necessidades de empresas que precisavam armazenar e processar grandes quantidades de dados de maneira mais escalável e flexível do que era possível com os bancos de dados relacionais tradicionais. A história dos bancos NoSQL remonta ao início dos anos 2000, quando grandes empresas de tecnologia, como Google, Amazon e Yahoo!, começaram a lidar com grandes quantidades de dados que não podiam ser eficientemente processados pelos bancos de dados relacionais tradicionais. Essas empresas desenvolveram suas próprias soluções de banco de dados NoSQL, como o Bigtable do Google e o Dynamo da Amazon, que permitiam o armazenamento e processamento de grandes quantidades de dados de maneira mais escalável e distribuída. Com o tempo, outras empresas e desenvolvedores começaram a adotar soluções NoSQL e desenvolveram suas próprias soluções. Hoje em dia, os bancos de dados NoSQL são amplamente utilizados em diversos setores, incluindo finanças, saúde, comércio eletrônico e mídia social. Existem vários tipos de bancos NoSQL, incluindo bancos de dados de documentos, bancos de dados de colunas, bancos de dados de chave-valor e bancos de dados de grafos. Cada tipo é otimizado para um conjunto específico de casos de uso e oferece recursos e funcionalidades exclusivos para atender às necessidades dos usuários.
+> **Em uma frase:** bancos **NoSQL** (*Not Only SQL*) guardam dados em formatos diferentes de tabelas (documentos, chave-valor, colunas, grafos), com esquema flexível e foco em **escalar horizontalmente**.
 
-Em 2009, o engenheiro da Amazon, Werner Vogels, publicou um artigo no blog da empresa sobre a "escalabilidade evolutiva", destacando a importância de bancos de dados distribuídos para lidar com grandes volumes de dados. Isso chamou a atenção de muitos desenvolvedores e empresas, que começaram a buscar alternativas ao modelo relacional tradicional. Outra iniciativa importante foi o lançamento do Apache Cassandra, um banco de dados distribuído de código aberto desenvolvido pela empresa de software Facebook em 2008. O Cassandra foi projetado para suportar a escala horizontal em grandes clusters de servidores e logo se tornou popular entre empresas de tecnologia que precisavam lidar com grandes volumes de dados. Com o tempo, outros bancos de dados NoSQL foram surgindo, cada um com suas próprias características e propósitos. Alguns exemplos incluem o MongoDB, o Redis, o Couchbase e o Amazon DynamoDB.
+## 📖 Como surgiram
 
-<br>
+No início dos anos 2000, empresas como Google e Amazon passaram a lidar com volumes de dados e acessos que os bancos relacionais tradicionais tinham dificuldade de atender em um só servidor. Surgiram soluções próprias e distribuídas:
 
-## Diferenças entre SQL e NoSQL
+- **2006:** o Google publica o artigo do **Bigtable**.
+- **2007:** a Amazon publica o artigo do **Dynamo** (escrito por Werner Vogels, CTO da empresa, e colegas).
+- **2008:** o Facebook cria o **Cassandra**, inspirado nos dois.
+- **2009:** é lançado o **MongoDB**, e o termo "NoSQL" se populariza.
 
-### Estrutura de dados:
+## 🗂️ Os quatro tipos principais
 
-#### Relacional
+| Tipo | Como guarda | Exemplos | Bom para |
+| --- | --- | --- | --- |
+| **Documento** | Documentos parecidos com JSON | MongoDB, Couchbase, Firestore | Catálogos, perfis, conteúdo |
+| **Chave-valor** | Um valor por chave, como um `Map` gigante | Redis, DynamoDB | Cache, sessões, carrinhos |
+| **Colunar** (*wide-column*) | Linhas com colunas flexíveis, agrupadas em famílias | Cassandra, HBase | Muita escrita, séries temporais, IoT |
+| **Grafo** | Nós e relacionamentos | Neo4j | Redes sociais, recomendações, detecção de fraude |
 
-<img src="./img/01.jpg" alt="" width="250">
+## ⚖️ SQL × NoSQL
 
-- Banco de dados relacionais são organizados em tabelas, com colunas e linhas que representam campos e registros, respectivamente.
+| | Relacional (SQL) | NoSQL |
+| --- | --- | --- |
+| Estrutura | Tabelas com linhas e colunas | Documentos, chave-valor, colunas ou grafos |
+| Esquema | Rígido, definido antes | Flexível; pode variar entre registros |
+| Consultas | SQL, com `JOIN`s poderosos | API ou linguagem própria; *joins* limitados |
+| Escalabilidade típica | **Vertical** (servidor maior) | **Horizontal** (mais servidores) |
+| Transações | ACID completas | Variam; muitos priorizam disponibilidade |
+| Melhor para | Dados estruturados, relações complexas, consistência forte | Grandes volumes, esquema variável, alta escala |
 
-#### No SQL
+> [!NOTE]
+> Essa divisão é uma tendência, não uma regra: bancos relacionais modernos também escalam horizontalmente (com réplicas e particionamento) e suportam JSON; vários NoSQL (como MongoDB e DynamoDB) já oferecem transações ACID.
 
-<img src="./img/02.jpg" alt="" width="250">
+> [!TIP]
+> Não existe "o melhor banco". Muitos sistemas usam os dois: **PostgreSQL** para pedidos e pagamentos (consistência), **Redis** para cache e **MongoDB** ou **Elasticsearch** para catálogo e busca. Isso se chama **persistência poliglota**.
 
-- Bancos de dados NoSQL geralmente não possuem uma estrutura de dados fixa, permitindo que os dados sejam armazenados em diferentes formatos, como documentos, pares chave-valor ou grafos.
+### O teorema CAP
 
-<br>
+Em um sistema distribuído, quando há uma falha de rede entre servidores (*Partition*, partição), é preciso escolher entre **consistência** (*Consistency*: todos veem o mesmo dado) e **disponibilidade** (*Availability*: todos recebem resposta). As iniciais formam o nome **CAP**. Bancos NoSQL fazem escolhas diferentes nesse equilíbrio.
 
-### Esquema
+## 🔗 Para conhecer
 
-#### Relacional
-- Bancos de dados relacionais têm um esquema estrito, que define os tipos de dados e restrições que podem ser aplicados em cada coluna.
+- [Neo4j Sandbox](https://sandbox.neo4j.com/) (grafos)
+- [Apache Cassandra](https://cassandra.apache.org/) (colunar)
+- [Redis](https://redis.io/) (chave-valor em memória)
+- [MongoDB](https://www.mongodb.com/) (documentos, próximas aulas)
 
-#### No SQL
-- Bancos de dados NoSQL, em contraste, geralmente têm um esquema mais flexível e dinâmico, permitindo que os dados sejam adicionados sem a necessidade de especificar um esquema rígido.
+## 📌 Resumindo
 
-<br>
+- NoSQL = modelos além das tabelas: documento, chave-valor, colunar e grafo.
+- Esquema flexível e foco em escala horizontal.
+- SQL e NoSQL se complementam; escolha pelo problema.
 
-### Consulta
-#### Relacional
-- Bancos de dados relacionais são projetados para consultas complexas e transações seguras, usando a linguagem SQL (Structured Query Language).
+## 🏋️ Mão na massa
 
-#### No SQL
-- Bancos de dados NoSQL geralmente não suportam SQL, e as consultas são feitas usando outras linguagens ou APIs específicas.
+**1.** Que tipo de banco NoSQL você usaria para: (a) cache de sessões de usuário; (b) "amigos de amigos" numa rede social; (c) catálogo de produtos com atributos diferentes por categoria?
 
-<br>
+<details>
+<summary>Ver resposta</summary>
 
-### Escalabilidade
+(a) **Chave-valor** (Redis); (b) **Grafo** (Neo4j); (c) **Documento** (MongoDB).
 
-#### Relacional
-- Bancos de dados relacionais são escalonados verticalmente, o que significa que as atualizações de hardware são necessárias para aumentar a capacidade de armazenamento e processamento.
+</details>
 
-#### No SQL
-- Bancos de dados NoSQL, por outro lado, são escalonados horizontalmente, permitindo que eles sejam distribuídos por vários servidores para lidar com grandes quantidades de dados e tráfego.
+**2.** Um sistema bancário de transferências deve usar um banco que priorize o quê?
 
-<br>
+<details>
+<summary>Ver resposta</summary>
 
-### Uso
+**Consistência** e transações **ACID**: o saldo não pode ficar errado. Por isso o núcleo de sistemas bancários costuma usar bancos relacionais.
 
-#### Relacional
-- Bancos de dados relacionais são amplamente utilizados em aplicações tradicionais de negócios, como sistemas de gerenciamento de inventário, sistemas de gerenciamento de pedidos e sistemas de gerenciamento de recursos humanos.
+</details>
 
-#### No SQL
-- Bancos de dados NoSQL são frequentemente usados em aplicativos web e móveis, como gerenciamento de conteúdo, análise de big data, redes sociais e jogos online.
+**3.** O que significa escalar horizontalmente?
 
-Em resumo, os bancos de dados relacionais são adequados para aplicações com estruturas de dados previsíveis e consultas complexas, enquanto os bancos de dados NoSQL são ideais para aplicações com dados não estruturados ou semiestruturados, grande volume de dados e alta escalabilidade.
+<details>
+<summary>Ver resposta</summary>
 
-<br>
+Aumentar a capacidade **adicionando mais servidores** e distribuindo os dados entre eles, em vez de trocar por um servidor mais potente (escala vertical).
 
-<br>
+</details>
 
-<br>
+---
 
-[Voltar a Introdução ao MongoDB](/Arquivos/Conteudo/5%20-%20Trabalhando%20com%20banco%20de%20dados%20sql%20e%20nosql/5.2%20Introducao%20ao%20mongodb.md)<br>
-[Voltar ao inicio](/README.md)
+<div align="center">
+
+[⬅️ 5.1 Primeiros passos com SQL e bancos relacionais](./01-sql.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [5.3 Conceitos e instalação ➡️](./03-mongodb.md)
+
+</div>

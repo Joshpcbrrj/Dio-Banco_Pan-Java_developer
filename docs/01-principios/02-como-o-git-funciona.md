@@ -1,66 +1,99 @@
-# Como o Git funciona
+# 1.2 · Como o Git funciona por dentro
 
-## Sha1 (Secure hash algorithm)
+> **Em uma frase:** o Git guarda o projeto como uma coleção de **objetos** (blobs, trees e commits), e cada objeto é identificado por um **hash**: uma "impressão digital" calculada a partir do próprio conteúdo.
 
-No contexto do GitHub, o SHA-1 é amplamente utilizado para identificar commits e versões específicas em um repositório Git. Cada commit gerado pelo Git possui um identificador único de 40 caracteres, que é o resultado do cálculo do SHA-1 sobre os dados do commit.
+## 🔑 Hash: a impressão digital do conteúdo
 
-O SHA-1 no GitHub desempenha um papel crucial na integridade e na rastreabilidade dos commits. Cada commit possui um hash SHA-1 exclusivo que representa seu estado específico do projeto em determinado momento. Isso permite que os desenvolvedores identifiquem com precisão um commit específico e o referenciem em operações como ramificação, mesclagem e reverte.
+Um **hash** é um número gerado a partir de um conteúdo qualquer. Ele tem três propriedades importantes:
 
-Quando você visita um repositório no GitHub, pode ver os commits e suas mensagens de commit associadas. O hash SHA-1 é exibido junto a cada commit, permitindo que você identifique e se refira a um commit específico ao longo da história do projeto. Além disso, ao explorar um repositório no GitHub, você pode acessar diferentes versões do código-fonte por meio de branches, tags e commits, todos identificados por seus respectivos hashes SHA-1.
+1. **O mesmo conteúdo sempre gera o mesmo hash.**
+2. **Qualquer mudança mínima** (uma vírgula!) gera um hash completamente diferente.
+3. **Não dá para voltar** do hash para o conteúdo original.
 
-É importante ressaltar que o SHA-1 é usado principalmente para identificação e rastreabilidade, não para fins de segurança criptográfica. Como mencionado anteriormente, o SHA-1 foi considerado inseguro para aplicações criptográficas desde 2005 devido a vulnerabilidades descobertas. Portanto, embora o SHA-1 seja usado para identificar commits no GitHub, não deve ser utilizado para fins críticos de segurança.
+O Git usa o algoritmo **SHA-1**, que gera um código de **40 caracteres hexadecimais**, como `a94a8fe5ccb19ba61c4c0873d391e987982fbbd3`. Na prática, você costuma ver só os 7 primeiros (`a94a8fe`).
 
-### Resumindo:
-- Se trata de um algoritmo de encriptação. Esse conjunto criptográfico foi criado pela NSA (agencia de segurança nacional americana).
-- A encriptação gera um conjunto identificador de 40 dígitos.
+> [!NOTE]
+> SHA-1 é uma **função de hash**, não uma criptografia: ele não "esconde" nada, só gera uma identificação. Como hoje já se sabe forjar colisões de SHA-1 (desde 2017), o Git passou a proteger-se contra esse ataque e ganhou suporte a repositórios com **SHA-256**. Para o dia a dia, nada muda.
 
-### Encriptando arquivo com SHA1
+### Experimente
+
+Você pode calcular o hash de um texto com o próprio Git:
 
 ```bash
-# Vamos abrir o git bash na pasta onde esta o arquivo de texto e fazer:
-openssl sha1 nome_do_arquivo_de_texto
+echo "Olá mundo" | git hash-object --stdin
+# a cada vez que rodar, o resultado é o mesmo
 
-#Obs
-#Após a execução do comando o terminal irá retornar a chave criptografica do arquivo.
-#Essa chave será modificada cada vez que o arquivo sofrer alguma modificação.
+echo "Olá mundo!" | git hash-object --stdin
+# basta um "!" a mais e o hash muda totalmente
 ```
-<br> 
 
-## Objetos internos do Git
+## 🧱 Os três objetos principais
 
-### Hierarquia completa:
+| Objeto | O que guarda | Analogia |
+| --- | --- | --- |
+| **Blob** | O **conteúdo** de um arquivo (sem nome, sem data). | O texto de uma página. |
+| **Tree** | Uma **pasta**: lista de nomes de arquivos/subpastas e o hash de cada um. | O índice de um capítulo. |
+| **Commit** | Uma **foto do projeto**: aponta para a tree principal, para o commit anterior (pai), autor, data e mensagem. | Uma página do diário do projeto. |
 
-<img src="./img/16.jpg" alt="" width="500">
+```mermaid
+flowchart LR
+    C2["commit 98ca9<br/>autor, data, mensagem"] --> C1["commit 34ac2<br/>(commit pai)"]
+    C2 --> T["tree 92ec2<br/>(pasta raiz)"]
+    T --> B1["blob 5b1d3<br/>README.md"]
+    T --> B2["blob 911e7<br/>LICENSE"]
+    T --> T2["tree 3c4e9<br/>pasta src/"]
+    T2 --> B3["blob cba0a<br/>Main.java"]
+```
 
-### Blob
+Repare em algo esperto: se um arquivo **não mudou** entre dois commits, o novo commit simplesmente aponta para o **mesmo blob** que já existia. Por isso o Git ocupa pouco espaço mesmo com milhares de versões.
 
-<img src="./img/17.jpg" alt="" width="250">
+## 🔗 Por que isso garante a integridade?
 
-- **Blob** é um objeto que representa o conteúdo de um arquivo específico em um repositório. Ele armazena os dados binários ou de texto do arquivo, mas não contém informações sobre o nome do arquivo, a localização ou o histórico de alterações. O blob é identificado pelo seu hash SHA-1 único e é usado pelo Git para rastrear e gerenciar o conteúdo dos arquivos em um repositório.
+O hash de um commit é calculado a partir de tudo o que ele contém, **inclusive o hash do commit anterior**. Então, se alguém alterasse um arquivo antigo, o hash daquele blob mudaria, o da tree mudaria, o do commit mudaria... e todos os commits seguintes também. Qualquer adulteração fica evidente.
 
-### Trees
+> [!TIP]
+> Quer espiar os objetos de verdade? Em qualquer repositório, rode `git cat-file -p HEAD` para ver o último commit e `git cat-file -p <hash>` para abrir qualquer objeto.
 
-<img src="./img/18.jpg" alt="" width="250">
+## 📌 Resumindo
 
-- **Trees** são objetos que representam a estrutura de diretórios de um repositório. Uma "tree" contém informações sobre os arquivos e diretórios presentes em um determinado ponto da história do projeto. Ela registra os nomes dos arquivos, os modos de permissão e os hashes SHA-1 dos blobs correspondentes aos conteúdos dos arquivos. As "trees" também podem referenciar outras "trees", formando uma estrutura hierárquica que reflete a organização dos diretórios no repositório. As "trees" são usadas pelo Git para manter o controle e a integridade dos diretórios e arquivos em um repositório.
+- O Git identifica tudo por **hashes SHA-1** de 40 caracteres, calculados a partir do conteúdo.
+- **Blob** = conteúdo de um arquivo; **tree** = pasta; **commit** = foto do projeto + metadados + ponteiro para o commit pai.
+- Arquivos iguais reaproveitam o mesmo blob, por isso o Git é leve.
+- Como cada commit depende do anterior, o histórico é à prova de adulteração.
 
-### Commits
+## 🏋️ Mão na massa
 
-<img src="./img/19.jpg" alt="" width="250">
+**1.** Rode `echo "teste" | git hash-object --stdin` duas vezes. Os resultados são iguais? E se trocar para `"Teste"`?
 
-- **Commit** no Git é uma operação que registra uma nova versão dos arquivos em um repositório. Ele representa um marco na história do projeto, capturando as alterações feitas nos arquivos em um determinado momento. Um "commit" inclui informações como o autor, a data e a mensagem descritiva das alterações realizadas. Além disso, cada "commit" possui um hash SHA-1 único que o identifica de forma exclusiva. Os "commits" são usados para rastrear e gerenciar o histórico do projeto, permitindo que os desenvolvedores acompanhem as alterações ao longo do tempo, comparem versões anteriores e restaurem versões anteriores, se necessário. O Git facilita a criação de ramos (branches) e a mesclagem (merge) de "commits", permitindo o trabalho paralelo em diferentes recursos e a integração das alterações em uma versão principal do projeto.
+<details>
+<summary>Ver resposta</summary>
 
-<br> 
+As duas execuções com `"teste"` geram **exatamente o mesmo hash**, porque o conteúdo é o mesmo. Com `"Teste"` (T maiúsculo), o hash muda completamente: qualquer diferença no conteúdo gera outro hash.
 
-## Fluxo do git
+</details>
 
-<img src="./img/20.jpg" alt="" width="900">
+**2.** Qual objeto do Git guarda o **nome** de um arquivo: o blob ou a tree?
 
-- O __fluxo__ do Git envolve a criação de blobs que representam o conteúdo dos arquivos, que são organizados em árvores que registram a estrutura de diretórios. Os commits são então criados para registrar as alterações feitas nos arquivos e referenciam as árvores correspondentes. Dessa forma, os blobs armazenam os dados dos arquivos, as árvores organizam os blobs em diretórios e os commits registram as alterações nos arquivos, formando um histórico completo e rastreável do projeto.
+<details>
+<summary>Ver resposta</summary>
 
-<br>
+A **tree**. O blob guarda apenas o conteúdo; o nome do arquivo (e a permissão) ficam registrados na tree que representa a pasta onde ele está.
 
-<br>
+</details>
 
-[Voltar a introdução ao Git](/Arquivos/Conteudo/1%20-%20Principio%20de%20desenvolvimento%20de%20software/1.1%20Introducao%20ao%20git.md)<br>
-[Voltar para inicio](/README.md)
+**3.** Você fez 10 commits e o arquivo `LICENSE` nunca mudou. Quantos blobs desse arquivo o Git guardou?
+
+<details>
+<summary>Ver resposta</summary>
+
+**Um só.** Como o conteúdo é sempre igual, o hash é sempre o mesmo, e todas as trees apontam para esse único blob.
+
+</details>
+
+---
+
+<div align="center">
+
+[⬅️ 1.1 Git e GitHub](./01-git-e-github.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [1.3 Configurando o Git e fazendo o primeiro commit ➡️](./03-primeiro-commit.md)
+
+</div>

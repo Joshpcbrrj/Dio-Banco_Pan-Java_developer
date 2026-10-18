@@ -1,61 +1,139 @@
-# O que são testes unitários
+# 4.20 · Testes unitários e JUnit
 
-Os testes unitários são uma prática comum de desenvolvimento de software que consiste em escrever testes automatizados para validar a funcionalidade de pequenas partes do código, chamadas de unidades. Esses testes são escritos pelos próprios desenvolvedores e têm como objetivo garantir que as unidades funcionem de acordo com as especificações, mesmo após alterações no código. Os testes unitários permitem a detecção precoce de erros e falhas, facilitando a correção e minimizando impactos em outras partes do sistema. Eles também ajudam a documentar o código, já que os testes descrevem a funcionalidade esperada de cada unidade.
+> **Em uma frase:** um teste unitário é um pequeno programa que verifica, automaticamente, se **uma unidade** do código (geralmente um método) faz o que deveria; o **JUnit** é o framework padrão para escrevê-los em Java.
 
-- O uso de ferramentas de automação de testes, como JUnit e TestNG, facilita a implementação e execução dos testes unitários, bem como a geração de relatórios e métricas de cobertura de testes.
-- Em resumo, os testes unitários são uma prática essencial para garantir a qualidade do software e reduzir os riscos de erros e falhas em produção.
+## 🤔 Por que testar?
 
-<br>
+- Detectar erros **cedo**, antes de chegarem ao usuário.
+- Mudar o código com **segurança**: se algo quebrar, um teste avisa na hora.
+- **Documentar** o comportamento esperado: o teste mostra como o método deve ser usado.
+- Rodar centenas de verificações em segundos, a cada alteração.
 
-### Sobre JUnit
+```mermaid
+flowchart TB
+    E2E["Testes ponta a ponta<br/>(poucos, lentos)"]
+    I["Testes de integração<br/>(alguns)"]
+    U["Testes unitários<br/>(muitos, rápidos)"]
+    E2E --- I --- U
+```
 
-O JUnit é um framework open source de testes unitários para a linguagem de programação Java. Ele foi criado por Erich Gamma e Kent Beck em meados dos anos 1990, enquanto trabalhavam em um projeto de desenvolvimento de um ambiente integrado de desenvolvimento (IDE) chamado Smalltalk no ambiente Java. Gamma e Beck perceberam a necessidade de ter uma maneira fácil e padronizada de testar o código Java. Eles criaram o JUnit como uma estrutura de teste simples e fácil de usar, que se tornou popular rapidamente entre os desenvolvedores Java. Desde sua criação, o JUnit evoluiu muito e hoje é uma das ferramentas de teste mais utilizadas pelos desenvolvedores Java. Ele é compatível com várias IDEs e ambientes de desenvolvimento, e continua sendo uma ferramenta valiosa para garantir a qualidade e a confiabilidade do código Java.
+Essa é a famosa **pirâmide de testes**: a base, com mais testes, é formada pelos unitários, que são rápidos e baratos.
 
-<details>
-<summary>Exemplo de teste em código</summary>
+## ☕ Sobre o JUnit
+
+O JUnit foi criado em **1997 por Kent Beck e Erich Gamma**, inspirado no SUnit, um framework de testes para Smalltalk que Beck havia escrito antes. A geração atual é o **JUnit 5 (Jupiter)**, e o **JUnit 6** (2025) mantém a mesma forma de escrever testes. Tudo o que você vê aqui funciona nas duas versões.
+
+## 🧪 Seu primeiro teste
+
+Código a ser testado (`src/main/java`):
 
 ```java
-//Classe Pessoa
-public Pessoa(String nome, int idade) {
-    this.nome = nome;
-    this.idade = idade;
-}
+public class Pessoa {
+    private final String nome;
+    private final int idade;
 
-public String getNome() {
-    return nome;
-}
+    public Pessoa(String nome, int idade) {
+        this.nome = nome;
+        this.idade = idade;
+    }
 
-public int getIdade() {
-    return idade;
-}
-
-public boolean ehMaiorDeIdade() {
-    return idade >= 18;
+    public boolean ehMaiorDeIdade() {
+        return idade >= 18;
+    }
 }
 ```
 
+Teste (`src/test/java`, mesmo pacote):
+
 ```java
-//Teste do metódo da classe pessoa
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class PessoaTest {
+class PessoaTest {
 
     @Test
-    public void testMaioridade() {
+    void deveSerMaiorDeIdadeCom25Anos() {
         Pessoa pessoa = new Pessoa("João", 25);
         assertTrue(pessoa.ehMaiorDeIdade());
+    }
+
+    @Test
+    void naoDeveSerMaiorDeIdadeCom17Anos() {
+        Pessoa pessoa = new Pessoa("Ana", 17);
+        assertFalse(pessoa.ehMaiorDeIdade());
+    }
+}
+```
+
+Dependência no `pom.xml`:
+
+```xml
+<dependency>
+    <groupId>org.junit.jupiter</groupId>
+    <artifactId>junit-jupiter</artifactId>
+    <version>5.13.4</version>
+    <scope>test</scope>
+</dependency>
+```
+
+Rode com `mvn test` ou pelo ▶️ ao lado da classe de teste na IDE. Verde ✅ passou; vermelho ❌ falhou.
+
+> [!TIP]
+> Teste os **limites**: para `idade >= 18`, os casos mais importantes são 17 e 18. É nas bordas que os bugs se escondem.
+
+## 📌 Resumindo
+
+- Teste unitário verifica uma pequena parte do código, de forma automática e rápida.
+- JUnit: métodos anotados com `@Test`, verificações com `assertTrue`, `assertEquals`...
+- Testes ficam em `src/test/java`; rode com `mvn test`.
+- Teste os casos de borda.
+
+## 🏋️ Mão na massa
+
+**1.** Escreva testes para um método `Calculadora.somar(int a, int b)`.
+
+<details>
+<summary>Ver resposta</summary>
+
+```java
+class CalculadoraTest {
+
+    @Test
+    void deveSomarDoisPositivos() {
+        assertEquals(5, Calculadora.somar(2, 3));
+    }
+
+    @Test
+    void deveSomarComNegativo() {
+        assertEquals(-1, Calculadora.somar(2, -3));
     }
 }
 ```
 
 </details>
 
-<br>
+**2.** Quais idades você testaria para um método `podeVotar(int idade)` que retorna `true` a partir dos 16 anos?
 
-<br>
+<details>
+<summary>Ver resposta</summary>
 
-<br>
+Os limites: **15** (`false`) e **16** (`true`). Também vale um valor comum, como 30, e um caso inválido, como idade negativa, para decidir o comportamento esperado (lançar exceção, por exemplo).
 
-[Voltar a Testes unitários com JUnit](/Arquivos/Conteudo/4%20-%20Programa%C3%A7%C3%A3o%20orientada%20a%20objetos/4.6%20Teste%20unitarios%20com%20junit.md)<br>
-[Voltar ao inicio](/README.md)
+</details>
+
+**3.** No projeto [`projetos/04-testes-junit`](../../projetos/04-testes-junit/), rode os testes com `mvn test`. Quantos passaram?
+
+<details>
+<summary>Ver resposta</summary>
+
+O resumo aparece no final da saída, no formato `Tests run: X, Failures: 0, Errors: 0, Skipped: 0`. Se aparecer `BUILD SUCCESS`, todos passaram.
+
+</details>
+
+---
+
+<div align="center">
+
+[⬅️ 4.19 Plugins do Maven](./19-maven-plugins.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [4.21 JUnit a fundo ➡️](./21-junit-recursos.md)
+
+</div>

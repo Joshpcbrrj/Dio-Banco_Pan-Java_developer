@@ -1,124 +1,92 @@
-# Set / HashSet
+# 2.28 · Conjuntos: a interface `Set`
 
-## Set
+> **Em uma frase:** um `Set` é uma coleção que **não aceita elementos repetidos** e não tem índice; o `HashSet` não garante ordem, o `LinkedHashSet` mantém a ordem de inserção e o `TreeSet` mantém tudo ordenado.
 
-A `interface Set` em Java é uma das interfaces de coleção de dados fornecidas pela plataforma Java. Ela estende a interface `Collection` e define um conjunto não ordenado de elementos únicos. Isso significa que não há elementos duplicados em um conjunto e não há garantia da ordem em que os elementos são armazenados. A interface `Set` fornece uma série de métodos para trabalhar com conjuntos, incluindo:
+## 🧰 Principais métodos
 
-- **`add(E element)`**: adiciona o elemento especificado ao conjunto se ele ainda não estiver presente.
-- **`remove(Object o)`**: remove o elemento especificado do conjunto, se presente.
-- **`contains(Object o)`**: retorna **`true`** se o conjunto contiver o elemento especificado.
-- **`isEmpty()`**: retorna **`true`** se o conjunto não contiver nenhum elemento.
-- **`size()`**: retorna o número de elementos no conjunto.
-- **`clear()`**: remove todos os elementos do conjunto.
-- **`iterator()`**: retorna um iterador sobre os elementos no conjunto.
+`add(e)` (devolve `false` se já existia), `remove(o)`, `contains(o)`, `size()`, `isEmpty()`, `clear()` e `iterator()`.
 
-As implementações da interface `Set` em Java incluem `HashSet`, `TreeSet` e `LinkedHashSet`. O `HashSet` é a implementação mais rápida e eficiente, mas não garante a ordem dos elementos. O `TreeSet` mantém os elementos em ordem natural ou de acordo com um Comparator especificado, enquanto o `LinkedHashSet` mantém a ordem de inserção dos elementos. Os conjuntos são frequentemente usados para remover elementos duplicados de uma lista, verificar a presença de um elemento em uma coleção ou fazer operações de conjunto como união, interseção e diferença.
+## 🏗️ Implementações
 
-### Falando mais de HashSet
-`HashSet` é uma classe em Java que implementa a interface `Set`. É uma coleção que não permite elementos duplicados e não tem ordem definida para os elementos. Em outras palavras, ele armazena um conjunto de elementos únicos em uma ordem aleatória. Os elementos armazenados em um `HashSet` são acessados por meio de seu valor e não por um índice específico. Uma das principais vantagens do `HashSet` é que ele possui um tempo de acesso constante (O(1)) para a maioria das operações, o que o torna uma escolha eficiente para conjuntos de elementos grandes. No entanto, o `HashSet` não garante a ordem em que os elementos são armazenados. Se a ordem dos elementos é importante, é necessário usar uma outra classe, como o `LinkedHashSet`, que mantém a ordem em que os elementos foram adicionados à coleção.
-
-<br>
-
-### Mostrando em código:
-<details>
-<summary>Código</summary>
+| Classe | Ordem dos elementos | Velocidade | Observação |
+| --- | --- | --- | --- |
+| **`HashSet`** | Nenhuma garantida | A mais rápida (O(1) em média) | Usa `hashCode` + `equals` |
+| **`LinkedHashSet`** | Ordem de **inserção** | Quase tão rápida | Usa uma lista encadeada por dentro |
+| **`TreeSet`** | **Ordenada** (natural ou por `Comparator`) | O(log n) | Usa árvore rubro-negra; exige `Comparable` ou `Comparator`; não aceita `null` |
 
 ```java
-//Class main
-package com.projeto.Set;
+Set<String> marcas = new HashSet<>(List.of("Ford", "Toyota", "Nissan", "Audi"));
+marcas.add("Ford");                   // ignorado: já existe
+System.out.println(marcas);           // ordem imprevisível
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.TreeSet;
+Set<String> ordenadas = new TreeSet<>(marcas);
+System.out.println(ordenadas);        // [Audi, Ford, Nissan, Toyota]
+```
 
-public class Main {
-    public static void main(String[] args) {
-        //Criando um hashSet de carros "conjunto_de_carros_hashSet" (sem ordenamento)
-        Set<Carro> conjunto_de_carros_hashSet = new HashSet<>();
-        //Método add (Adicionando elemento no "conjunto_de_carros_hashSet"
-        conjunto_de_carros_hashSet.add(new Carro("Ford"));
-        conjunto_de_carros_hashSet.add(new Carro("Toyota"));
-        conjunto_de_carros_hashSet.add(new Carro("Nissan"));
-        conjunto_de_carros_hashSet.add(new Carro("Hyundai"));
-        conjunto_de_carros_hashSet.add(new Carro("Chevrolet"));
-        conjunto_de_carros_hashSet.add(new Carro("Audi"));
-        //Mostdando "conjunto_de_carros_hashSet" na tela (Veremos sem ordem de adição)
-        System.out.println("Conjunto hashSet sem ordem específica: " + conjunto_de_carros_hashSet);
+Para colocar seus próprios objetos num `TreeSet`, a classe precisa implementar `Comparable`:
 
-        //Criando um treeSet de carros "conjunto_de_carros_treeSet" (Exige método comparaTo)
-        Set <Carro> conjunto_de_carros_treeSet = new TreeSet<>();
-        //Método add (Adicionando elemento no "conjunto_de_carros_treeSet"
-        conjunto_de_carros_treeSet.add(new Carro("Ford"));
-        conjunto_de_carros_treeSet.add(new Carro("Toyota"));
-        conjunto_de_carros_treeSet.add(new Carro("honda"));
-        conjunto_de_carros_treeSet.add(new Carro("Volkswagen"));
-        conjunto_de_carros_treeSet.add(new Carro("Chevrolet"));
-        conjunto_de_carros_treeSet.add(new Carro("BMW"));
-        //Mostdando "conjunto_de_carros_treeSet" na tela (Organizado por ordem alfabética)
-        System.out.println("Conjunto treehSet ordem alfabética': " +conjunto_de_carros_treeSet);
+```java
+public class Carro implements Comparable<Carro> {
+    // ... atributo marca, equals e hashCode (aula 2.24)
 
+    @Override
+    public int compareTo(Carro outro) {
+        return this.marca.compareTo(outro.marca);   // ordem alfabética
     }
 }
 ```
 
+> [!TIP]
+> Um uso clássico do `Set` é **remover duplicados** de uma lista: `new LinkedHashSet<>(lista)` tira os repetidos mantendo a ordem original.
+
+> [!WARNING]
+> Num `HashSet`, os objetos **precisam** ter `equals` e `hashCode` corretos (aula [2.24](./24-equals-e-hashcode.md)); senão os "repetidos" entram mesmo assim.
+
+Exercícios e operações de conjuntos (união, interseção e diferença) estão na aula [4.9 · Set](../04-poo/09-set.md).
+
+## 📌 Resumindo
+
+- `Set` não aceita repetidos e não tem índice.
+- `HashSet` (sem ordem), `LinkedHashSet` (ordem de inserção), `TreeSet` (ordenado).
+- `TreeSet` exige `Comparable`/`Comparator`; `HashSet` exige `equals`/`hashCode`.
+
+## 🏋️ Mão na massa
+
+**1.** Remova os nomes repetidos de `["Ana", "Bia", "Ana", "Caio", "Bia"]` mantendo a ordem.
+
+<details>
+<summary>Ver resposta</summary>
+
 ```java
-//Class Carro
-package com.projeto.Set;
-
-import java.util.Objects;
-
-public class Carro implements Comparable<Carro>{
-    String marca;
-
-    //Construtor
-    public Carro(String marca) {
-        this.marca = marca;
-    }
-
-    //Getters e setters
-    public String getMarca() {
-        return marca;
-    }
-    public void setMarca(String marca) {
-        this.marca = marca;
-    }
-
-    //Método "Equals"
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Carro carro = (Carro) o;
-        return Objects.equals(marca, carro.marca);
-    }
-    //Método "hashCode"
-    @Override
-    public int hashCode() {
-        return Objects.hash(marca);
-    }
-    //Método "toString"
-    @Override
-    public String toString() {
-        return "Carro{" +
-                "marca='" + marca + '\'' +
-                '}';
-    }
-    //Método "compareTo" implementado para usar o "treeSet" (Estruturas de arvores exigem)
-    @Override
-    public int compareTo(Carro o) {
-      return this.getMarca().compareTo(o.getMarca());
-    }
-}
+List<String> nomes = List.of("Ana", "Bia", "Ana", "Caio", "Bia");
+Set<String> unicos = new LinkedHashSet<>(nomes);
+System.out.println(unicos);   // [Ana, Bia, Caio]
 ```
 
 </details>
 
-<br>
+**2.** O que `set.add("Ford")` devolve se o `"Ford"` já estiver no conjunto?
 
-<br>
+<details>
+<summary>Ver resposta</summary>
 
-<br>
+`false`, indicando que nada foi adicionado.
 
-[Voltar a Principais implementações das estruturas de dados em Java](/Arquivos/Conteudo/2%20-%20Conhecendo%20a%20linguagem%20Java/2.5.8%20Principais%20implementacoes.md)<br>
-[Voltar a Estrutura de dados em Java](/Arquivos/Conteudo/2%20-%20Conhecendo%20a%20linguagem%20Java/2.5%20Estrutura%20de%20dados%20em%20java.md)<br>
-[Voltar para inicio](/README.md)
+</details>
+
+**3.** Qual `Set` usar para mostrar uma lista de palavras em ordem alfabética, sem repetição?
+
+<details>
+<summary>Ver resposta</summary>
+
+`TreeSet`, que mantém os elementos ordenados (para `String`, a ordem natural é a alfabética) e não aceita repetidos.
+
+</details>
+
+---
+
+<div align="center">
+
+[⬅️ 2.27 Listas prontas](./27-list.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [2.29 Mapas ➡️](./29-map.md)
+
+</div>

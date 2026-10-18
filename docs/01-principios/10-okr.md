@@ -1,25 +1,69 @@
-# OKR 
+# 1.10 · OKR (Objetivos e Resultados-Chave)
 
-## Pontos importantes!
+> **Em uma frase:** OKR é um jeito de definir metas com um **objetivo** inspirador (aonde queremos chegar) e alguns **resultados-chave** mensuráveis (como saberemos que chegamos).
 
-- OKR é uma sigla para Objectives and Key Results, ou Objetivos e Resultados-chave, em português. É uma metodologia utilizada para definir e acompanhar metas e objetivos em empresas e organizações, que tem como objetivo aumentar o foco e a efetividade na busca por resultados.
-- A metodologia OKR foi criada por Andrew Grove, ex-CEO da Intel, na década de 1970, e posteriormente popularizada por John Doerr, investidor e ex-executivo do Google. O objetivo inicial era definir e monitorar metas em empresas de tecnologia, mas hoje em dia é utilizada em diversos setores e tipos de negócio.
-- Os OKRs são definidos em ciclos, geralmente trimestrais, e consistem em um conjunto de objetivos de alto nível, que devem ser específicos, mensuráveis, atingíveis, relevantes e temporais (SMART), e um conjunto de resultados-chave que indicam o progresso na direção dos objetivos. Os resultados-chave devem ser definidos de forma quantitativa e objetiva, permitindo que o desempenho seja monitorado e comparado com as metas estabelecidas.
-  
-### Ilustrando pontos de OKR:
+## 📖 Origem
 
-<img src="./img/14.png" alt="" width="800">
+A metodologia foi criada por **Andy Grove** na **Intel**, nos anos 1970, e popularizada por **John Doerr**, que a levou ao Google em 1999. Hoje é usada por empresas de todos os tamanhos.
 
-> **OBS:** Os resultados-chave, chamados de KRs, são as metas que determinam o atingimento do objetivo na metodologia OKR.
-> - Baseada em indicadores-chave de desempenho (KPIs)
-> - Quantitativas
-> - Smart (Específicas, mensuráveis, atingíveis, relevantes e temporais).
->
->> Em média cada objetivo tem de 2 a 5 metas chave.
+## 🎯 Como funciona
 
-<br>
+| Parte | Característica | Exemplo |
+| --- | --- | --- |
+| **Objetivo (O)** | Qualitativo, claro e inspirador | "Tornar nosso app a forma preferida de abrir conta" |
+| **Resultados-chave (KRs)** | Quantitativos, mensuráveis e com prazo; geralmente 2 a 5 por objetivo | "Reduzir o tempo de abertura de conta de 15 para 5 minutos"<br/>"Atingir nota 4,7 na loja de aplicativos"<br/>"Aumentar a conversão do cadastro de 40% para 60%" |
 
-<br>
+- Os OKRs costumam ser definidos em **ciclos trimestrais**.
+- Os KRs medem **resultados**, não tarefas. "Lançar a nova tela" é uma tarefa; "reduzir o abandono do cadastro em 20%" é um resultado.
+- Bons KRs seguem a ideia **SMART**: específicos, mensuráveis, atingíveis, relevantes e com prazo.
 
-[Voltar a trabalho com equipes ágeis](/Arquivos/Conteudo/1%20-%20Principio%20de%20desenvolvimento%20de%20software/1.2%20Trabalho%20com%20equipes%20ageis.md)<br>
-[Voltar para inicio](/README.md)
+> [!TIP]
+> No Google, atingir cerca de **70%** de um OKR ambicioso já é considerado um bom resultado. A meta é puxar o time para cima, não punir quem não bateu 100%.
+
+### KPI × KR
+
+- **KPI** (indicador-chave de desempenho) é algo que você acompanha sempre, como a "saúde" do negócio (ex.: número de usuários ativos).
+- **KR** é uma meta de **mudança** em um indicador, dentro de um prazo (ex.: aumentar os usuários ativos de 10 mil para 15 mil neste trimestre).
+
+## 📌 Resumindo
+
+- OKR = **Objetivo** (aonde ir) + **Resultados-chave** (como medir).
+- Criado na Intel por Andy Grove e popularizado no Google por John Doerr.
+- Ciclos curtos (geralmente trimestrais), 2 a 5 KRs mensuráveis por objetivo.
+
+## 🏋️ Mão na massa
+
+**1.** Escreva um OKR pessoal para o seu estudo de Java neste trimestre.
+
+<details>
+<summary>Ver resposta</summary>
+
+Exemplo: **O:** "Ficar pronto para uma vaga de estágio em Java". **KRs:** "Concluir os 8 módulos deste material", "Publicar 3 projetos no GitHub com testes", "Acertar pelo menos 80% no simulado".
+
+</details>
+
+**2.** "Fazer 10 reuniões com clientes" é um bom resultado-chave?
+
+<details>
+<summary>Ver resposta</summary>
+
+Não muito: é uma **tarefa** (atividade), não um resultado. Um KR melhor mede o efeito, como "aumentar a satisfação dos clientes (NPS) de 30 para 50".
+
+</details>
+
+**3.** Qual a diferença entre KPI e KR?
+
+<details>
+<summary>Ver resposta</summary>
+
+O KPI é um indicador acompanhado continuamente. O KR é uma meta de mudança em um indicador, com valor-alvo e prazo.
+
+</details>
+
+---
+
+<div align="center">
+
+[⬅️ 1.9 Kanban](./09-kanban.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [1.11 Ferramentas para times ágeis ➡️](./11-ferramentas-ageis.md)
+
+</div>

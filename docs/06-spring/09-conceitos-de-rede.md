@@ -1,107 +1,117 @@
-# Outros conceitos importantes
+# 6.9 · Conceitos de rede: DNS, proxy reverso, balanceador, camadas OSI e TCP/IP
 
-## Proxy
+> **Em uma frase:** antes de uma requisição chegar à sua API, ela passa pelo **DNS** (que traduz o nome em IP), por **firewalls**, **CDNs**, **proxies reversos** e **balanceadores de carga**; os modelos **OSI** e **TCP/IP** organizam essa comunicação em camadas.
 
-Um proxy é um servidor intermediário que atua como um intermediário entre os clientes e os servidores. Ele recebe as solicitações dos clientes e as encaminha para os servidores correspondentes, agindo como um representante do cliente junto ao servidor. O uso de um proxy pode trazer benefícios como aumento da segurança, melhoria na performance e controle de acesso a recursos da rede.
+## 🗺️ O caminho de uma requisição
 
-### Tipos de proxy
+```mermaid
+flowchart LR
+    U["Usuário<br/>api.banco.com"] --> D["DNS<br/>→ 203.0.113.10"]
+    D --> CDN["CDN / firewall"]
+    CDN --> LB["Balanceador de carga<br/>(proxy reverso)"]
+    LB --> A1["Instância 1<br/>da API"]
+    LB --> A2["Instância 2<br/>da API"]
+    A1 --> DB[("Banco de dados")]
+    A2 --> DB
+```
 
-Existem diferentes tipos de proxy, cada um com suas características e funções específicas:
+## 📖 Glossário essencial
 
-- Proxy HTTP: atua como intermediário para solicitações HTTP e HTTPS. Ele é capaz de interceptar as solicitações HTTP e encaminhá-las para o servidor correspondente.
-- Proxy reverso: atua como intermediário para solicitações feitas ao servidor web. Ele recebe as solicitações dos clientes e as encaminha para o servidor web correspondente.
-- Proxy de cache: armazena em cache as respostas dos servidores para solicitações repetidas. Isso pode melhorar significativamente a performance, reduzindo a latência e o tráfego de rede.
+| Conceito | O que é |
+| --- | --- |
+| **DNS** | O "catálogo telefônico" da internet: traduz nomes (`www.exemplo.com`) em endereços IP, consultando uma hierarquia de servidores. |
+| **Socket** | Um ponto de comunicação identificado por **IP + porta** (ex.: `192.168.0.10:8080`). Pode ser TCP (confiável) ou UDP (rápido). |
+| **Proxy (direto)** | Intermediário que age em nome do **cliente** (aula [6.3](./03-cookies-cache-proxy.md)). |
+| **Proxy reverso** | Intermediário que age em nome do **servidor**: recebe as requisições, cuida do HTTPS e encaminha para as aplicações (NGINX, Traefik). |
+| **Balanceador de carga** | Distribui as requisições entre várias instâncias, para escalar e tolerar falhas. |
+| **Firewall** | Filtra o tráfego, permitindo só o autorizado. |
+| **CDN** | Rede de servidores espalhados pelo mundo que guarda cópias do conteúdo perto dos usuários. |
+| **API** | Conjunto de regras para um sistema conversar com outro (Módulo 6). |
+| **Microsserviços** | Arquitetura que divide o sistema em serviços pequenos e independentes, cada um com seu deploy e, geralmente, seu banco. |
+| **Contêineres** | Empacotam a aplicação com tudo o que ela precisa para rodar igual em qualquer lugar (Docker, no [módulo extra](../08-extras/03-docker-para-java.md)). |
 
-<br>
+### Tipos de balanceador de carga
 
-## DNS
+| Tipo | Como decide |
+| --- | --- |
+| **Camada 4** (transporte) | Pelo IP e pela porta; rápido e simples. |
+| **Camada 7** (aplicação) | Pelo conteúdo da requisição: caminho (`/api/pagamentos`), cabeçalhos, cookies. |
+| **Por DNS** | Responde IPs diferentes para o mesmo nome. |
+| Hardware × software | Equipamentos dedicados ou programas (NGINX, HAProxy, balanceadores da nuvem como o AWS ELB). |
 
-DNS (Domain Name System) é um sistema de nomenclatura hierárquica utilizado para identificar recursos da rede, como servidores web e computadores. Ele permite que os usuários acessem esses recursos utilizando nomes amigáveis, como [www.exemplo.com](http://www.exemplo.com/), em vez de endereços IP numéricos.
+## 🧱 Modelos em camadas
 
-### Funcionamento do DNS
+### OSI (7 camadas) × TCP/IP (4 camadas)
 
-O DNS funciona por meio de uma hierarquia de servidores DNS, que são responsáveis por armazenar informações sobre os nomes de domínio e seus correspondentes endereços IP. Quando um usuário acessa um nome de domínio, o sistema de resolução de nomes de domínio (DNS resolver) busca essa informação em uma série de servidores DNS até encontrar o endereço IP correspondente. Em seguida, o usuário pode acessar o recurso da rede desejado utilizando esse endereço IP.
+| OSI | TCP/IP | O que faz | Exemplos |
+| --- | --- | --- | --- |
+| 7. Aplicação | **Aplicação** | Protocolos usados pelos programas | HTTP, DNS, SMTP, WebSocket |
+| 6. Apresentação | ↑ | Formato, codificação e criptografia dos dados | TLS, JSON, UTF-8 |
+| 5. Sessão | ↑ | Abre, mantém e encerra sessões | — |
+| 4. Transporte | **Transporte** | Entrega entre processos (portas) | TCP, UDP, QUIC |
+| 3. Rede | **Internet** | Endereçamento e roteamento entre redes | IP, ICMP |
+| 2. Enlace | **Acesso à rede** | Entrega dentro da mesma rede local | Ethernet, Wi-Fi, MAC |
+| 1. Física | ↑ | Sinais elétricos, ópticos, de rádio | Cabos, fibra |
 
-<br>
+```mermaid
+flowchart TB
+    subgraph TCPIP["TCP/IP"]
+        direction TB
+        A["Aplicação<br/>(OSI 5, 6 e 7)"] --> T["Transporte<br/>(OSI 4)"] --> I["Internet<br/>(OSI 3)"] --> R["Acesso à rede<br/>(OSI 1 e 2)"]
+    end
+```
 
-## Socket
+- O **OSI** é um modelo **de referência**: mais detalhado e didático.
+- O **TCP/IP** é o modelo **que a internet usa de fato**.
 
-Socket é um mecanismo utilizado para a comunicação entre processos em um mesmo computador ou em diferentes computadores em uma rede. Ele permite que os processos enviem e recebam informações por meio de um canal de comunicação. O socket é definido por um endereço IP e um número de porta, que são utilizados para identificar o processo que está enviando ou recebendo informações.
+> [!TIP]
+> Quando alguém fala em "balanceador de camada 7" ou "firewall de camada 4", está usando a numeração do **OSI**.
 
-### Tipos de Socket
+## 📌 Resumindo
 
-Existem diferentes tipos de sockets, cada um com suas características e funções específicas:
+- DNS traduz nomes em IPs; sockets são IP + porta.
+- Proxy reverso e balanceador ficam na frente das aplicações, distribuindo e protegendo.
+- OSI tem 7 camadas (referência); TCP/IP tem 4 (o que a internet usa).
 
-- Socket TCP: utilizado para comunicação confiável e orientada a conexão. Ele garante que as informações sejam entregues na ordem correta e sem perda de dados.
-- Socket UDP: utilizado para comunicação não confiável e não orientada a conexão. Ele não garante que as informações sejam entregues na ordem correta ou sem perda de dados.
+## 🏋️ Mão na massa
 
-<br>
+**1.** Use o terminal para descobrir o IP de `github.com`.
 
-## Load Balancer
+<details>
+<summary>Ver resposta</summary>
 
-O Load Balancer é um dispositivo ou software que distribui o tráfego de rede de forma equilibrada entre os servidores de um cluster. Ele é utilizado para aumentar a disponibilidade e escalabilidade de aplicações web, distribuindo as solicitações de clientes entre diferentes servidores. O uso de um Load Balancer pode ajudar a evitar sobrecarga em servidores individuais e garantir que a aplicação continue funcionando mesmo em caso de falhas em um ou mais servidores.
+```bash
+nslookup github.com
+# ou, no Linux/macOS/Git Bash:
+dig github.com +short
+```
 
-### Tipos de Load Balancer
+O DNS devolve um ou mais endereços IP.
 
-- Load Balancer baseado em hardware: consiste em um dispositivo físico dedicado que é instalado na rede. Ele é capaz de lidar com grandes volumes de tráfego de rede e possui recursos avançados de gerenciamento de tráfego.
-- Load Balancer baseado em software: consiste em um software que pode ser instalado em servidores existentes ou em máquinas virtuais. Ele é mais flexível e escalável que o Load Balancer baseado em hardware, pois pode ser implantado em diferentes plataformas de hardware.
-- Load Balancer de DNS: utiliza o DNS para distribuir o tráfego entre diferentes servidores. Ele utiliza diferentes endereços IP para o mesmo nome de domínio, de modo que as solicitações são distribuídas entre diferentes servidores.
-- Load Balancer de camada de aplicação: distribui o tráfego com base em informações de camada de aplicação, como o tipo de solicitação, o tamanho da solicitação e outras informações específicas da aplicação.
+</details>
 
-<br>
+**2.** Em qual camada do TCP/IP ficam o HTTP, o TCP e o IP?
 
-## Outros conceitos importantes no mundo Web
+<details>
+<summary>Ver resposta</summary>
 
-### Firewall:
+HTTP na **Aplicação**, TCP no **Transporte** e IP na **Internet**.
 
-É uma solução de segurança que protege a rede contra ameaças externas e internas. Ele atua como uma barreira entre a rede interna e a Internet, permitindo apenas o tráfego autorizado.
+</details>
 
-### CDN (Content Delivery Network):
+**3.** Qual a diferença entre proxy e proxy reverso?
 
-É uma rede de servidores distribuídos em diferentes localidades geográficas que armazenam e entregam conteúdo aos usuários finais. Ele é utilizado para melhorar a velocidade e a disponibilidade de sites e aplicativos web, armazenando conteúdo em cache em servidores próximos aos usuários.
+<details>
+<summary>Ver resposta</summary>
 
-### API (Application Programming Interface)
+O **proxy** (direto) fica do lado do **cliente** e acessa a internet em nome dele. O **proxy reverso** fica do lado do **servidor**: recebe as requisições da internet e as encaminha para as aplicações internas, que ficam "escondidas" atrás dele.
 
-É um conjunto de regras, protocolos e ferramentas para construir e integrar aplicativos. Ele permite que diferentes aplicativos se comuniquem entre si e compartilhem informações de forma padronizada.
+</details>
 
-### Microserviços:
+---
 
-É uma arquitetura de software que divide uma aplicação em serviços independentes e autônomos, cada um com sua própria lógica de negócios e banco de dados. Ele é utilizado para tornar a aplicação mais escalável, resiliente e fácil de manter.
+<div align="center">
 
-### Contêineres
+[⬅️ 6.8 WebSocket](./08-websocket.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [6.10 Spring Framework ➡️](./10-spring-framework.md)
 
-São unidades de software que encapsulam o código e suas dependências, permitindo que ele seja executado de forma isolada em diferentes ambientes. Eles são utilizados para facilitar a implantação e a portabilidade de aplicativos em diferentes plataformas e ambientes de execução.
-
-<br>
-
-# Camadas Tcp/Ip
-
-<img src="./img/23.jpg" alt="" width="400">
-
-- O TCP/IP (Transmission Control Protocol/Internet Protocol) é um modelo de referência que descreve como os protocolos de rede são organizados e como as camadas de rede se relacionam entre si.
-- Ele é composto por quatro camadas principais: Camada de Aplicação, Camada de Transporte, Camada de Rede e Camada de Interface de Rede.
-- Cada camada é responsável por uma parte específica do processo de comunicação de rede.
-- O TCP/IP é amplamente utilizado na Internet e é considerado o modelo padrão de referência para redes de computadores.
-
-<br>
-
-## Camadas do modelo OSI
-
-<img src="./img/24.webp" alt="" width="500">
-
-- O OSI (Open Systems Interconnection) é um modelo de referência que descreve como os protocolos de rede são organizados e como as camadas de rede se relacionam entre si.
-- Ele é composto por sete camadas principais: Camada Física, Camada de Enlace de Dados, Camada de Rede, Camada de Transporte, Camada de Sessão, Camada de Apresentação e Camada de Aplicação.
-- Cada camada é responsável por uma parte específica do processo de comunicação de rede.
-- O OSI é menos utilizado na prática do que o TCP/IP, mas é considerado um modelo mais completo e abrangente, pois inclui mais camadas e separa as funções de cada camada de forma mais clara.
-
-### Equivalendo as camadas OSI com TCP/IP
-<img src="./img/25.png" alt="" width="600">
-
-<br>
-
-<br>
-
-<br>
-
-[Voltar a Principais protocolos de comunicação da internet](/Arquivos/Conteudo/6%20-%20Ganhando%20produtividade%20com%20spring%20framwork/6.1%20Principais%20protocolos%20de%20comunicacao%20na%20internet.md)<br>
-[Voltar ao inicio](/README.md)
+</div>
