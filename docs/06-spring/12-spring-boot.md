@@ -8,7 +8,7 @@
 | --- | --- |
 | **Auto-configuração** | Olha as bibliotecas no *classpath* e configura tudo sozinho. Colocou o driver do PostgreSQL? Ele cria a conexão. Colocou o starter web? Sobe o Tomcat. |
 | **Starters** | Um único `spring-boot-starter-xxx` traz todas as dependências de um recurso, em versões compatíveis. |
-| **Gestão de versões** | O `spring-boot-starter-parent` define as versões de centenas de bibliotecas (aula [4.16](../04-poo/16-maven-dependencias.md)). |
+| **Gestão de versões** | O `spring-boot-starter-parent` define as versões de centenas de bibliotecas (aula [4.17](../04-poo/17-maven-dependencias.md)). |
 | **Servidor embutido** | Tomcat (ou Jetty/Undertow) dentro do `.jar`: `java -jar app.jar` e pronto. |
 | **Prontidão para produção** | Actuator com *health check* e métricas, configuração externa por ambiente (*profiles*). |
 | **Testes** | `spring-boot-starter-test` com JUnit, Mockito e AssertJ. |

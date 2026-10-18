@@ -277,7 +277,7 @@
   explicacao: 'O comando `java` recebe o **nome da classe**, sem a extensão `.class`.'
 
 - modulo: 2
-  aula: 02-java/11-operadores-relacionais-e-logicos.md
+  aula: 02-java/12-operadores-relacionais-e-logicos.md
   pergunta: 'Para comparar o **conteúdo** de duas `String`, o que você deve usar?'
   opcoes:
     - '`==`'
@@ -288,7 +288,7 @@
   explicacao: '`==` compara se são o mesmo objeto na memória. `.equals()` compara o texto.'
 
 - modulo: 2
-  aula: 02-java/11-operadores-relacionais-e-logicos.md
+  aula: 02-java/12-operadores-relacionais-e-logicos.md
   pergunta: 'Em `if (lista != null && lista.size() > 0)`, o que acontece se `lista` for `null`?'
   opcoes:
     - 'Lança `NullPointerException`.'
@@ -299,7 +299,7 @@
   explicacao: 'Com `&&`, se a primeira parte for falsa, o resultado já é falso e o Java não avalia o resto, evitando a NPE.'
 
 - modulo: 2
-  aula: 02-java/12-controle-de-fluxo.md
+  aula: 02-java/13-controle-de-fluxo.md
   pergunta: 'No `switch` tradicional (com `:`), o que acontece se você esquecer o `break` em um `case`?'
   opcoes:
     - 'Erro de compilação.'
@@ -310,7 +310,7 @@
   explicacao: 'Sem `break`, ocorre o *fall-through*. O `switch` com setas (`->`) não tem esse problema.'
 
 - modulo: 2
-  aula: 02-java/13-blocos-de-codigo.md
+  aula: 02-java/14-blocos-de-codigo.md
   pergunta: 'Quando um bloco `static { ... }` de uma classe é executado?'
   opcoes:
     - 'A cada `new` da classe.'
@@ -321,7 +321,7 @@
   explicacao: 'O bloco estático roda uma vez, no carregamento da classe. O bloco de inicialização (sem `static`) roda a cada `new`, antes do construtor.'
 
 - modulo: 2
-  aula: 02-java/14-repeticao-e-arrays.md
+  aula: 02-java/15-repeticao-e-arrays.md
   pergunta: 'Qual laço **sempre executa pelo menos uma vez**?'
   opcoes:
     - '`for`'
@@ -332,7 +332,7 @@
   explicacao: 'O `do-while` testa a condição no fim, então o corpo roda ao menos uma vez.'
 
 - modulo: 2
-  aula: 02-java/14-repeticao-e-arrays.md
+  aula: 02-java/15-repeticao-e-arrays.md
   pergunta: 'Num array `int[] v = new int[5];`, quais são os índices válidos?'
   opcoes:
     - 'De 1 a 5'
@@ -343,7 +343,7 @@
   explicacao: 'Índices começam em 0 e vão até `length - 1`. Acessar `v[5]` lança `ArrayIndexOutOfBoundsException`.'
 
 - modulo: 2
-  aula: 02-java/14-repeticao-e-arrays.md
+  aula: 02-java/15-repeticao-e-arrays.md
   pergunta: 'O que faz o `continue` dentro de um laço?'
   opcoes:
     - 'Encerra o laço.'
@@ -354,7 +354,7 @@
   explicacao: '`break` sai do laço; `continue` só pula para a próxima iteração.'
 
 - modulo: 2
-  aula: 02-java/17-estruturas-de-dados.md
+  aula: 02-java/18-estruturas-de-dados.md
   pergunta: 'Em `Pessoa a = new Pessoa(); Pessoa b = a; b.setNome("Ana");`, qual o nome de `a`?'
   opcoes:
     - '`null`'
@@ -365,7 +365,7 @@
   explicacao: 'Com objetos, a variável guarda uma referência. `b = a` copia a referência, então as duas variáveis apontam para o mesmo objeto.'
 
 - modulo: 2
-  aula: 02-java/18-pilhas.md
+  aula: 02-java/19-pilhas.md
   pergunta: 'Uma **pilha** segue qual regra?'
   opcoes:
     - 'FIFO: o primeiro a entrar é o primeiro a sair.'
@@ -376,7 +376,7 @@
   explicacao: 'Pilha é LIFO, como uma pilha de pratos. A fila é FIFO.'
 
 - modulo: 2
-  aula: 02-java/19-filas.md
+  aula: 02-java/20-filas.md
   pergunta: 'Numa fila implementada com nós, por que guardar referências para o **início e o fim**?'
   opcoes:
     - 'Para gastar menos memória.'
@@ -387,7 +387,7 @@
   explicacao: 'Com as duas pontas guardadas, `enqueue` e `dequeue` não precisam percorrer a estrutura.'
 
 - modulo: 2
-  aula: 02-java/20-listas-encadeadas.md
+  aula: 02-java/21-listas-encadeadas.md
   pergunta: 'Qual a principal desvantagem de uma lista encadeada em relação a um array?'
   opcoes:
     - 'Não aceita objetos.'
@@ -398,7 +398,7 @@
   explicacao: 'No array, `v[i]` é imediato. Na lista encadeada, para chegar ao índice `i` é preciso seguir `i` referências.'
 
 - modulo: 2
-  aula: 02-java/22-listas-circulares.md
+  aula: 02-java/23-listas-circulares.md
   pergunta: 'Numa lista circular, para onde aponta o `proximo` do último nó?'
   opcoes:
     - 'Para `null`'
@@ -409,7 +409,7 @@
   explicacao: 'A cauda aponta para a cabeça, formando um círculo. Por isso é preciso cuidado com laços infinitos ao percorrer.'
 
 - modulo: 2
-  aula: 02-java/23-arvores-binarias.md
+  aula: 02-java/24-arvores-binarias.md
   pergunta: 'Numa árvore binária de busca, o percurso **em ordem** devolve os elementos como?'
   opcoes:
     - 'Na ordem de inserção'
@@ -420,7 +420,7 @@
   explicacao: 'Em ordem visita esquerda → raiz → direita. Como os menores ficam à esquerda, o resultado sai ordenado.'
 
 - modulo: 2
-  aula: 02-java/24-equals-e-hashcode.md
+  aula: 02-java/25-equals-e-hashcode.md
   pergunta: 'Você sobrescreveu `equals()` mas não `hashCode()`. O que pode acontecer num `HashSet`?'
   opcoes:
     - 'Nada, o `HashSet` só usa `equals()`.'
@@ -431,7 +431,7 @@
   explicacao: 'O `HashSet` usa o hash para achar a posição e só depois o `equals`. Objetos iguais precisam ter o mesmo hash: sobrescreva sempre os dois juntos.'
 
 - modulo: 2
-  aula: 02-java/25-stack-e-deque.md
+  aula: 02-java/26-stack-e-deque.md
   pergunta: 'Qual é a forma recomendada hoje de criar uma pilha em Java?'
   opcoes:
     - '`Stack<Integer> p = new Stack<>();`'
@@ -442,7 +442,7 @@
   explicacao: '`Stack` é antiga (herda de `Vector`). A documentação recomenda `ArrayDeque` com `push`, `pop` e `peek`.'
 
 - modulo: 2
-  aula: 02-java/26-queue.md
+  aula: 02-java/27-queue.md
   pergunta: 'Numa `Queue` vazia, qual a diferença entre `poll()` e `remove()`?'
   opcoes:
     - 'Nenhuma.'
@@ -453,7 +453,7 @@
   explicacao: '`offer`/`poll`/`peek` devolvem um valor especial; `add`/`remove`/`element` lançam exceção.'
 
 - modulo: 2
-  aula: 02-java/26-queue.md
+  aula: 02-java/27-queue.md
   pergunta: 'Qual fila entrega primeiro o elemento de **maior prioridade** (por padrão, o menor valor)?'
   opcoes:
     - '`ArrayDeque`'
@@ -464,7 +464,7 @@
   explicacao: 'A `PriorityQueue` ordena pela ordem natural (ou por um `Comparator`), e não pela ordem de chegada.'
 
 - modulo: 2
-  aula: 02-java/27-list.md
+  aula: 02-java/28-list.md
   pergunta: 'Por que `List.of(1, 2, 3).add(4)` lança exceção?'
   opcoes:
     - 'Porque `List.of` cria uma lista imutável.'
@@ -475,7 +475,7 @@
   explicacao: '`List.of` cria uma lista imutável. Para uma lista alterável, use `new ArrayList<>(List.of(1, 2, 3))`.'
 
 - modulo: 2
-  aula: 02-java/28-set.md
+  aula: 02-java/29-set.md
   pergunta: 'Qual `Set` mantém os elementos **ordenados**?'
   opcoes:
     - '`HashSet`'
@@ -486,7 +486,7 @@
   explicacao: '`HashSet` não garante ordem; `LinkedHashSet` mantém a ordem de inserção; `TreeSet` mantém a ordem natural (ou a de um `Comparator`).'
 
 - modulo: 2
-  aula: 02-java/29-map.md
+  aula: 02-java/30-map.md
   pergunta: 'O que acontece ao fazer `put` com uma chave que **já existe** no `Map`?'
   opcoes:
     - 'Lança exceção.'
@@ -497,7 +497,7 @@
   explicacao: 'As chaves são únicas: o `put` substitui o valor (e devolve o antigo). Para não sobrescrever, use `putIfAbsent`.'
 
 - modulo: 2
-  aula: 02-java/30-metodos-conceitos.md
+  aula: 02-java/31-metodos-conceitos.md
   pergunta: 'O que faz parte da **assinatura** de um método?'
   opcoes:
     - 'O nome e o tipo de retorno.'
@@ -508,7 +508,7 @@
   explicacao: 'Assinatura = nome + lista de parâmetros. O tipo de retorno não faz parte dela, por isso não dá para sobrecarregar mudando só o retorno.'
 
 - modulo: 2
-  aula: 02-java/30-metodos-conceitos.md
+  aula: 02-java/31-metodos-conceitos.md
   pergunta: 'Como o Java passa parâmetros para os métodos?'
   opcoes:
     - 'Sempre por referência.'
@@ -519,7 +519,7 @@
   explicacao: 'Tudo é passado por valor. Para objetos, copia-se a referência: o método consegue alterar o objeto, mas não trocar para qual objeto a variável original aponta.'
 
 - modulo: 2
-  aula: 02-java/31-sobrecarga-e-sobrescrita.md
+  aula: 02-java/32-sobrecarga-e-sobrescrita.md
   pergunta: 'Dois métodos `somar(int, int)` e `somar(double, double)` na mesma classe são um exemplo de quê?'
   opcoes:
     - 'Sobrescrita'
@@ -530,7 +530,7 @@
   explicacao: 'Sobrecarga: mesmo nome, parâmetros diferentes, na mesma classe. Sobrescrita é a subclasse redefinir um método herdado com a mesma assinatura.'
 
 - modulo: 2
-  aula: 02-java/32-retorno-de-metodos.md
+  aula: 02-java/33-retorno-de-metodos.md
   pergunta: 'Um método declarado como `int calcular(int x)` tem um `if` com `return` dentro, mas nenhum `return` depois do `if`. O que acontece?'
   opcoes:
     - 'Compila e devolve 0 quando o `if` é falso.'
@@ -539,6 +539,39 @@
     - 'Lança exceção em tempo de execução.'
   resposta: 1
   explicacao: 'O compilador exige que todos os caminhos possíveis devolvam um valor do tipo declarado ("missing return statement").'
+
+- modulo: 2
+  aula: 02-java/11-strings-e-entrada.md
+  pergunta: 'Depois de `String s = "java"; s.toUpperCase();`, quanto vale `s`?'
+  opcoes:
+    - '"JAVA"'
+    - '"java"'
+    - '"Java"'
+    - 'Não compila.'
+  resposta: 1
+  explicacao: 'Strings são imutáveis: `toUpperCase()` devolve uma nova `String`, que não foi guardada. O certo é `s = s.toUpperCase();`.'
+
+- modulo: 2
+  aula: 02-java/11-strings-e-entrada.md
+  pergunta: 'Depois de `int idade = entrada.nextInt();`, o `entrada.nextLine()` seguinte devolve uma linha vazia. Por quê?'
+  opcoes:
+    - 'Porque o `Scanner` só lê uma vez.'
+    - 'Porque o Enter digitado após o número ficou no buffer e foi lido pelo `nextLine()`.'
+    - 'Porque `nextLine()` só funciona com números.'
+    - 'Porque faltou `useLocale`.'
+  resposta: 1
+  explicacao: 'O `nextInt()` lê só o número e deixa a quebra de linha para trás. Chame um `nextLine()` extra ou leia tudo com `nextLine()` e converta com `Integer.parseInt`.'
+
+- modulo: 2
+  aula: 02-java/11-strings-e-entrada.md
+  pergunta: 'O que `"Java é Demais".substring(0, 4)` devolve?'
+  opcoes:
+    - '"Java "'
+    - '"Java"'
+    - '"Jav"'
+    - '"ava "'
+  resposta: 1
+  explicacao: 'O `substring(inicio, fim)` inclui o índice inicial e exclui o final: posições 0, 1, 2 e 3.'
 
 # ---------------------------------------------------------------- Módulo 3
 - modulo: 3
@@ -675,7 +708,7 @@
   explicacao: 'Interfaces não guardam estado, mas podem ter métodos com implementação (`default`, `static`, `private`) além dos abstratos.'
 
 - modulo: 4
-  aula: 04-poo/05-pacotes.md
+  aula: 04-poo/06-pacotes.md
   pergunta: 'Qual pacote é importado **automaticamente** em toda classe Java?'
   opcoes:
     - '`java.util`'
@@ -686,7 +719,7 @@
   explicacao: '`java.lang` (com `String`, `Math`, `System`...) é importado automaticamente. Os demais precisam de `import`.'
 
 - modulo: 4
-  aula: 04-poo/06-modificadores-de-acesso.md
+  aula: 04-poo/07-modificadores-de-acesso.md
   pergunta: 'Um atributo sem modificador de acesso (acesso *padrão*) é visível onde?'
   opcoes:
     - 'Em qualquer lugar.'
@@ -697,7 +730,7 @@
   explicacao: 'Do mais aberto ao mais fechado: `public` (todos), `protected` (pacote + subclasses), padrão (pacote) e `private` (só a classe).'
 
 - modulo: 4
-  aula: 04-poo/07-collections.md
+  aula: 04-poo/08-collections.md
   pergunta: 'Você remove itens de uma lista dentro de um *for-each* e recebe `ConcurrentModificationException`. Qual a solução?'
   opcoes:
     - 'Usar `removeIf` ou um `Iterator`.'
@@ -708,7 +741,7 @@
   explicacao: 'O *for-each* não permite alterar a coleção durante a iteração. `lista.removeIf(cond)` ou `iterator.remove()` fazem isso com segurança.'
 
 - modulo: 4
-  aula: 04-poo/08-list.md
+  aula: 04-poo/09-list.md
   pergunta: 'Qual a diferença entre `Comparable` e `Comparator`?'
   opcoes:
     - '`Comparable` define a ordem natural dentro da classe; `Comparator` define ordens alternativas, fora dela.'
@@ -719,7 +752,7 @@
   explicacao: '`Comparable` (`compareTo`) é implementada pela própria classe. `Comparator` permite outras ordens: `Comparator.comparing(Pessoa::getIdade).reversed()`.'
 
 - modulo: 4
-  aula: 04-poo/09-set.md
+  aula: 04-poo/10-set.md
   pergunta: 'O que o método `add` de um `Set` devolve ao tentar inserir um elemento que **já existe**?'
   opcoes:
     - '`true`'
@@ -730,7 +763,7 @@
   explicacao: 'O `Set` não aceita repetidos: o `add` devolve `false` e o conjunto continua igual.'
 
 - modulo: 4
-  aula: 04-poo/10-map.md
+  aula: 04-poo/11-map.md
   pergunta: 'Qual método conta ocorrências de palavras de forma mais curta?'
   opcoes:
     - '`mapa.put(palavra, mapa.get(palavra) + 1)`'
@@ -741,7 +774,7 @@
   explicacao: '`merge` insere 1 se a chave não existe ou soma 1 ao valor atual. A primeira opção quebraria com NPE na primeira ocorrência.'
 
 - modulo: 4
-  aula: 04-poo/11-stream-api.md
+  aula: 04-poo/12-stream-api.md
   pergunta: 'Numa Stream, quando as operações intermediárias (`filter`, `map`...) são executadas?'
   opcoes:
     - 'Imediatamente, uma por vez.'
@@ -752,7 +785,7 @@
   explicacao: 'As operações intermediárias são preguiçosas (*lazy*): nada acontece até a operação terminal disparar o processamento.'
 
 - modulo: 4
-  aula: 04-poo/11-stream-api.md
+  aula: 04-poo/12-stream-api.md
   pergunta: 'O que é uma **interface funcional**?'
   opcoes:
     - 'Uma interface sem métodos.'
@@ -763,7 +796,7 @@
   explicacao: 'Exemplos: `Predicate`, `Function`, `Consumer`, `Supplier`, `Comparator`. A lambda é uma forma curta de implementar o único método abstrato.'
 
 - modulo: 4
-  aula: 04-poo/12-debugging.md
+  aula: 04-poo/13-debugging.md
   pergunta: 'Ao ler um **stack trace**, onde procurar primeiro a causa do erro?'
   opcoes:
     - 'Na última linha.'
@@ -774,7 +807,7 @@
   explicacao: 'O stack trace é a pilha de chamadas: leia de cima para baixo, entenda o tipo do erro e ache a primeira linha que é do seu projeto.'
 
 - modulo: 4
-  aula: 04-poo/13-excecoes.md
+  aula: 04-poo/14-excecoes.md
   pergunta: 'Qual a diferença entre exceções **checked** e **unchecked**?'
   opcoes:
     - 'Checked o compilador obriga a tratar ou declarar; unchecked (`RuntimeException`) não.'
@@ -785,7 +818,7 @@
   explicacao: 'Exceções checked (como `IOException`) exigem `try/catch` ou `throws`. As unchecked (como `NullPointerException`) geralmente indicam bugs.'
 
 - modulo: 4
-  aula: 04-poo/13-excecoes.md
+  aula: 04-poo/14-excecoes.md
   pergunta: 'Qual a diferença entre `throw` e `throws`?'
   opcoes:
     - 'São sinônimos.'
@@ -796,7 +829,7 @@
   explicacao: '`throw new IllegalArgumentException(...)` lança; `void ler() throws IOException` avisa quem chama que precisa tratar.'
 
 - modulo: 4
-  aula: 04-poo/13-excecoes.md
+  aula: 04-poo/14-excecoes.md
   pergunta: 'Para que serve o **try-with-resources**?'
   opcoes:
     - 'Para repetir o bloco se der erro.'
@@ -807,7 +840,7 @@
   explicacao: 'Recursos declarados em `try (...)` que implementam `AutoCloseable` são fechados automaticamente, mesmo se ocorrer uma exceção.'
 
 - modulo: 4
-  aula: 04-poo/14-maven.md
+  aula: 04-poo/15-maven.md
   pergunta: 'Como o Maven identifica uma biblioteca?'
   opcoes:
     - 'Pelo nome do arquivo `.jar`.'
@@ -818,7 +851,7 @@
   explicacao: 'As coordenadas (por exemplo, `org.junit.jupiter:junit-jupiter:5.11.0`) localizam a biblioteca no Maven Central.'
 
 - modulo: 4
-  aula: 04-poo/14-maven.md
+  aula: 04-poo/15-maven.md
   pergunta: 'Onde ficam os testes num projeto Maven?'
   opcoes:
     - '`src/main/java`'
@@ -829,7 +862,7 @@
   explicacao: 'Código em `src/main/java`, testes em `src/test/java` e saída do build em `target`.'
 
 - modulo: 4
-  aula: 04-poo/16-maven-dependencias.md
+  aula: 04-poo/17-maven-dependencias.md
   pergunta: 'Qual escopo usar para o **JUnit** no `pom.xml`?'
   opcoes:
     - '`compile`'
@@ -840,7 +873,7 @@
   explicacao: 'Com escopo `test`, a biblioteca só está disponível para compilar e rodar os testes e não vai junto no pacote final.'
 
 - modulo: 4
-  aula: 04-poo/17-maven-ciclo-de-vida.md
+  aula: 04-poo/18-maven-ciclo-de-vida.md
   pergunta: 'Ao rodar `mvn package`, quais fases são executadas?'
   opcoes:
     - 'Só a `package`.'
@@ -851,7 +884,7 @@
   explicacao: 'Pedir uma fase executa todas as anteriores do ciclo `default`. Por isso `mvn package` também compila e roda os testes.'
 
 - modulo: 4
-  aula: 04-poo/18-maven-multi-modulos.md
+  aula: 04-poo/19-maven-multi-modulos.md
   pergunta: 'Num projeto multimódulos, qual `packaging` o POM pai deve ter?'
   opcoes:
     - '`jar`'
@@ -862,7 +895,7 @@
   explicacao: 'O pai tem `<packaging>pom</packaging>` e lista os filhos em `<modules>`; cada módulo declara o pai em `<parent>`.'
 
 - modulo: 4
-  aula: 04-poo/20-testes-unitarios.md
+  aula: 04-poo/21-testes-unitarios.md
   pergunta: 'Qual anotação marca um método como teste no JUnit 5?'
   opcoes:
     - '`@Teste`'
@@ -873,7 +906,7 @@
   explicacao: 'Métodos com `@Test` são executados pelo JUnit, por exemplo com `mvn test`.'
 
 - modulo: 4
-  aula: 04-poo/21-junit-recursos.md
+  aula: 04-poo/22-junit-recursos.md
   pergunta: 'Como verificar, com JUnit 5, que um método lança `IllegalArgumentException`?'
   opcoes:
     - '`assertEquals(IllegalArgumentException.class, metodo())`'
@@ -884,7 +917,7 @@
   explicacao: '`assertThrows` executa a lambda e falha se a exceção esperada não for lançada. Ele ainda devolve a exceção para outras verificações.'
 
 - modulo: 4
-  aula: 04-poo/21-junit-recursos.md
+  aula: 04-poo/22-junit-recursos.md
   pergunta: 'Qual a diferença entre `@BeforeEach` e `@BeforeAll`?'
   opcoes:
     - '`@BeforeEach` roda antes de cada teste; `@BeforeAll` roda uma vez antes de todos (e deve ser `static`).'
@@ -895,7 +928,7 @@
   explicacao: 'Use `@BeforeEach` para preparar um estado limpo a cada teste e `@BeforeAll` para algo caro feito uma só vez.'
 
 - modulo: 4
-  aula: 04-poo/22-testes-boas-praticas.md
+  aula: 04-poo/23-testes-boas-praticas.md
   pergunta: 'Qual o ciclo do **TDD**?'
   opcoes:
     - 'Código → teste → deploy'
@@ -906,7 +939,7 @@
   explicacao: 'No TDD, você escreve um teste que falha, escreve o mínimo de código para passar e depois melhora o código mantendo os testes verdes.'
 
 - modulo: 4
-  aula: 04-poo/22-testes-boas-praticas.md
+  aula: 04-poo/23-testes-boas-praticas.md
   pergunta: 'O que significa o padrão **Arrange → Act → Assert**?'
   opcoes:
     - 'Organizar os imports, executar e documentar.'
@@ -916,9 +949,42 @@
   resposta: 1
   explicacao: 'Separar o teste nessas três partes deixa claro o que está sendo testado e facilita a leitura.'
 
+- modulo: 4
+  aula: 04-poo/05-abstratas-static-enum.md
+  pergunta: 'O que acontece em `Conta c = new Conta();` se `Conta` for uma classe **abstrata**?'
+  opcoes:
+    - 'Cria uma conta vazia.'
+    - 'Erro de compilação: classes abstratas não podem ser instanciadas.'
+    - 'Lança exceção em tempo de execução.'
+    - 'Cria uma `ContaCorrente` automaticamente.'
+  resposta: 1
+  explicacao: 'Uma classe abstrata é um molde incompleto: só as subclasses concretas podem ser instanciadas (`Conta c = new ContaCorrente();`).'
+
+- modulo: 4
+  aula: 04-poo/05-abstratas-static-enum.md
+  pergunta: 'Um atributo `static int totalDeContas` numa classe `Conta` é...'
+  opcoes:
+    - '...um valor diferente para cada objeto.'
+    - '...um único valor compartilhado por todos os objetos da classe.'
+    - '...uma constante que não pode mudar.'
+    - '...visível só dentro do construtor.'
+  resposta: 1
+  explicacao: '`static` pertence à classe, não ao objeto. Para ser constante, ele precisaria também de `final`.'
+
+- modulo: 4
+  aula: 04-poo/05-abstratas-static-enum.md
+  pergunta: 'Qual a principal vantagem de usar um `enum StatusPedido` em vez de uma `String` para o status?'
+  opcoes:
+    - 'Ocupa menos memória.'
+    - 'Só aceita os valores declarados: um erro de digitação não compila.'
+    - 'Pode ser gravado no banco sem conversão.'
+    - 'Permite valores nulos.'
+  resposta: 1
+  explicacao: 'Com `String`, "PGO" passaria despercebido. Com o enum, `StatusPedido.PGO` é erro de compilação.'
+
 # ---------------------------------------------------------------- Módulo 5
 - modulo: 5
-  aula: 05-banco-de-dados/01-sql.md
+  aula: 05-banco-de-dados/06-sql-consultas.md
   pergunta: 'Qual a diferença entre `WHERE` e `HAVING`?'
   opcoes:
     - 'São sinônimos.'
@@ -929,7 +995,7 @@
   explicacao: 'Exemplo: `WHERE ativo = true` filtra clientes; `HAVING COUNT(*) > 5` filtra os grupos com mais de 5 pedidos.'
 
 - modulo: 5
-  aula: 05-banco-de-dados/01-sql.md
+  aula: 05-banco-de-dados/04-sql-criando-tabelas.md
   pergunta: '`CREATE TABLE` e `ALTER TABLE` pertencem a qual subconjunto do SQL?'
   opcoes:
     - 'DML'
@@ -940,7 +1006,7 @@
   explicacao: 'DDL define a estrutura; DML altera dados (`INSERT`, `UPDATE`, `DELETE`); DQL consulta (`SELECT`); DCL cuida de permissões.'
 
 - modulo: 5
-  aula: 05-banco-de-dados/01-sql.md
+  aula: 05-banco-de-dados/02-modelagem-relacional.md
   pergunta: 'O que é uma **chave estrangeira** (FK)?'
   opcoes:
     - 'Uma coluna que identifica unicamente cada linha.'
@@ -951,7 +1017,7 @@
   explicacao: 'A FK liga tabelas (por exemplo, `pedido.cliente_id` → `cliente.id`) e garante que a referência exista.'
 
 - modulo: 5
-  aula: 05-banco-de-dados/02-nosql.md
+  aula: 05-banco-de-dados/10-nosql.md
   pergunta: 'Qual destes **não** é um modelo comum de banco NoSQL?'
   opcoes:
     - 'Documento'
@@ -962,7 +1028,7 @@
   explicacao: 'Os modelos NoSQL mais comuns são documento (MongoDB), chave-valor (Redis, DynamoDB), colunar (Cassandra) e grafo (Neo4j).'
 
 - modulo: 5
-  aula: 05-banco-de-dados/03-mongodb.md
+  aula: 05-banco-de-dados/11-mongodb.md
   pergunta: 'Qual campo o MongoDB cria automaticamente em todo documento?'
   opcoes:
     - '`id`'
@@ -973,7 +1039,7 @@
   explicacao: 'O `_id` é a chave primária. Se você não informar, o MongoDB gera um `ObjectId` único.'
 
 - modulo: 5
-  aula: 05-banco-de-dados/04-mongodb-modelagem.md
+  aula: 05-banco-de-dados/13-mongodb-modelagem.md
   pergunta: 'Quando é melhor **embutir** (embedding) um dado em vez de referenciá-lo?'
   opcoes:
     - 'Quando o dado é lido junto com o documento principal e a lista é pequena.'
@@ -984,7 +1050,7 @@
   explicacao: 'Embedding é ótimo para dados lidos juntos (como os endereços de um cliente). Para relações grandes ou N:N, use referências; lembre do limite de 16 MB por documento.'
 
 - modulo: 5
-  aula: 05-banco-de-dados/05-mongodb-comandos.md
+  aula: 05-banco-de-dados/12-mongodb-comandos.md
   pergunta: 'Qual comando aumenta em 1 o campo `estoque` de um produto no `mongosh`?'
   opcoes:
     - '`db.produtos.updateOne({ nome: "X" }, { estoque: +1 })`'
@@ -995,7 +1061,7 @@
   explicacao: 'O operador `$inc` incrementa. Sem um operador (`$set`, `$inc`...), o `updateOne` recusa a operação.'
 
 - modulo: 5
-  aula: 05-banco-de-dados/06-mongodb-indices-e-agregacoes.md
+  aula: 05-banco-de-dados/14-mongodb-indices-e-agregacoes.md
   pergunta: 'O que indica um `COLLSCAN` no resultado de `explain()`?'
   opcoes:
     - 'Que a consulta usou um índice.'
@@ -1006,7 +1072,7 @@
   explicacao: 'COLLSCAN é a varredura completa. Criar um índice no campo filtrado faz a consulta usar IXSCAN, bem mais rápido.'
 
 - modulo: 5
-  aula: 05-banco-de-dados/06-mongodb-indices-e-agregacoes.md
+  aula: 05-banco-de-dados/14-mongodb-indices-e-agregacoes.md
   pergunta: 'Num pipeline de agregação, por que colocar o `$match` o mais cedo possível?'
   opcoes:
     - 'Porque é obrigatório.'
@@ -1017,7 +1083,7 @@
   explicacao: 'Filtrar cedo diminui o trabalho de `$group`, `$sort` e `$lookup`, e o `$match` no início pode usar índices.'
 
 - modulo: 5
-  aula: 05-banco-de-dados/07-dynamodb.md
+  aula: 05-banco-de-dados/15-dynamodb.md
   pergunta: 'No DynamoDB, uma chave primária **composta** é formada por quê?'
   opcoes:
     - 'Partition key + sort key'
@@ -1028,7 +1094,7 @@
   explicacao: 'A chave pode ser simples (só partition key) ou composta (partition + sort). A sort key ordena os itens que têm a mesma partition key.'
 
 - modulo: 5
-  aula: 05-banco-de-dados/07-dynamodb.md
+  aula: 05-banco-de-dados/15-dynamodb.md
   pergunta: 'Para que serve um **GSI** (índice secundário global) no DynamoDB?'
   opcoes:
     - 'Para fazer backup da tabela.'
@@ -1039,7 +1105,7 @@
   explicacao: 'Sem índice, o `query` só funciona pela chave da tabela. Um GSI define outra chave (partition e sort) para consultas diferentes.'
 
 - modulo: 5
-  aula: 05-banco-de-dados/08-dynamodb-pratica.md
+  aula: 05-banco-de-dados/16-dynamodb-pratica.md
   pergunta: 'O que um `query` no DynamoDB sempre precisa informar?'
   opcoes:
     - 'A sort key'
@@ -1048,6 +1114,116 @@
     - 'O nome do usuário da AWS'
   resposta: 1
   explicacao: 'O `query` busca dentro de uma partição, então a partition key é obrigatória. Buscar sem ela exige um `scan`, que lê a tabela inteira.'
+
+- modulo: 5
+  aula: 05-banco-de-dados/01-o-que-e-banco-de-dados.md
+  pergunta: 'O que é um **SGBD**?'
+  opcoes:
+    - 'Uma linguagem de consulta.'
+    - 'O programa que guarda, protege e consulta os dados, como PostgreSQL ou MySQL.'
+    - 'Um tipo de tabela.'
+    - 'Uma planilha compartilhada.'
+  resposta: 1
+  explicacao: 'O SGBD (Sistema Gerenciador de Banco de Dados) controla concorrência, permissões, transações e executa as consultas que a aplicação envia.'
+
+- modulo: 5
+  aula: 05-banco-de-dados/02-modelagem-relacional.md
+  pergunta: 'Como se implementa um relacionamento **muitos para muitos** (N:N) entre pedidos e produtos?'
+  opcoes:
+    - 'Com uma FK em cada uma das duas tabelas.'
+    - 'Com uma tabela associativa no meio (como `itens_pedido`), que tem uma FK para cada lado.'
+    - 'Repetindo os produtos dentro da tabela de pedidos.'
+    - 'Não é possível em bancos relacionais.'
+  resposta: 1
+  explicacao: 'A tabela associativa liga os dois lados e é o lugar natural para os dados do relacionamento, como quantidade e preço pago.'
+
+- modulo: 5
+  aula: 05-banco-de-dados/03-normalizacao.md
+  pergunta: 'A tabela `funcionarios (id, nome, departamento_id, nome_departamento)` viola qual forma normal?'
+  opcoes:
+    - '1FN'
+    - '2FN'
+    - '3FN'
+    - 'Nenhuma'
+  resposta: 2
+  explicacao: '`nome_departamento` depende de `departamento_id`, que não é a chave. Pela 3FN, ele deve ficar numa tabela `departamentos`.'
+
+- modulo: 5
+  aula: 05-banco-de-dados/05-sql-inserindo-e-alterando.md
+  pergunta: 'O que faz `DELETE FROM clientes;`?'
+  opcoes:
+    - 'Nada: falta o `WHERE`, então dá erro.'
+    - 'Apaga **todos** os clientes da tabela.'
+    - 'Apaga a tabela inteira, inclusive a estrutura.'
+    - 'Apaga só o último cliente inserido.'
+  resposta: 1
+  explicacao: 'Sem `WHERE`, `DELETE` e `UPDATE` atingem todas as linhas. Confira o filtro com um `SELECT` antes. Para apagar a estrutura, seria `DROP TABLE`.'
+
+- modulo: 5
+  aula: 05-banco-de-dados/06-sql-consultas.md
+  pergunta: 'Por que `SELECT * FROM clientes WHERE cidade = NULL` não devolve nenhuma linha?'
+  opcoes:
+    - 'Porque não existem clientes sem cidade.'
+    - 'Porque comparações com `NULL` usando `=` nunca são verdadeiras; o certo é `IS NULL`.'
+    - 'Porque `NULL` precisa estar entre aspas.'
+    - 'Porque falta o `ORDER BY`.'
+  resposta: 1
+  explicacao: '`NULL` significa "sem valor/desconhecido", e qualquer comparação com ele dá "desconhecido". Use `IS NULL` e `IS NOT NULL`.'
+
+- modulo: 5
+  aula: 05-banco-de-dados/07-sql-joins-e-subconsultas.md
+  pergunta: 'Você quer listar **todos** os clientes, inclusive os que nunca fizeram pedido, com seus pedidos quando houver. Qual `JOIN` usar?'
+  opcoes:
+    - '`INNER JOIN`'
+    - '`clientes LEFT JOIN pedidos`'
+    - '`CROSS JOIN`'
+    - '`pedidos INNER JOIN clientes`'
+  resposta: 1
+  explicacao: 'O `LEFT JOIN` mantém todas as linhas da tabela da esquerda e preenche com `NULL` quando não há par. O `INNER` descartaria os clientes sem pedidos.'
+
+- modulo: 5
+  aula: 05-banco-de-dados/08-transacoes-indices-e-views.md
+  pergunta: 'Numa transação com dois `UPDATE`s, o segundo falha. Depois do fim da transação, o que acontece com o primeiro?'
+  opcoes:
+    - 'Fica gravado, porque deu certo.'
+    - 'É desfeito: a transação é "tudo ou nada" (atomicidade).'
+    - 'Fica gravado pela metade.'
+    - 'Depende da ordem das colunas.'
+  resposta: 1
+  explicacao: 'A atomicidade (o "A" do ACID) garante que ou todos os comandos valem, ou nenhum. No PostgreSQL, depois de um erro, até o `COMMIT` vira `ROLLBACK`.'
+
+- modulo: 5
+  aula: 05-banco-de-dados/08-transacoes-indices-e-views.md
+  pergunta: 'Qual é o custo de criar um índice numa coluna?'
+  opcoes:
+    - 'Nenhum, índices só trazem vantagens.'
+    - 'As escritas (`INSERT`, `UPDATE`, `DELETE`) ficam um pouco mais lentas e o índice ocupa espaço.'
+    - 'As leituras ficam mais lentas.'
+    - 'A coluna passa a aceitar só valores únicos.'
+  resposta: 1
+  explicacao: 'O índice acelera as buscas, mas precisa ser atualizado a cada escrita. Crie índices para as consultas que existem de verdade.'
+
+- modulo: 5
+  aula: 05-banco-de-dados/09-jdbc.md
+  pergunta: 'Qual forma de montar uma consulta JDBC evita **SQL injection**?'
+  opcoes:
+    - '`"SELECT * FROM clientes WHERE email = ''" + email + "''"`'
+    - '`prepareStatement("SELECT * FROM clientes WHERE email = ?")` com `setString(1, email)`'
+    - 'Converter o e-mail para maiúsculas antes de concatenar.'
+    - 'Usar `createStatement()` em vez de `prepareStatement()`.'
+  resposta: 1
+  explicacao: 'Com parâmetros `?`, o SQL e os valores vão separados para o banco, e um texto como `'' OR ''1''=''1` é tratado como dado, não como código.'
+
+- modulo: 5
+  aula: 05-banco-de-dados/09-jdbc.md
+  pergunta: 'No JDBC, qual método executa um `SELECT` e qual executa um `UPDATE`?'
+  opcoes:
+    - '`executeQuery()` para o `SELECT` (devolve `ResultSet`) e `executeUpdate()` para o `UPDATE` (devolve as linhas afetadas).'
+    - '`executeUpdate()` para os dois.'
+    - '`run()` e `save()`.'
+    - '`executeQuery()` para os dois.'
+  resposta: 0
+  explicacao: 'O `ResultSet` é percorrido com `next()`; o número devolvido pelo `executeUpdate()` diz quantas linhas foram alteradas.'
 
 # ---------------------------------------------------------------- Módulo 6
 - modulo: 6
@@ -1526,7 +1702,7 @@
   explicacao: 'Cada contêiner tem seu próprio `localhost`. Dentro da rede do Compose, os serviços se encontram pelo nome.'
 
 - modulo: 8
-  aula: 08-extras/04-erros-comuns.md
+  aula: 08-extras/06-erros-comuns.md
   pergunta: 'A aplicação Spring Boot não sobe com "Port 8080 was already in use". O que fazer?'
   opcoes:
     - 'Reinstalar o Java.'
@@ -1535,3 +1711,47 @@
     - 'Trocar `javax` por `jakarta`.'
   resposta: 1
   explicacao: 'Outra aplicação (ou outra instância da sua) está usando a porta 8080.'
+
+- modulo: 8
+  aula: 08-extras/04-testes-spring-boot.md
+  pergunta: 'Num teste unitário do `ProdutoService`, para que serve o `@Mock ProdutoRepository`?'
+  opcoes:
+    - 'Para criar o banco de testes.'
+    - 'Para colocar um dublê no lugar do repository, sem acessar banco nenhum.'
+    - 'Para subir a aplicação Spring inteira.'
+    - 'Para gerar dados aleatórios.'
+  resposta: 1
+  explicacao: 'O Mockito cria um objeto falso que devolve o que você ensaiar com `when(...).thenReturn(...)`. Assim o teste fica rápido e foca só na regra do service.'
+
+- modulo: 8
+  aula: 08-extras/04-testes-spring-boot.md
+  pergunta: 'Qual anotação sobe **só a camada web** para testar um controller com MockMvc?'
+  opcoes:
+    - '`@SpringBootTest`'
+    - '`@DataJpaTest`'
+    - '`@WebMvcTest`'
+    - '`@ExtendWith(MockitoExtension.class)`'
+  resposta: 2
+  explicacao: '`@WebMvcTest` carrega controllers, validação, conversão de JSON e `@RestControllerAdvice`. As dependências do controller entram como dublês com `@MockitoBean`.'
+
+- modulo: 8
+  aula: 08-extras/05-boas-praticas-api.md
+  pergunta: 'Por que não é recomendado devolver a entidade JPA diretamente no controller?'
+  opcoes:
+    - 'Porque o Spring não consegue converter entidades em JSON.'
+    - 'Porque pode vazar dados sensíveis, acopla a API ao banco e permite que o cliente altere campos indevidos.'
+    - 'Porque entidades não podem ter getters.'
+    - 'Porque é mais lento que usar `Map`.'
+  resposta: 1
+  explicacao: 'DTOs (geralmente `record`s) definem exatamente o que entra e o que sai da API, independentemente da estrutura das tabelas.'
+
+- modulo: 8
+  aula: 08-extras/05-boas-praticas-api.md
+  pergunta: 'Uma migração `V2__insere_produtos.sql` do Flyway já foi aplicada em produção e você precisa de uma coluna nova. O que fazer?'
+  opcoes:
+    - 'Editar a `V2` e reiniciar a aplicação.'
+    - 'Criar uma nova migração, por exemplo `V3__adiciona_coluna.sql`.'
+    - 'Mudar `ddl-auto` para `create`.'
+    - 'Apagar a tabela `flyway_schema_history`.'
+  resposta: 1
+  explicacao: 'Migrações aplicadas nunca são editadas (o Flyway confere um checksum). Cada mudança é uma migração nova, aplicada em ordem em todos os ambientes.'

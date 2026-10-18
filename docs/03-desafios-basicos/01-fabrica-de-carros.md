@@ -79,6 +79,6 @@ int precoFinal = custoFabrica * (100 + percentualDistribuidor + percentualImpost
 
 <div align="center">
 
-[⬅️ 2.33 Exercícios de métodos](../02-java/33-exercicios-metodos.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [3.2 Positivos e média ➡️](./02-positivos-e-media.md)
+[⬅️ 2.34 Exercícios de métodos](../02-java/34-exercicios-metodos.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [3.2 Positivos e média ➡️](./02-positivos-e-media.md)
 
 </div>

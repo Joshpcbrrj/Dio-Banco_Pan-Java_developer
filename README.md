@@ -27,7 +27,7 @@
 
 Este repositório reúne as minhas anotações do bootcamp **Banco Pan · Java Developer**, da **DIO (Digital Innovation One)**. A ideia é que ele sirva como um **material de estudo e consulta** para qualquer pessoa que esteja aprendendo Java para o back-end.
 
-As explicações foram escritas em **linguagem simples**, com analogias, diagramas, código comentado, **exercícios com respostas** e alertas sobre os erros mais comuns. O conteúdo foi **atualizado** para as versões atuais das ferramentas: Java 21/25, Spring Boot 3+, Spring Security 6+ (`SecurityFilterChain`), springdoc-openapi no lugar do Springfox, `jakarta.*` no lugar de `javax.*` e o `mongosh` no lugar do antigo shell do MongoDB. No fim, um módulo extra traz assuntos que vão além do curso: Java moderno, `Optional`, Docker e um guia de erros comuns.
+As explicações foram escritas em **linguagem simples**, com analogias, diagramas, código comentado, **exercícios com respostas** e alertas sobre os erros mais comuns. O conteúdo foi **atualizado** para as versões atuais das ferramentas: Java 21/25, Spring Boot 3+, Spring Security 6+ (`SecurityFilterChain`), springdoc-openapi no lugar do Springfox, `jakarta.*` no lugar de `javax.*` e o `mongosh` no lugar do antigo shell do MongoDB. O módulo de **bancos de dados** foi ampliado para ensinar do zero (modelagem, normalização, SQL completo com JOINs e transações, e JDBC), e foram acrescentadas aulas sobre `String`, classes abstratas, `static` e `enum`. No fim, um módulo extra traz assuntos que vão além do curso: Java moderno, `Optional`, Docker, testes no Spring Boot, boas práticas de API (DTOs, paginação, Flyway e logs) e um guia de erros comuns. Os exemplos de código e de SQL foram executados para conferir os resultados mostrados.
 
 ## 🧭 Como usar este material
 
@@ -55,7 +55,8 @@ Todas as aulas seguem o mesmo formato:
 | [JDK 21 ou 25](https://adoptium.net/) (Temurin) | Compilar e rodar Java | [2.1](./docs/02-java/01-historia-e-plataforma.md) |
 | [IntelliJ IDEA](https://www.jetbrains.com/idea/) (ou VS Code / Eclipse) | Escrever o código | [2.2](./docs/02-java/02-ides.md) |
 | [Git](https://git-scm.com/) | Versionar os projetos | [1.3](./docs/01-principios/03-primeiro-commit.md) |
-| [Maven](https://maven.apache.org/) (ou o `mvnw` dos projetos) | Dependências e build | [4.14](./docs/04-poo/14-maven.md) |
+| [Maven](https://maven.apache.org/) (ou o `mvnw` dos projetos) | Dependências e build | [4.15](./docs/04-poo/15-maven.md) |
+| [PostgreSQL](https://www.postgresql.org/download/) + [DBeaver](https://dbeaver.io/) (ou o [DB Fiddle](https://www.db-fiddle.com/), no navegador) | Praticar SQL | [5.1](./docs/05-banco-de-dados/01-o-que-e-banco-de-dados.md) |
 | [Docker](https://www.docker.com/products/docker-desktop/) (opcional) | Subir bancos de dados sem instalar nada | [8.3](./docs/08-extras/03-docker-para-java.md) |
 
 ## ☕ Java em 30 segundos
@@ -96,7 +97,7 @@ Git e GitHub do zero, métodos ágeis (XP, Scrum, Kanban) e OKRs.
 
 ### 2️⃣ Conhecendo a linguagem Java
 
-JDK, IDEs, sintaxe, controle de fluxo, arrays, estruturas de dados, Collections e métodos.
+JDK, IDEs, sintaxe, Strings, controle de fluxo, arrays, estruturas de dados, Collections e métodos.
 
 | Aula | Assunto |
 | --- | --- |
@@ -110,29 +111,30 @@ JDK, IDEs, sintaxe, controle de fluxo, arrays, estruturas de dados, Collections 
 | 2.8 | [Palavras reservadas](./docs/02-java/08-palavras-reservadas.md) |
 | 2.9 | [Comentários, Javadoc e a documentação oficial](./docs/02-java/09-javadoc.md) |
 | 2.10 | [Compilando e executando pelo terminal](./docs/02-java/10-terminal.md) |
-| 2.11 | [Operadores relacionais e lógicos a fundo](./docs/02-java/11-operadores-relacionais-e-logicos.md) |
-| 2.12 | [Controle de fluxo: `if`, `else` e `switch`](./docs/02-java/12-controle-de-fluxo.md) |
-| 2.13 | [Blocos de código](./docs/02-java/13-blocos-de-codigo.md) |
-| 2.14 | [Estruturas de repetição e arrays](./docs/02-java/14-repeticao-e-arrays.md) |
-| 2.15 | [Exercícios de estruturas de repetição](./docs/02-java/15-exercicios-repeticao.md) |
-| 2.16 | [Exercícios de arrays](./docs/02-java/16-exercicios-arrays.md) |
-| 2.17 | [Estruturas de dados: referências, nós e generics](./docs/02-java/17-estruturas-de-dados.md) |
-| 2.18 | [Pilhas (LIFO)](./docs/02-java/18-pilhas.md) |
-| 2.19 | [Filas (FIFO)](./docs/02-java/19-filas.md) |
-| 2.20 | [Listas encadeadas](./docs/02-java/20-listas-encadeadas.md) |
-| 2.21 | [Listas duplamente encadeadas](./docs/02-java/21-listas-duplamente-encadeadas.md) |
-| 2.22 | [Listas circulares](./docs/02-java/22-listas-circulares.md) |
-| 2.23 | [Árvores e árvores binárias de busca](./docs/02-java/23-arvores-binarias.md) |
-| 2.24 | [`equals()` e `hashCode()`](./docs/02-java/24-equals-e-hashcode.md) |
-| 2.25 | [Pilhas prontas do Java: `Stack` e `Deque`](./docs/02-java/25-stack-e-deque.md) |
-| 2.26 | [Filas prontas do Java: `Queue`, `ArrayDeque`, `LinkedList` e `PriorityQueue`](./docs/02-java/26-queue.md) |
-| 2.27 | [Listas prontas: a interface `List`](./docs/02-java/27-list.md) |
-| 2.28 | [Conjuntos: a interface `Set`](./docs/02-java/28-set.md) |
-| 2.29 | [Mapas: a interface `Map`](./docs/02-java/29-map.md) |
-| 2.30 | [Métodos: assinatura, construtores e passagem de parâmetros](./docs/02-java/30-metodos-conceitos.md) |
-| 2.31 | [Sobrecarga × sobrescrita](./docs/02-java/31-sobrecarga-e-sobrescrita.md) |
-| 2.32 | [Retorno de métodos](./docs/02-java/32-retorno-de-metodos.md) |
-| 2.33 | [Exercícios de métodos](./docs/02-java/33-exercicios-metodos.md) |
+| 2.11 | [Strings e entrada de dados com `Scanner`](./docs/02-java/11-strings-e-entrada.md) |
+| 2.12 | [Operadores relacionais e lógicos a fundo](./docs/02-java/12-operadores-relacionais-e-logicos.md) |
+| 2.13 | [Controle de fluxo: `if`, `else` e `switch`](./docs/02-java/13-controle-de-fluxo.md) |
+| 2.14 | [Blocos de código](./docs/02-java/14-blocos-de-codigo.md) |
+| 2.15 | [Estruturas de repetição e arrays](./docs/02-java/15-repeticao-e-arrays.md) |
+| 2.16 | [Exercícios de estruturas de repetição](./docs/02-java/16-exercicios-repeticao.md) |
+| 2.17 | [Exercícios de arrays](./docs/02-java/17-exercicios-arrays.md) |
+| 2.18 | [Estruturas de dados: referências, nós e generics](./docs/02-java/18-estruturas-de-dados.md) |
+| 2.19 | [Pilhas (LIFO)](./docs/02-java/19-pilhas.md) |
+| 2.20 | [Filas (FIFO)](./docs/02-java/20-filas.md) |
+| 2.21 | [Listas encadeadas](./docs/02-java/21-listas-encadeadas.md) |
+| 2.22 | [Listas duplamente encadeadas](./docs/02-java/22-listas-duplamente-encadeadas.md) |
+| 2.23 | [Listas circulares](./docs/02-java/23-listas-circulares.md) |
+| 2.24 | [Árvores e árvores binárias de busca](./docs/02-java/24-arvores-binarias.md) |
+| 2.25 | [`equals()` e `hashCode()`](./docs/02-java/25-equals-e-hashcode.md) |
+| 2.26 | [Pilhas prontas do Java: `Stack` e `Deque`](./docs/02-java/26-stack-e-deque.md) |
+| 2.27 | [Filas prontas do Java: `Queue`, `ArrayDeque`, `LinkedList` e `PriorityQueue`](./docs/02-java/27-queue.md) |
+| 2.28 | [Listas prontas: a interface `List`](./docs/02-java/28-list.md) |
+| 2.29 | [Conjuntos: a interface `Set`](./docs/02-java/29-set.md) |
+| 2.30 | [Mapas: a interface `Map`](./docs/02-java/30-map.md) |
+| 2.31 | [Métodos: assinatura, construtores e passagem de parâmetros](./docs/02-java/31-metodos-conceitos.md) |
+| 2.32 | [Sobrecarga × sobrescrita](./docs/02-java/32-sobrecarga-e-sobrescrita.md) |
+| 2.33 | [Retorno de métodos](./docs/02-java/33-retorno-de-metodos.md) |
+| 2.34 | [Exercícios de métodos](./docs/02-java/34-exercicios-metodos.md) |
 
 ### 3️⃣ Desafios de código: algoritmos básicos
 
@@ -148,7 +150,7 @@ Cinco desafios resolvidos e explicados passo a passo.
 
 ### 4️⃣ Programação orientada a objetos
 
-Classes, herança, interfaces, Collections, Stream API, exceções, Maven e testes com JUnit.
+Classes, herança, interfaces, classes abstratas, `static`, `enum`, Collections, Stream API, exceções, Maven e testes com JUnit.
 
 | Aula | Assunto |
 | --- | --- |
@@ -156,40 +158,49 @@ Classes, herança, interfaces, Collections, Stream API, exceções, Maven e test
 | 4.2 | [Herança, upcast/downcast e polimorfismo](./docs/04-poo/02-heranca-e-polimorfismo.md) |
 | 4.3 | [Associação: dependência, agregação e composição](./docs/04-poo/03-associacao.md) |
 | 4.4 | [Interfaces](./docs/04-poo/04-interfaces.md) |
-| 4.5 | [Pacotes](./docs/04-poo/05-pacotes.md) |
-| 4.6 | [Modificadores de acesso](./docs/04-poo/06-modificadores-de-acesso.md) |
-| 4.7 | [O framework Collections](./docs/04-poo/07-collections.md) |
-| 4.8 | [List: ordenação, `Comparable` e `Comparator`](./docs/04-poo/08-list.md) |
-| 4.9 | [Set: conjuntos sem repetição](./docs/04-poo/09-set.md) |
-| 4.10 | [Map: dicionários chave → valor](./docs/04-poo/10-map.md) |
-| 4.11 | [Lambdas, referências de método e Stream API](./docs/04-poo/11-stream-api.md) |
-| 4.12 | [Debugging: encontrando erros no código](./docs/04-poo/12-debugging.md) |
-| 4.13 | [Tratamento de exceções](./docs/04-poo/13-excecoes.md) |
-| 4.14 | [O que é o Apache Maven](./docs/04-poo/14-maven.md) |
-| 4.15 | [Criando projetos e comandos do Maven](./docs/04-poo/15-maven-comandos.md) |
-| 4.16 | [Gerenciamento de dependências: transitividade, escopos e exclusões](./docs/04-poo/16-maven-dependencias.md) |
-| 4.17 | [Ciclo de vida do build (*build lifecycle*)](./docs/04-poo/17-maven-ciclo-de-vida.md) |
-| 4.18 | [Projetos multimódulos](./docs/04-poo/18-maven-multi-modulos.md) |
-| 4.19 | [Plugins do Maven](./docs/04-poo/19-maven-plugins.md) |
-| 4.20 | [Testes unitários e JUnit](./docs/04-poo/20-testes-unitarios.md) |
-| 4.21 | [JUnit a fundo: assertions, assumptions e ciclo de vida](./docs/04-poo/21-junit-recursos.md) |
-| 4.22 | [Boas práticas de testes e TDD](./docs/04-poo/22-testes-boas-praticas.md) |
-| 4.23 | [Desafio POO: o domínio de um bootcamp](./docs/04-poo/23-desafio-poo.md) |
+| 4.5 | [Classes abstratas, membros `static` e `enum`](./docs/04-poo/05-abstratas-static-enum.md) |
+| 4.6 | [Pacotes](./docs/04-poo/06-pacotes.md) |
+| 4.7 | [Modificadores de acesso](./docs/04-poo/07-modificadores-de-acesso.md) |
+| 4.8 | [O framework Collections](./docs/04-poo/08-collections.md) |
+| 4.9 | [List: ordenação, `Comparable` e `Comparator`](./docs/04-poo/09-list.md) |
+| 4.10 | [Set: conjuntos sem repetição](./docs/04-poo/10-set.md) |
+| 4.11 | [Map: dicionários chave → valor](./docs/04-poo/11-map.md) |
+| 4.12 | [Lambdas, referências de método e Stream API](./docs/04-poo/12-stream-api.md) |
+| 4.13 | [Debugging: encontrando erros no código](./docs/04-poo/13-debugging.md) |
+| 4.14 | [Tratamento de exceções](./docs/04-poo/14-excecoes.md) |
+| 4.15 | [O que é o Apache Maven](./docs/04-poo/15-maven.md) |
+| 4.16 | [Criando projetos e comandos do Maven](./docs/04-poo/16-maven-comandos.md) |
+| 4.17 | [Gerenciamento de dependências: transitividade, escopos e exclusões](./docs/04-poo/17-maven-dependencias.md) |
+| 4.18 | [Ciclo de vida do build (*build lifecycle*)](./docs/04-poo/18-maven-ciclo-de-vida.md) |
+| 4.19 | [Projetos multimódulos](./docs/04-poo/19-maven-multi-modulos.md) |
+| 4.20 | [Plugins do Maven](./docs/04-poo/20-maven-plugins.md) |
+| 4.21 | [Testes unitários e JUnit](./docs/04-poo/21-testes-unitarios.md) |
+| 4.22 | [JUnit a fundo: assertions, assumptions e ciclo de vida](./docs/04-poo/22-junit-recursos.md) |
+| 4.23 | [Boas práticas de testes e TDD](./docs/04-poo/23-testes-boas-praticas.md) |
+| 4.24 | [Desafio POO: o domínio de um bootcamp](./docs/04-poo/24-desafio-poo.md) |
 
 ### 5️⃣ Bancos de dados SQL e NoSQL
 
-SQL, modelagem relacional, MongoDB e Amazon DynamoDB.
+Do zero: o que é um banco, modelagem, normalização, SQL completo (com JOINs, transações e índices), JDBC, MongoDB e Amazon DynamoDB.
 
 | Aula | Assunto |
 | --- | --- |
-| 5.1 | [Primeiros passos com SQL e bancos relacionais](./docs/05-banco-de-dados/01-sql.md) |
-| 5.2 | [NoSQL: o que é e quando usar](./docs/05-banco-de-dados/02-nosql.md) |
-| 5.3 | [MongoDB: conceitos e instalação](./docs/05-banco-de-dados/03-mongodb.md) |
-| 5.4 | [MongoDB: modelagem (*embedding* × referência) e boas práticas](./docs/05-banco-de-dados/04-mongodb-modelagem.md) |
-| 5.5 | [MongoDB: comandos essenciais (CRUD)](./docs/05-banco-de-dados/05-mongodb-comandos.md) |
-| 5.6 | [MongoDB: índices, desempenho e agregações](./docs/05-banco-de-dados/06-mongodb-indices-e-agregacoes.md) |
-| 5.7 | [Amazon DynamoDB](./docs/05-banco-de-dados/07-dynamodb.md) |
-| 5.8 | [Prática: DynamoDB pela AWS CLI](./docs/05-banco-de-dados/08-dynamodb-pratica.md) |
+| 5.1 | [O que é um banco de dados (e como preparar o ambiente)](./docs/05-banco-de-dados/01-o-que-e-banco-de-dados.md) |
+| 5.2 | [Modelagem relacional: tabelas, chaves e relacionamentos](./docs/05-banco-de-dados/02-modelagem-relacional.md) |
+| 5.3 | [Normalização: organizando as tabelas sem repetição](./docs/05-banco-de-dados/03-normalizacao.md) |
+| 5.4 | [SQL: criando tabelas, tipos e restrições (DDL)](./docs/05-banco-de-dados/04-sql-criando-tabelas.md) |
+| 5.5 | [SQL: inserindo, alterando e apagando dados (DML)](./docs/05-banco-de-dados/05-sql-inserindo-e-alterando.md) |
+| 5.6 | [SQL: consultando dados com `SELECT`](./docs/05-banco-de-dados/06-sql-consultas.md) |
+| 5.7 | [SQL: juntando tabelas com `JOIN` e subconsultas](./docs/05-banco-de-dados/07-sql-joins-e-subconsultas.md) |
+| 5.8 | [Transações, índices, views e permissões](./docs/05-banco-de-dados/08-transacoes-indices-e-views.md) |
+| 5.9 | [Java + banco de dados: JDBC](./docs/05-banco-de-dados/09-jdbc.md) |
+| 5.10 | [NoSQL: o que é e quando usar](./docs/05-banco-de-dados/10-nosql.md) |
+| 5.11 | [MongoDB: conceitos e instalação](./docs/05-banco-de-dados/11-mongodb.md) |
+| 5.12 | [MongoDB: comandos essenciais (CRUD)](./docs/05-banco-de-dados/12-mongodb-comandos.md) |
+| 5.13 | [MongoDB: modelagem (*embedding* × referência) e boas práticas](./docs/05-banco-de-dados/13-mongodb-modelagem.md) |
+| 5.14 | [MongoDB: índices, desempenho e agregações](./docs/05-banco-de-dados/14-mongodb-indices-e-agregacoes.md) |
+| 5.15 | [Amazon DynamoDB](./docs/05-banco-de-dados/15-dynamodb.md) |
+| 5.16 | [Prática: DynamoDB pela AWS CLI](./docs/05-banco-de-dados/16-dynamodb-pratica.md) |
 
 ### 6️⃣ Produtividade com Spring Framework
 
@@ -239,14 +250,16 @@ Mais cinco desafios, com soluções comentadas e variações.
 
 ### 8️⃣ Extras (além do curso)
 
-Java moderno, `Optional`, Docker e um guia de erros comuns.
+Java moderno, `Optional`, Docker, testes no Spring Boot, boas práticas de API e um guia de erros comuns.
 
 | Aula | Assunto |
 | --- | --- |
 | 8.1 | [Java moderno: o que mudou do Java 8 ao 25](./docs/08-extras/01-java-moderno.md) |
 | 8.2 | [Lidando com `null`: `NullPointerException` e `Optional`](./docs/08-extras/02-optional-e-null.md) |
 | 8.3 | [Docker para quem programa em Java](./docs/08-extras/03-docker-para-java.md) |
-| 8.4 | [Erros comuns em Java e Spring e como resolver](./docs/08-extras/04-erros-comuns.md) |
+| 8.4 | [Testando uma API Spring Boot](./docs/08-extras/04-testes-spring-boot.md) |
+| 8.5 | [Boas práticas em APIs: DTOs, paginação, migrações e logs](./docs/08-extras/05-boas-praticas-api.md) |
+| 8.6 | [Erros comuns em Java e Spring e como resolver](./docs/08-extras/06-erros-comuns.md) |
 
 ---
 
@@ -256,9 +269,9 @@ O código dos projetos feitos durante o bootcamp está na pasta [`projetos/`](./
 
 | Projeto | Assunto | Aula |
 | --- | --- | --- |
-| [02-loops-e-arrays](./projetos/02-loops-e-arrays/) | Exercícios de laços e arrays | [2.15](./docs/02-java/15-exercicios-repeticao.md) |
-| [04-testes-junit](./projetos/04-testes-junit/) | Testes unitários com JUnit 5 | [4.20](./docs/04-poo/20-testes-unitarios.md) |
-| [05-desafio-dynamodb](./projetos/05-desafio-dynamodb/) | Tabela, índices e consultas no DynamoDB | [5.8](./docs/05-banco-de-dados/08-dynamodb-pratica.md) |
+| [02-loops-e-arrays](./projetos/02-loops-e-arrays/) | Exercícios de laços e arrays | [2.16](./docs/02-java/16-exercicios-repeticao.md) |
+| [04-testes-junit](./projetos/04-testes-junit/) | Testes unitários com JUnit 5 | [4.21](./docs/04-poo/21-testes-unitarios.md) |
+| [05-desafio-dynamodb](./projetos/05-desafio-dynamodb/) | Tabela, índices e consultas no DynamoDB | [5.16](./docs/05-banco-de-dados/16-dynamodb-pratica.md) |
 | [06-spring-boot-dio](./projetos/06-spring-boot-dio/) | Primeiros passos, beans, escopos, propriedades, JPA e segurança | [6.13](./docs/06-spring/13-projeto-spring-boot.md) |
 | [06-api-com-swagger](./projetos/06-api-com-swagger/) | API REST documentada com Swagger | [6.18](./docs/06-spring/18-projeto-rest-api.md) |
 | [06-api-spring-security](./projetos/06-api-spring-security/) | API com Spring Security e banco de dados | [6.23](./docs/06-spring/23-projetos-seguranca.md) |

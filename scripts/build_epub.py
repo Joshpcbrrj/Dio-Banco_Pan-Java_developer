@@ -9,6 +9,7 @@ se ele estiver instalado; caso contrário, usa a capa em SVG.
 import glob
 import os
 import posixpath
+import random
 import re
 import shutil
 import subprocess
@@ -135,11 +136,15 @@ class Book:
                 atual = p["modulo"]
                 out += [f"## {modulos[atual - 1]}", ""]
             out += [f"**{n}.** {p['pergunta']}", ""]
-            out += [f"{letras[i]}) {op}" for i, op in enumerate(p["opcoes"])] + [""]
+            # embaralha as alternativas (sempre do mesmo jeito) para a certa não ficar sempre na mesma letra
+            ordem = list(range(len(p["opcoes"])))
+            random.Random(n).shuffle(ordem)
+            out += [f"{letras[i]}) {p['opcoes'][o]}" for i, o in enumerate(ordem)] + [""]
+            certa = letras[ordem.index(p["resposta"])]
             m = re.match(r"(\d+)-[^/]+/(\d+)-", p["aula"])
             numero = f"{int(m.group(1))}.{int(m.group(2))}"
             link = "#" + self.ids["docs/" + p["aula"]]
-            gabarito += [f"**{n}. {letras[p['resposta']]})** {p['explicacao']} [Revisar a aula {numero}]({link})", ""]
+            gabarito += [f"**{n}. {certa})** {p['explicacao']} [Revisar a aula {numero}]({link})", ""]
         return "\n".join(out + gabarito)
 
     def build(self):

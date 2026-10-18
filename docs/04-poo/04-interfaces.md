@@ -89,7 +89,7 @@ public class Pato extends Animal implements Nadador, Voador { ... }
 
 ### Classe abstrata × interface
 
-Uma **classe abstrata** (`abstract class`) fica no meio do caminho: não pode ser instanciada, pode ter métodos abstratos **e** atributos e construtores. Use-a quando várias classes compartilham **estado e código**; use interface quando compartilham só um **contrato**.
+Uma **classe abstrata** (`abstract class`) fica no meio do caminho: não pode ser instanciada, pode ter métodos abstratos **e** atributos e construtores. Use-a quando várias classes compartilham **estado e código**; use interface quando compartilham só um **contrato**. Os detalhes, com exemplos, estão na próxima aula ([4.5](./05-abstratas-static-enum.md)).
 
 ## 💡 Por que interfaces são tão usadas
 
@@ -169,6 +169,6 @@ Como é `default`, `Quadrado` e `Circulo` ganham o método automaticamente, sem 
 
 <div align="center">
 
-[⬅️ 4.3 Associação](./03-associacao.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [4.5 Pacotes ➡️](./05-pacotes.md)
+[⬅️ 4.3 Associação](./03-associacao.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [4.5 Classes abstratas, membros static e enum ➡️](./05-abstratas-static-enum.md)
 
 </div>

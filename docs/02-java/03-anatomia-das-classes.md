@@ -128,7 +128,7 @@ src/
     └── Main.java
 ```
 
-Você verá pacotes com mais detalhes na aula [4.5](../04-poo/05-pacotes.md).
+Você verá pacotes com mais detalhes na aula [4.6](../04-poo/06-pacotes.md).
 
 ## 📌 Resumindo
 

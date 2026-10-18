@@ -132,6 +132,6 @@ Dá erro (`ClassNotFoundException` ou "Could not find or load main class"), porq
 
 <div align="center">
 
-[⬅️ 2.9 Comentários, Javadoc e a documentação oficial](./09-javadoc.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [2.11 Operadores relacionais e lógicos a fundo ➡️](./11-operadores-relacionais-e-logicos.md)
+[⬅️ 2.9 Comentários, Javadoc e a documentação oficial](./09-javadoc.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [2.11 Strings e entrada de dados com Scanner ➡️](./11-strings-e-entrada.md)
 
 </div>

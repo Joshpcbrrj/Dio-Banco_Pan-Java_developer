@@ -25,7 +25,7 @@ flowchart LR
 1. **Qual é a finalidade?** Um método, uma responsabilidade.
 2. **Retorna algo?** Se não retornar nada, o tipo é `void`.
 3. **Precisa de quais dados?** Esses são os parâmetros.
-4. **Pode dar erro?** Pode ser preciso tratar ou declarar uma exceção (`throws`), assunto da aula [4.13](../04-poo/13-excecoes.md).
+4. **Pode dar erro?** Pode ser preciso tratar ou declarar uma exceção (`throws`), assunto da aula [4.14](../04-poo/14-excecoes.md).
 5. **Quem pode usar?** Visibilidade: `public`, `private`, `protected` ou nenhuma (padrão).
 
 ```java
@@ -71,7 +71,7 @@ public void gravar(Cliente cliente) { }
 - Em projetos em inglês, você verá muito `findById()`, `save()`, `getName()`.
 
 > [!TIP]
-> Este é só o primeiro contato. Assinatura, parâmetros, construtores, sobrecarga e retornos são aprofundados nas aulas [2.30 a 2.33](./30-metodos-conceitos.md).
+> Este é só o primeiro contato. Assinatura, parâmetros, construtores, sobrecarga e retornos são aprofundados nas aulas [2.31 a 2.33](./31-metodos-conceitos.md).
 
 ## 📌 Resumindo
 

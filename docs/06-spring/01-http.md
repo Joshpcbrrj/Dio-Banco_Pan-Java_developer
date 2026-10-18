@@ -123,6 +123,6 @@ Porque a velocidade importa mais que a garantia de entrega: se a posição de um
 
 <div align="center">
 
-[⬅️ 5.8 DynamoDB pela AWS CLI](../05-banco-de-dados/08-dynamodb-pratica.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [6.2 Mensagens HTTP ➡️](./02-mensagens-http.md)
+[⬅️ 5.16 DynamoDB pela AWS CLI](../05-banco-de-dados/16-dynamodb-pratica.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [6.2 Mensagens HTTP ➡️](./02-mensagens-http.md)
 
 </div>

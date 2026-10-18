@@ -34,6 +34,9 @@ spring.datasource.password=${DB_PASSWORD}
 spring.jpa.hibernate.ddl-auto=update
 ```
 
+> [!NOTE]
+> O `ddl-auto=update` deixa o Hibernate criar e alterar as tabelas sozinho: prático para estudar, arriscado em produção. Em projetos reais, as mudanças no banco são feitas com migrações versionadas (Flyway), e o Hibernate só valida (`ddl-auto=validate`). Veja a aula [8.5](../08-extras/05-boas-praticas-api.md).
+
 > [!CAUTION]
 > Nunca escreva usuário e senha do banco direto no `application.properties` versionado. Use **variáveis de ambiente** (como acima) ou um cofre de segredos (AWS Secrets Manager).
 

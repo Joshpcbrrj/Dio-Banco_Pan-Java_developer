@@ -102,7 +102,7 @@ if (idade >= 18 && temIngresso) {
 }
 ```
 
-Mais detalhes e tabelas-verdade na aula [2.11](./11-operadores-relacionais-e-logicos.md).
+Mais detalhes e tabelas-verdade na aula [2.12](./12-operadores-relacionais-e-logicos.md).
 
 ## ❓ Ternário
 

@@ -53,7 +53,7 @@ public class OlaMundo {
 
     ---
 
-    JDK, IDEs, tipos, operadores, controle de fluxo, arrays, estruturas de dados, Collections e métodos.
+    JDK, IDEs, tipos, operadores, Strings, controle de fluxo, arrays, estruturas de dados, Collections e métodos.
 
     [:octicons-arrow-right-24: Começar](02-java/01-historia-e-plataforma.md)
 
@@ -69,7 +69,7 @@ public class OlaMundo {
 
     ---
 
-    Classes, herança, interfaces, Collections, Stream API, exceções, Maven e testes com JUnit.
+    Classes, herança, interfaces, classes abstratas, `static`, `enum`, Collections, Stream API, exceções, Maven e testes com JUnit.
 
     [:octicons-arrow-right-24: Começar](04-poo/01-classes-e-objetos.md)
 
@@ -77,9 +77,9 @@ public class OlaMundo {
 
     ---
 
-    SQL, modelagem relacional, MongoDB e Amazon DynamoDB.
+    Do zero: modelagem, normalização, SQL completo (JOINs, transações, índices), JDBC, MongoDB e DynamoDB.
 
-    [:octicons-arrow-right-24: Começar](05-banco-de-dados/01-sql.md)
+    [:octicons-arrow-right-24: Começar](./05-banco-de-dados/01-o-que-e-banco-de-dados.md)
 
 -   :material-leaf: **6 · Spring**
 
@@ -101,7 +101,7 @@ public class OlaMundo {
 
     ---
 
-    Além do curso: Java moderno, `Optional`, Docker e um guia de erros comuns.
+    Além do curso: Java moderno, `Optional`, Docker, testes no Spring Boot, boas práticas de API e erros comuns.
 
     [:octicons-arrow-right-24: Começar](08-extras/01-java-moderno.md)
 

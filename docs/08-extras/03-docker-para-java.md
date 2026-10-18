@@ -158,6 +158,6 @@ Porque cada contêiner tem seu próprio `localhost`. Dentro da rede do Compose, 
 
 <div align="center">
 
-[⬅️ 8.2 Lidando com null](./02-optional-e-null.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [8.4 Erros comuns em Java e Spring e como resolver ➡️](./04-erros-comuns.md)
+[⬅️ 8.2 Lidando com null](./02-optional-e-null.md) &nbsp;|&nbsp; [🏠 Índice](../../README.md) &nbsp;|&nbsp; [8.4 Testando uma API Spring Boot ➡️](./04-testes-spring-boot.md)
 
 </div>
