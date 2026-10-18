@@ -1,0 +1,1537 @@
+# Banco de perguntas do simulado.
+#
+# Cada pergunta tem:
+#   modulo:     número do módulo (1 a 8)
+#   aula:       caminho da aula dentro de docs/, usado no link "Revisar aula"
+#   pergunta:   enunciado (aceita `código` e **negrito**)
+#   opcoes:     4 alternativas
+#   resposta:   índice da alternativa correta (0 = primeira)
+#   explicacao: por que a resposta está certa
+#
+# Use aspas simples nos textos. Para escrever um apóstrofo dentro deles, use dois: ''.
+
+# ---------------------------------------------------------------- Módulo 1
+- modulo: 1
+  aula: 01-principios/01-git-e-github.md
+  pergunta: 'Qual a diferença entre **Git** e **GitHub**?'
+  opcoes:
+    - 'São a mesma coisa: GitHub é só o nome comercial do Git.'
+    - 'Git é o sistema de controle de versão; GitHub é uma plataforma online que hospeda repositórios Git.'
+    - 'GitHub é o sistema de controle de versão; Git é o site onde ficam os projetos.'
+    - 'Git só funciona com internet; GitHub funciona offline.'
+  resposta: 1
+  explicacao: 'O Git roda no seu computador e guarda o histórico. O GitHub hospeda repositórios Git na nuvem e acrescenta colaboração (pull requests, issues, Actions).'
+
+- modulo: 1
+  aula: 01-principios/02-como-o-git-funciona.md
+  pergunta: 'No Git, o que é um **blob**?'
+  opcoes:
+    - 'Uma branch temporária.'
+    - 'O conteúdo de um arquivo, identificado por um hash.'
+    - 'Uma pasta do projeto.'
+    - 'Um commit que ainda não foi enviado ao GitHub.'
+  resposta: 1
+  explicacao: 'Blob guarda o conteúdo de um arquivo; tree representa uma pasta; commit é a foto do projeto com metadados e ponteiro para o commit pai.'
+
+- modulo: 1
+  aula: 01-principios/02-como-o-git-funciona.md
+  pergunta: 'Por que o histórico do Git é considerado "à prova de adulteração"?'
+  opcoes:
+    - 'Porque só o dono do repositório pode fazer commits.'
+    - 'Porque os commits são criptografados com senha.'
+    - 'Porque cada commit tem um hash calculado a partir do conteúdo e do commit anterior; mudar algo muda todos os hashes seguintes.'
+    - 'Porque o GitHub guarda uma cópia de segurança.'
+  resposta: 2
+  explicacao: 'O hash depende do conteúdo e do commit pai. Alterar um commit antigo mudaria o hash dele e de todos os que vêm depois, o que é facilmente detectado.'
+
+- modulo: 1
+  aula: 01-principios/03-primeiro-commit.md
+  pergunta: 'Qual a sequência correta para salvar uma alteração no histórico local?'
+  opcoes:
+    - '`git commit` e depois `git add`'
+    - '`git push` e depois `git commit`'
+    - '`git add` e depois `git commit`'
+    - '`git init` a cada alteração'
+  resposta: 2
+  explicacao: 'O `git add` coloca as alterações no staging; o `git commit` grava o que está no staging no histórico.'
+
+- modulo: 1
+  aula: 01-principios/04-ciclo-de-vida-e-conflitos.md
+  pergunta: 'Você precisa desfazer um commit que **já foi enviado** e que outras pessoas já baixaram. Qual comando é o mais seguro?'
+  opcoes:
+    - '`git reset --hard`'
+    - '`git revert`'
+    - '`git restore`'
+    - '`git rm`'
+  resposta: 1
+  explicacao: 'O `git revert` cria um novo commit que desfaz o anterior, sem reescrever o histórico compartilhado. O `reset` reescreve o histórico e deve ficar para commits só locais.'
+
+- modulo: 1
+  aula: 01-principios/04-ciclo-de-vida-e-conflitos.md
+  pergunta: 'Depois de editar o trecho em conflito e apagar os marcadores `<<<<<<<`, `=======` e `>>>>>>>`, o que falta fazer?'
+  opcoes:
+    - 'Nada, o Git detecta sozinho.'
+    - '`git add` no arquivo e `git commit`.'
+    - '`git init` de novo.'
+    - '`git reset --hard`.'
+  resposta: 1
+  explicacao: 'Com o conflito resolvido, você marca o arquivo como resolvido com `git add` e conclui o merge com `git commit`.'
+
+- modulo: 1
+  aula: 01-principios/05-manifesto-agil.md
+  pergunta: 'Quantos **valores** e **princípios** tem o Manifesto Ágil?'
+  opcoes:
+    - '4 valores e 12 princípios'
+    - '12 valores e 4 princípios'
+    - '3 valores e 5 princípios'
+    - '5 valores e 10 princípios'
+  resposta: 0
+  explicacao: 'O Manifesto Ágil, de 2001, tem 4 valores (como "indivíduos e interações mais que processos e ferramentas") e 12 princípios.'
+
+- modulo: 1
+  aula: 01-principios/06-tradicional-vs-agil.md
+  pergunta: 'Qual é a principal característica do modelo **cascata**?'
+  opcoes:
+    - 'Entregas pequenas a cada duas semanas.'
+    - 'Etapas em sequência, com o valor entregue só no final.'
+    - 'Ausência de planejamento.'
+    - 'Programação em par obrigatória.'
+  resposta: 1
+  explicacao: 'No cascata, cada etapa (requisitos, projeto, desenvolvimento, testes) só começa quando a anterior termina, e o cliente só vê o resultado no final.'
+
+- modulo: 1
+  aula: 01-principios/07-xp.md
+  pergunta: 'Qual destas é uma prática marcante do **XP (Extreme Programming)**?'
+  opcoes:
+    - 'Daily de 1 hora'
+    - 'Programação em par e TDD'
+    - 'Documentação completa antes de programar'
+    - 'Entregas anuais'
+  resposta: 1
+  explicacao: 'O XP, criado por Kent Beck, foca em qualidade técnica: programação em par, TDD, integração contínua, refatoração e design simples.'
+
+- modulo: 1
+  aula: 01-principios/08-scrum.md
+  pergunta: 'Quais são os três pilares do Scrum?'
+  opcoes:
+    - 'Planejamento, execução e entrega'
+    - 'Transparência, inspeção e adaptação'
+    - 'Velocidade, qualidade e custo'
+    - 'Backlog, sprint e incremento'
+  resposta: 1
+  explicacao: 'O Scrum se baseia no empirismo, sustentado por transparência, inspeção e adaptação. Backlog, sprint e incremento são artefatos e eventos, não pilares.'
+
+- modulo: 1
+  aula: 01-principios/08-scrum.md
+  pergunta: 'No Scrum, quem é responsável por priorizar o **Product Backlog**?'
+  opcoes:
+    - 'O Scrum Master'
+    - 'Os desenvolvedores'
+    - 'O Product Owner'
+    - 'O gerente de projetos'
+  resposta: 2
+  explicacao: 'O Product Owner cuida do Product Backlog e decide a ordem de prioridade para maximizar o valor entregue.'
+
+- modulo: 1
+  aula: 01-principios/09-kanban.md
+  pergunta: 'Para que serve o **limite de WIP** em um quadro Kanban?'
+  opcoes:
+    - 'Para limitar o número de pessoas no time.'
+    - 'Para limitar quantas tarefas podem estar em andamento ao mesmo tempo, evitando trabalho acumulado.'
+    - 'Para definir a duração da sprint.'
+    - 'Para limitar o número de colunas do quadro.'
+  resposta: 1
+  explicacao: 'WIP (*work in progress*) é o trabalho em andamento. Limitá-lo força o time a terminar antes de começar coisas novas e revela gargalos.'
+
+- modulo: 1
+  aula: 01-principios/10-okr.md
+  pergunta: 'Num OKR, o que é um **Key Result**?'
+  opcoes:
+    - 'Uma tarefa a ser feita pelo time.'
+    - 'Uma meta mensurável que indica se o objetivo foi alcançado.'
+    - 'O objetivo inspirador do trimestre.'
+    - 'Um indicador acompanhado para sempre, sem prazo.'
+  resposta: 1
+  explicacao: 'O Objetivo diz aonde ir; os Resultados-Chave (2 a 5 por objetivo) são metas mensuráveis, com valor-alvo e prazo.'
+
+# ---------------------------------------------------------------- Módulo 2
+- modulo: 2
+  aula: 02-java/01-historia-e-plataforma.md
+  pergunta: 'Qual a relação entre **JDK**, **JRE** e **JVM**?'
+  opcoes:
+    - 'JVM contém o JRE, que contém o JDK.'
+    - 'JDK = JRE + ferramentas de desenvolvimento; JRE = JVM + bibliotecas.'
+    - 'São três nomes para a mesma coisa.'
+    - 'JRE é usado para programar e JDK só para rodar programas.'
+  resposta: 1
+  explicacao: 'A JVM executa o bytecode; o JRE junta a JVM e as bibliotecas; o JDK acrescenta o compilador (`javac`) e outras ferramentas. Para programar, instale um JDK.'
+
+- modulo: 2
+  aula: 02-java/01-historia-e-plataforma.md
+  pergunta: 'O que o comando `javac` gera a partir de um arquivo `.java`?'
+  opcoes:
+    - 'Um executável `.exe`'
+    - 'Bytecode em um arquivo `.class`'
+    - 'Código de máquina específico do processador'
+    - 'Um arquivo `.jar` pronto para publicar'
+  resposta: 1
+  explicacao: 'O `javac` compila para bytecode (`.class`), que roda em qualquer JVM. Por isso o Java é "escreva uma vez, rode em qualquer lugar".'
+
+- modulo: 2
+  aula: 02-java/03-anatomia-das-classes.md
+  pergunta: 'Qual nome segue as convenções do Java para uma **classe**?'
+  opcoes:
+    - '`contaCorrente`'
+    - '`conta_corrente`'
+    - '`ContaCorrente`'
+    - '`CONTA_CORRENTE`'
+  resposta: 2
+  explicacao: 'Classes usam PascalCase; variáveis e métodos, camelCase; constantes, MAIÚSCULAS com sublinhado.'
+
+- modulo: 2
+  aula: 02-java/04-tipos-e-variaveis.md
+  pergunta: 'Qual tipo é o mais indicado para guardar **valores em dinheiro**?'
+  opcoes:
+    - '`float`'
+    - '`double`'
+    - '`int`'
+    - '`BigDecimal`'
+  resposta: 3
+  explicacao: '`float` e `double` têm imprecisões de arredondamento (por exemplo, `0.1 + 0.2` dá `0.30000000000000004`). `BigDecimal` faz contas decimais exatas.'
+
+- modulo: 2
+  aula: 02-java/04-tipos-e-variaveis.md
+  pergunta: 'Quantos tipos **primitivos** existem no Java?'
+  opcoes:
+    - '4'
+    - '6'
+    - '8'
+    - '10'
+  resposta: 2
+  explicacao: 'São 8: `byte`, `short`, `int`, `long`, `float`, `double`, `char` e `boolean`. `String` é uma classe, não um primitivo.'
+
+- modulo: 2
+  aula: 02-java/05-operadores.md
+  pergunta: 'Qual o resultado de `7 / 2` em Java, sendo os dois números `int`?'
+  opcoes:
+    - '`3.5`'
+    - '`3`'
+    - '`4`'
+    - 'Erro de compilação'
+  resposta: 1
+  explicacao: 'A divisão entre inteiros descarta a parte decimal. Para obter `3.5`, pelo menos um dos operandos precisa ser decimal: `7 / 2.0`.'
+
+- modulo: 2
+  aula: 02-java/05-operadores.md
+  pergunta: 'Depois de `int a = 5; int b = a++;`, quanto valem `a` e `b`?'
+  opcoes:
+    - '`a = 6`, `b = 6`'
+    - '`a = 5`, `b = 6`'
+    - '`a = 6`, `b = 5`'
+    - '`a = 5`, `b = 5`'
+  resposta: 2
+  explicacao: 'No pós-incremento (`a++`), o valor atual (5) é usado na expressão e só depois `a` vira 6.'
+
+- modulo: 2
+  aula: 02-java/05-operadores.md
+  pergunta: 'Qual o resultado de `10 % 3`?'
+  opcoes:
+    - '`3`'
+    - '`1`'
+    - '`3.33`'
+    - '`0`'
+  resposta: 1
+  explicacao: 'O `%` devolve o resto da divisão: 10 dividido por 3 dá 3, com resto 1.'
+
+- modulo: 2
+  aula: 02-java/07-escopo.md
+  pergunta: 'Por que este código não compila? `int total; System.out.println(total);` (dentro de um método)'
+  opcoes:
+    - 'Porque `total` é palavra reservada.'
+    - 'Porque variáveis locais não têm valor padrão e precisam ser inicializadas antes do uso.'
+    - 'Porque falta o `static`.'
+    - 'Porque `println` não aceita `int`.'
+  resposta: 1
+  explicacao: 'Atributos recebem valor padrão (0, `false`, `null`); variáveis locais não. O compilador exige `int total = 0;`.'
+
+- modulo: 2
+  aula: 02-java/09-javadoc.md
+  pergunta: 'Qual forma de comentário é usada para gerar documentação com a ferramenta `javadoc`?'
+  opcoes:
+    - '`// comentário`'
+    - '`/* comentário */`'
+    - '`/** comentário */`'
+    - '`# comentário`'
+  resposta: 2
+  explicacao: 'Comentários `/** ... */` são Javadoc e aceitam tags como `@param`, `@return` e `@throws`.'
+
+- modulo: 2
+  aula: 02-java/10-terminal.md
+  pergunta: 'Depois de `javac Ola.java`, qual comando executa o programa?'
+  opcoes:
+    - '`java Ola.class`'
+    - '`java Ola`'
+    - '`javac Ola`'
+    - '`run Ola`'
+  resposta: 1
+  explicacao: 'O comando `java` recebe o **nome da classe**, sem a extensão `.class`.'
+
+- modulo: 2
+  aula: 02-java/11-operadores-relacionais-e-logicos.md
+  pergunta: 'Para comparar o **conteúdo** de duas `String`, o que você deve usar?'
+  opcoes:
+    - '`==`'
+    - '`.equals()`'
+    - '`=`'
+    - '`compare()`'
+  resposta: 1
+  explicacao: '`==` compara se são o mesmo objeto na memória. `.equals()` compara o texto.'
+
+- modulo: 2
+  aula: 02-java/11-operadores-relacionais-e-logicos.md
+  pergunta: 'Em `if (lista != null && lista.size() > 0)`, o que acontece se `lista` for `null`?'
+  opcoes:
+    - 'Lança `NullPointerException`.'
+    - 'O `&&` faz curto-circuito: a segunda parte nem é avaliada e a condição é falsa.'
+    - 'Não compila.'
+    - 'A condição é verdadeira.'
+  resposta: 1
+  explicacao: 'Com `&&`, se a primeira parte for falsa, o resultado já é falso e o Java não avalia o resto, evitando a NPE.'
+
+- modulo: 2
+  aula: 02-java/12-controle-de-fluxo.md
+  pergunta: 'No `switch` tradicional (com `:`), o que acontece se você esquecer o `break` em um `case`?'
+  opcoes:
+    - 'Erro de compilação.'
+    - 'A execução "cai" no próximo `case` e continua executando.'
+    - 'O `switch` é ignorado.'
+    - 'O programa trava.'
+  resposta: 1
+  explicacao: 'Sem `break`, ocorre o *fall-through*. O `switch` com setas (`->`) não tem esse problema.'
+
+- modulo: 2
+  aula: 02-java/13-blocos-de-codigo.md
+  pergunta: 'Quando um bloco `static { ... }` de uma classe é executado?'
+  opcoes:
+    - 'A cada `new` da classe.'
+    - 'Uma única vez, quando a classe é carregada.'
+    - 'Toda vez que um método estático é chamado.'
+    - 'Nunca, é só um comentário.'
+  resposta: 1
+  explicacao: 'O bloco estático roda uma vez, no carregamento da classe. O bloco de inicialização (sem `static`) roda a cada `new`, antes do construtor.'
+
+- modulo: 2
+  aula: 02-java/14-repeticao-e-arrays.md
+  pergunta: 'Qual laço **sempre executa pelo menos uma vez**?'
+  opcoes:
+    - '`for`'
+    - '`while`'
+    - '`do-while`'
+    - '`for-each`'
+  resposta: 2
+  explicacao: 'O `do-while` testa a condição no fim, então o corpo roda ao menos uma vez.'
+
+- modulo: 2
+  aula: 02-java/14-repeticao-e-arrays.md
+  pergunta: 'Num array `int[] v = new int[5];`, quais são os índices válidos?'
+  opcoes:
+    - 'De 1 a 5'
+    - 'De 0 a 5'
+    - 'De 0 a 4'
+    - 'De 1 a 4'
+  resposta: 2
+  explicacao: 'Índices começam em 0 e vão até `length - 1`. Acessar `v[5]` lança `ArrayIndexOutOfBoundsException`.'
+
+- modulo: 2
+  aula: 02-java/14-repeticao-e-arrays.md
+  pergunta: 'O que faz o `continue` dentro de um laço?'
+  opcoes:
+    - 'Encerra o laço.'
+    - 'Pula o resto da volta atual e vai para a próxima.'
+    - 'Reinicia o laço do zero.'
+    - 'Encerra o método.'
+  resposta: 1
+  explicacao: '`break` sai do laço; `continue` só pula para a próxima iteração.'
+
+- modulo: 2
+  aula: 02-java/17-estruturas-de-dados.md
+  pergunta: 'Em `Pessoa a = new Pessoa(); Pessoa b = a; b.setNome("Ana");`, qual o nome de `a`?'
+  opcoes:
+    - '`null`'
+    - '"Ana", porque `a` e `b` apontam para o mesmo objeto.'
+    - 'O nome anterior, porque `b` é uma cópia.'
+    - 'Não compila.'
+  resposta: 1
+  explicacao: 'Com objetos, a variável guarda uma referência. `b = a` copia a referência, então as duas variáveis apontam para o mesmo objeto.'
+
+- modulo: 2
+  aula: 02-java/18-pilhas.md
+  pergunta: 'Uma **pilha** segue qual regra?'
+  opcoes:
+    - 'FIFO: o primeiro a entrar é o primeiro a sair.'
+    - 'LIFO: o último a entrar é o primeiro a sair.'
+    - 'Sai sempre o maior elemento.'
+    - 'Os elementos saem em ordem aleatória.'
+  resposta: 1
+  explicacao: 'Pilha é LIFO, como uma pilha de pratos. A fila é FIFO.'
+
+- modulo: 2
+  aula: 02-java/19-filas.md
+  pergunta: 'Numa fila implementada com nós, por que guardar referências para o **início e o fim**?'
+  opcoes:
+    - 'Para gastar menos memória.'
+    - 'Para que inserir no fim e remover do início sejam O(1), sem percorrer a fila.'
+    - 'Porque o Java exige.'
+    - 'Para poder ordenar os elementos.'
+  resposta: 1
+  explicacao: 'Com as duas pontas guardadas, `enqueue` e `dequeue` não precisam percorrer a estrutura.'
+
+- modulo: 2
+  aula: 02-java/20-listas-encadeadas.md
+  pergunta: 'Qual a principal desvantagem de uma lista encadeada em relação a um array?'
+  opcoes:
+    - 'Não aceita objetos.'
+    - 'Acessar um elemento por índice exige percorrer os nós desde o início.'
+    - 'Tem tamanho fixo.'
+    - 'Não permite remover elementos.'
+  resposta: 1
+  explicacao: 'No array, `v[i]` é imediato. Na lista encadeada, para chegar ao índice `i` é preciso seguir `i` referências.'
+
+- modulo: 2
+  aula: 02-java/22-listas-circulares.md
+  pergunta: 'Numa lista circular, para onde aponta o `proximo` do último nó?'
+  opcoes:
+    - 'Para `null`'
+    - 'Para ele mesmo, sempre'
+    - 'Para o primeiro nó'
+    - 'Para o nó do meio'
+  resposta: 2
+  explicacao: 'A cauda aponta para a cabeça, formando um círculo. Por isso é preciso cuidado com laços infinitos ao percorrer.'
+
+- modulo: 2
+  aula: 02-java/23-arvores-binarias.md
+  pergunta: 'Numa árvore binária de busca, o percurso **em ordem** devolve os elementos como?'
+  opcoes:
+    - 'Na ordem de inserção'
+    - 'Em ordem crescente'
+    - 'Em ordem decrescente'
+    - 'Por nível, da raiz às folhas'
+  resposta: 1
+  explicacao: 'Em ordem visita esquerda → raiz → direita. Como os menores ficam à esquerda, o resultado sai ordenado.'
+
+- modulo: 2
+  aula: 02-java/24-equals-e-hashcode.md
+  pergunta: 'Você sobrescreveu `equals()` mas não `hashCode()`. O que pode acontecer num `HashSet`?'
+  opcoes:
+    - 'Nada, o `HashSet` só usa `equals()`.'
+    - 'Objetos "iguais" podem aparecer duplicados, porque caem em posições diferentes.'
+    - 'Erro de compilação.'
+    - 'O `HashSet` passa a ordenar os elementos.'
+  resposta: 1
+  explicacao: 'O `HashSet` usa o hash para achar a posição e só depois o `equals`. Objetos iguais precisam ter o mesmo hash: sobrescreva sempre os dois juntos.'
+
+- modulo: 2
+  aula: 02-java/25-stack-e-deque.md
+  pergunta: 'Qual é a forma recomendada hoje de criar uma pilha em Java?'
+  opcoes:
+    - '`Stack<Integer> p = new Stack<>();`'
+    - '`Deque<Integer> p = new ArrayDeque<>();`'
+    - '`List<Integer> p = new ArrayList<>();`'
+    - '`Vector<Integer> p = new Vector<>();`'
+  resposta: 1
+  explicacao: '`Stack` é antiga (herda de `Vector`). A documentação recomenda `ArrayDeque` com `push`, `pop` e `peek`.'
+
+- modulo: 2
+  aula: 02-java/26-queue.md
+  pergunta: 'Numa `Queue` vazia, qual a diferença entre `poll()` e `remove()`?'
+  opcoes:
+    - 'Nenhuma.'
+    - '`poll()` devolve `null`; `remove()` lança exceção.'
+    - '`poll()` lança exceção; `remove()` devolve `null`.'
+    - '`poll()` apaga a fila inteira.'
+  resposta: 1
+  explicacao: '`offer`/`poll`/`peek` devolvem um valor especial; `add`/`remove`/`element` lançam exceção.'
+
+- modulo: 2
+  aula: 02-java/26-queue.md
+  pergunta: 'Qual fila entrega primeiro o elemento de **maior prioridade** (por padrão, o menor valor)?'
+  opcoes:
+    - '`ArrayDeque`'
+    - '`LinkedList`'
+    - '`PriorityQueue`'
+    - '`Stack`'
+  resposta: 2
+  explicacao: 'A `PriorityQueue` ordena pela ordem natural (ou por um `Comparator`), e não pela ordem de chegada.'
+
+- modulo: 2
+  aula: 02-java/27-list.md
+  pergunta: 'Por que `List.of(1, 2, 3).add(4)` lança exceção?'
+  opcoes:
+    - 'Porque `List.of` cria uma lista imutável.'
+    - 'Porque listas não aceitam números.'
+    - 'Porque falta o índice no `add`.'
+    - 'Porque a lista está cheia.'
+  resposta: 0
+  explicacao: '`List.of` cria uma lista imutável. Para uma lista alterável, use `new ArrayList<>(List.of(1, 2, 3))`.'
+
+- modulo: 2
+  aula: 02-java/28-set.md
+  pergunta: 'Qual `Set` mantém os elementos **ordenados**?'
+  opcoes:
+    - '`HashSet`'
+    - '`LinkedHashSet`'
+    - '`TreeSet`'
+    - 'Nenhum, `Set` não tem ordem.'
+  resposta: 2
+  explicacao: '`HashSet` não garante ordem; `LinkedHashSet` mantém a ordem de inserção; `TreeSet` mantém a ordem natural (ou a de um `Comparator`).'
+
+- modulo: 2
+  aula: 02-java/29-map.md
+  pergunta: 'O que acontece ao fazer `put` com uma chave que **já existe** no `Map`?'
+  opcoes:
+    - 'Lança exceção.'
+    - 'Cria uma segunda entrada com a mesma chave.'
+    - 'Substitui o valor antigo pelo novo.'
+    - 'Ignora o novo valor.'
+  resposta: 2
+  explicacao: 'As chaves são únicas: o `put` substitui o valor (e devolve o antigo). Para não sobrescrever, use `putIfAbsent`.'
+
+- modulo: 2
+  aula: 02-java/30-metodos-conceitos.md
+  pergunta: 'O que faz parte da **assinatura** de um método?'
+  opcoes:
+    - 'O nome e o tipo de retorno.'
+    - 'O nome e os tipos (e a ordem) dos parâmetros.'
+    - 'Só o nome.'
+    - 'O modificador de acesso e o nome.'
+  resposta: 1
+  explicacao: 'Assinatura = nome + lista de parâmetros. O tipo de retorno não faz parte dela, por isso não dá para sobrecarregar mudando só o retorno.'
+
+- modulo: 2
+  aula: 02-java/30-metodos-conceitos.md
+  pergunta: 'Como o Java passa parâmetros para os métodos?'
+  opcoes:
+    - 'Sempre por referência.'
+    - 'Sempre por valor; no caso de objetos, o valor copiado é a referência.'
+    - 'Primitivos por referência e objetos por valor.'
+    - 'Depende da IDE.'
+  resposta: 1
+  explicacao: 'Tudo é passado por valor. Para objetos, copia-se a referência: o método consegue alterar o objeto, mas não trocar para qual objeto a variável original aponta.'
+
+- modulo: 2
+  aula: 02-java/31-sobrecarga-e-sobrescrita.md
+  pergunta: 'Dois métodos `somar(int, int)` e `somar(double, double)` na mesma classe são um exemplo de quê?'
+  opcoes:
+    - 'Sobrescrita'
+    - 'Sobrecarga'
+    - 'Herança'
+    - 'Erro de compilação'
+  resposta: 1
+  explicacao: 'Sobrecarga: mesmo nome, parâmetros diferentes, na mesma classe. Sobrescrita é a subclasse redefinir um método herdado com a mesma assinatura.'
+
+- modulo: 2
+  aula: 02-java/32-retorno-de-metodos.md
+  pergunta: 'Um método declarado como `int calcular(int x)` tem um `if` com `return` dentro, mas nenhum `return` depois do `if`. O que acontece?'
+  opcoes:
+    - 'Compila e devolve 0 quando o `if` é falso.'
+    - 'Não compila: todo caminho de um método não-`void` precisa de `return`.'
+    - 'Compila e devolve `null`.'
+    - 'Lança exceção em tempo de execução.'
+  resposta: 1
+  explicacao: 'O compilador exige que todos os caminhos possíveis devolvam um valor do tipo declarado ("missing return statement").'
+
+# ---------------------------------------------------------------- Módulo 3
+- modulo: 3
+  aula: 03-desafios-basicos/01-fabrica-de-carros.md
+  pergunta: 'Um carro custa R$ 10.000 na fábrica. O distribuidor fica com 28% e os impostos são 45%, ambos sobre o custo de fábrica. Qual o preço final?'
+  opcoes:
+    - 'R$ 10.730'
+    - 'R$ 17.300'
+    - 'R$ 14.500'
+    - 'R$ 12.800'
+  resposta: 1
+  explicacao: '10.000 + 28% (2.800) + 45% (4.500) = 17.300. Em código: `custo * (100 + distribuidor + impostos) / 100`.'
+
+- modulo: 3
+  aula: 03-desafios-basicos/02-positivos-e-media.md
+  pergunta: 'Ao ler decimais como `7.5` com `Scanner` num computador configurado em português, o que pode dar errado?'
+  opcoes:
+    - 'Nada, o `Scanner` sempre usa ponto.'
+    - 'O `Scanner` espera vírgula e lança `InputMismatchException`; use `useLocale(Locale.US)`.'
+    - 'O número é arredondado para 7.'
+    - 'O `Scanner` não lê decimais.'
+  resposta: 1
+  explicacao: 'O `Scanner` segue o idioma do sistema. Em pt-BR ele espera `7,5`. Com `new Scanner(System.in).useLocale(Locale.US)`, passa a aceitar o ponto.'
+
+- modulo: 3
+  aula: 03-desafios-basicos/03-soma-de-h.md
+  pergunta: 'Em `double h = 0; for (int i = 1; i <= n; i++) h += 1 / i;`, por que o resultado sai errado?'
+  opcoes:
+    - 'Porque `i` deveria começar em 0.'
+    - 'Porque `1 / i` é divisão inteira: dá 0 a partir de `i = 2`. O certo é `1.0 / i`.'
+    - 'Porque `double` não aceita somas.'
+    - 'Porque falta um `break`.'
+  resposta: 1
+  explicacao: 'Com dois `int`, a divisão descarta os decimais. Basta um operando decimal (`1.0`) para a divisão ser decimal.'
+
+- modulo: 3
+  aula: 03-desafios-basicos/04-dragao.md
+  pergunta: 'Num `if / else if` com as condições `energia > 8000` e `energia > 50000`, em que ordem elas devem aparecer?'
+  opcoes:
+    - 'Tanto faz.'
+    - 'Primeiro `> 8000`, depois `> 50000`.'
+    - 'Primeiro `> 50000` (a mais restritiva), depois `> 8000`.'
+    - 'As duas no mesmo `if` com `||`.'
+  resposta: 2
+  explicacao: 'O `else if` só é testado se os anteriores falharem. Se `> 8000` viesse primeiro, ele capturaria também os valores acima de 50000.'
+
+- modulo: 3
+  aula: 03-desafios-basicos/05-fibonacci.md
+  pergunta: 'Por que a versão **recursiva simples** de Fibonacci fica lenta para valores como `fib(45)`?'
+  opcoes:
+    - 'Porque Java não suporta recursão.'
+    - 'Porque ela recalcula os mesmos valores muitas vezes, e o número de chamadas cresce exponencialmente.'
+    - 'Porque usa `long`.'
+    - 'Porque o `for` é sempre mais lento.'
+  resposta: 1
+  explicacao: '`fib(45)` chama `fib(44)` e `fib(43)`, e `fib(44)` chama `fib(43)` de novo, e assim por diante. A versão com laço faz só `n` passos.'
+
+# ---------------------------------------------------------------- Módulo 4
+- modulo: 4
+  aula: 04-poo/01-classes-e-objetos.md
+  pergunta: 'Qual a diferença entre **classe** e **objeto**?'
+  opcoes:
+    - 'São sinônimos.'
+    - 'Classe é o molde; objeto é uma instância criada a partir dele com `new`.'
+    - 'Objeto é o molde; classe é a instância.'
+    - 'Classe guarda dados e objeto guarda métodos.'
+  resposta: 1
+  explicacao: 'A classe define atributos e métodos; cada `new` cria um objeto com o seu próprio estado.'
+
+- modulo: 4
+  aula: 04-poo/01-classes-e-objetos.md
+  pergunta: 'O que é **encapsulamento**?'
+  opcoes:
+    - 'Colocar todas as classes no mesmo arquivo.'
+    - 'Deixar os atributos `private` e permitir alterações só por métodos que validam as regras.'
+    - 'Herdar de várias classes.'
+    - 'Compactar o projeto em um `.jar`.'
+  resposta: 1
+  explicacao: 'Encapsular protege o estado do objeto: ninguém consegue, por exemplo, deixar um saldo negativo sem passar pela regra do método `sacar`.'
+
+- modulo: 4
+  aula: 04-poo/02-heranca-e-polimorfismo.md
+  pergunta: 'Java permite que uma classe estenda (`extends`) quantas classes?'
+  opcoes:
+    - 'Quantas quiser.'
+    - 'Apenas uma; mas pode implementar várias interfaces.'
+    - 'Duas.'
+    - 'Nenhuma, Java não tem herança.'
+  resposta: 1
+  explicacao: 'Java não tem herança múltipla de classes. Para combinar vários "contratos", a classe implementa várias interfaces.'
+
+- modulo: 4
+  aula: 04-poo/02-heranca-e-polimorfismo.md
+  pergunta: 'Antes de fazer um **downcast** (`(Gerente) funcionario`), o que é recomendado?'
+  opcoes:
+    - 'Nada, o downcast é sempre seguro.'
+    - 'Conferir com `instanceof`, para evitar `ClassCastException`.'
+    - 'Usar `super`.'
+    - 'Converter para `String` antes.'
+  resposta: 1
+  explicacao: 'O upcast é automático e seguro; o downcast é explícito e falha se o objeto real não for daquele tipo. Use `if (f instanceof Gerente g)`.'
+
+- modulo: 4
+  aula: 04-poo/02-heranca-e-polimorfismo.md
+  pergunta: 'Uma lista `List<Forma>` tem um `Circulo` e um `Quadrado`. Ao chamar `forma.area()` em cada um, cada objeto calcula a área do seu jeito. Esse é um exemplo de quê?'
+  opcoes:
+    - 'Encapsulamento'
+    - 'Sobrecarga'
+    - 'Polimorfismo'
+    - 'Composição'
+  resposta: 2
+  explicacao: 'Polimorfismo: a mesma chamada produz comportamentos diferentes conforme o objeto real.'
+
+- modulo: 4
+  aula: 04-poo/03-associacao.md
+  pergunta: 'Um `Pedido` cria e controla seus `ItemPedido`, que não fazem sentido sem ele. Que tipo de associação é essa?'
+  opcoes:
+    - 'Dependência'
+    - 'Agregação'
+    - 'Composição'
+    - 'Herança'
+  resposta: 2
+  explicacao: 'Na composição, o todo cria e controla as partes, que não existem sem ele. Na agregação, as partes vivem de forma independente.'
+
+- modulo: 4
+  aula: 04-poo/04-interfaces.md
+  pergunta: 'O que uma **interface** pode ter a partir do Java 8+?'
+  opcoes:
+    - 'Atributos de instância (estado).'
+    - 'Métodos abstratos, `default`, `static` e (desde o 9) `private`.'
+    - 'Construtores.'
+    - 'Só métodos abstratos.'
+  resposta: 1
+  explicacao: 'Interfaces não guardam estado, mas podem ter métodos com implementação (`default`, `static`, `private`) além dos abstratos.'
+
+- modulo: 4
+  aula: 04-poo/05-pacotes.md
+  pergunta: 'Qual pacote é importado **automaticamente** em toda classe Java?'
+  opcoes:
+    - '`java.util`'
+    - '`java.io`'
+    - '`java.lang`'
+    - '`java.time`'
+  resposta: 2
+  explicacao: '`java.lang` (com `String`, `Math`, `System`...) é importado automaticamente. Os demais precisam de `import`.'
+
+- modulo: 4
+  aula: 04-poo/06-modificadores-de-acesso.md
+  pergunta: 'Um atributo sem modificador de acesso (acesso *padrão*) é visível onde?'
+  opcoes:
+    - 'Em qualquer lugar.'
+    - 'Só dentro da própria classe.'
+    - 'Nas classes do mesmo pacote.'
+    - 'Só nas subclasses.'
+  resposta: 2
+  explicacao: 'Do mais aberto ao mais fechado: `public` (todos), `protected` (pacote + subclasses), padrão (pacote) e `private` (só a classe).'
+
+- modulo: 4
+  aula: 04-poo/07-collections.md
+  pergunta: 'Você remove itens de uma lista dentro de um *for-each* e recebe `ConcurrentModificationException`. Qual a solução?'
+  opcoes:
+    - 'Usar `removeIf` ou um `Iterator`.'
+    - 'Trocar a lista por um array.'
+    - 'Envolver o laço em `try/catch`.'
+    - 'Usar `Thread.sleep`.'
+  resposta: 0
+  explicacao: 'O *for-each* não permite alterar a coleção durante a iteração. `lista.removeIf(cond)` ou `iterator.remove()` fazem isso com segurança.'
+
+- modulo: 4
+  aula: 04-poo/08-list.md
+  pergunta: 'Qual a diferença entre `Comparable` e `Comparator`?'
+  opcoes:
+    - '`Comparable` define a ordem natural dentro da classe; `Comparator` define ordens alternativas, fora dela.'
+    - 'São a mesma interface com nomes diferentes.'
+    - '`Comparator` só funciona com números.'
+    - '`Comparable` serve para `Map` e `Comparator` para `List`.'
+  resposta: 0
+  explicacao: '`Comparable` (`compareTo`) é implementada pela própria classe. `Comparator` permite outras ordens: `Comparator.comparing(Pessoa::getIdade).reversed()`.'
+
+- modulo: 4
+  aula: 04-poo/09-set.md
+  pergunta: 'O que o método `add` de um `Set` devolve ao tentar inserir um elemento que **já existe**?'
+  opcoes:
+    - '`true`'
+    - '`false`'
+    - 'Lança exceção.'
+    - '`null`'
+  resposta: 1
+  explicacao: 'O `Set` não aceita repetidos: o `add` devolve `false` e o conjunto continua igual.'
+
+- modulo: 4
+  aula: 04-poo/10-map.md
+  pergunta: 'Qual método conta ocorrências de palavras de forma mais curta?'
+  opcoes:
+    - '`mapa.put(palavra, mapa.get(palavra) + 1)`'
+    - '`mapa.merge(palavra, 1, Integer::sum)`'
+    - '`mapa.remove(palavra)`'
+    - '`mapa.keySet().add(palavra)`'
+  resposta: 1
+  explicacao: '`merge` insere 1 se a chave não existe ou soma 1 ao valor atual. A primeira opção quebraria com NPE na primeira ocorrência.'
+
+- modulo: 4
+  aula: 04-poo/11-stream-api.md
+  pergunta: 'Numa Stream, quando as operações intermediárias (`filter`, `map`...) são executadas?'
+  opcoes:
+    - 'Imediatamente, uma por vez.'
+    - 'Só quando uma operação terminal (como `toList()` ou `count()`) é chamada.'
+    - 'Em paralelo, sempre.'
+    - 'Nunca, elas só descrevem a operação.'
+  resposta: 1
+  explicacao: 'As operações intermediárias são preguiçosas (*lazy*): nada acontece até a operação terminal disparar o processamento.'
+
+- modulo: 4
+  aula: 04-poo/11-stream-api.md
+  pergunta: 'O que é uma **interface funcional**?'
+  opcoes:
+    - 'Uma interface sem métodos.'
+    - 'Uma interface com exatamente um método abstrato, que pode ser implementada por uma lambda.'
+    - 'Uma interface com só métodos `static`.'
+    - 'Qualquer classe com o método `apply`.'
+  resposta: 1
+  explicacao: 'Exemplos: `Predicate`, `Function`, `Consumer`, `Supplier`, `Comparator`. A lambda é uma forma curta de implementar o único método abstrato.'
+
+- modulo: 4
+  aula: 04-poo/12-debugging.md
+  pergunta: 'Ao ler um **stack trace**, onde procurar primeiro a causa do erro?'
+  opcoes:
+    - 'Na última linha.'
+    - 'No tipo e mensagem da exceção e na primeira linha `at` que aponta para o seu código.'
+    - 'Nas linhas das bibliotecas do Java.'
+    - 'Em qualquer linha, a ordem não importa.'
+  resposta: 1
+  explicacao: 'O stack trace é a pilha de chamadas: leia de cima para baixo, entenda o tipo do erro e ache a primeira linha que é do seu projeto.'
+
+- modulo: 4
+  aula: 04-poo/13-excecoes.md
+  pergunta: 'Qual a diferença entre exceções **checked** e **unchecked**?'
+  opcoes:
+    - 'Checked o compilador obriga a tratar ou declarar; unchecked (`RuntimeException`) não.'
+    - 'Unchecked o compilador obriga a tratar; checked não.'
+    - 'Checked são erros da JVM, como `OutOfMemoryError`.'
+    - 'Não há diferença.'
+  resposta: 0
+  explicacao: 'Exceções checked (como `IOException`) exigem `try/catch` ou `throws`. As unchecked (como `NullPointerException`) geralmente indicam bugs.'
+
+- modulo: 4
+  aula: 04-poo/13-excecoes.md
+  pergunta: 'Qual a diferença entre `throw` e `throws`?'
+  opcoes:
+    - 'São sinônimos.'
+    - '`throw` lança uma exceção; `throws` declara, na assinatura, que o método pode lançá-la.'
+    - '`throws` lança e `throw` captura.'
+    - '`throw` só serve para `Error`.'
+  resposta: 1
+  explicacao: '`throw new IllegalArgumentException(...)` lança; `void ler() throws IOException` avisa quem chama que precisa tratar.'
+
+- modulo: 4
+  aula: 04-poo/13-excecoes.md
+  pergunta: 'Para que serve o **try-with-resources**?'
+  opcoes:
+    - 'Para repetir o bloco se der erro.'
+    - 'Para fechar automaticamente recursos (arquivos, conexões) ao final do bloco.'
+    - 'Para ignorar exceções.'
+    - 'Para rodar o bloco em outra thread.'
+  resposta: 1
+  explicacao: 'Recursos declarados em `try (...)` que implementam `AutoCloseable` são fechados automaticamente, mesmo se ocorrer uma exceção.'
+
+- modulo: 4
+  aula: 04-poo/14-maven.md
+  pergunta: 'Como o Maven identifica uma biblioteca?'
+  opcoes:
+    - 'Pelo nome do arquivo `.jar`.'
+    - 'Pelas coordenadas `groupId:artifactId:version`.'
+    - 'Pela URL do site da biblioteca.'
+    - 'Pelo nome do autor.'
+  resposta: 1
+  explicacao: 'As coordenadas (por exemplo, `org.junit.jupiter:junit-jupiter:5.11.0`) localizam a biblioteca no Maven Central.'
+
+- modulo: 4
+  aula: 04-poo/14-maven.md
+  pergunta: 'Onde ficam os testes num projeto Maven?'
+  opcoes:
+    - '`src/main/java`'
+    - '`src/test/java`'
+    - '`target/test`'
+    - '`test/`, na raiz'
+  resposta: 1
+  explicacao: 'Código em `src/main/java`, testes em `src/test/java` e saída do build em `target`.'
+
+- modulo: 4
+  aula: 04-poo/16-maven-dependencias.md
+  pergunta: 'Qual escopo usar para o **JUnit** no `pom.xml`?'
+  opcoes:
+    - '`compile`'
+    - '`runtime`'
+    - '`test`'
+    - '`provided`'
+  resposta: 2
+  explicacao: 'Com escopo `test`, a biblioteca só está disponível para compilar e rodar os testes e não vai junto no pacote final.'
+
+- modulo: 4
+  aula: 04-poo/17-maven-ciclo-de-vida.md
+  pergunta: 'Ao rodar `mvn package`, quais fases são executadas?'
+  opcoes:
+    - 'Só a `package`.'
+    - 'Todas as anteriores (validate, compile, test...) e a `package`.'
+    - '`package` e `install`.'
+    - '`clean` e `package`.'
+  resposta: 1
+  explicacao: 'Pedir uma fase executa todas as anteriores do ciclo `default`. Por isso `mvn package` também compila e roda os testes.'
+
+- modulo: 4
+  aula: 04-poo/18-maven-multi-modulos.md
+  pergunta: 'Num projeto multimódulos, qual `packaging` o POM pai deve ter?'
+  opcoes:
+    - '`jar`'
+    - '`war`'
+    - '`pom`'
+    - '`ear`'
+  resposta: 2
+  explicacao: 'O pai tem `<packaging>pom</packaging>` e lista os filhos em `<modules>`; cada módulo declara o pai em `<parent>`.'
+
+- modulo: 4
+  aula: 04-poo/20-testes-unitarios.md
+  pergunta: 'Qual anotação marca um método como teste no JUnit 5?'
+  opcoes:
+    - '`@Teste`'
+    - '`@Test`'
+    - '`@RunTest`'
+    - '`@Check`'
+  resposta: 1
+  explicacao: 'Métodos com `@Test` são executados pelo JUnit, por exemplo com `mvn test`.'
+
+- modulo: 4
+  aula: 04-poo/21-junit-recursos.md
+  pergunta: 'Como verificar, com JUnit 5, que um método lança `IllegalArgumentException`?'
+  opcoes:
+    - '`assertEquals(IllegalArgumentException.class, metodo())`'
+    - '`assertThrows(IllegalArgumentException.class, () -> metodo())`'
+    - '`assertTrue(metodo() instanceof Exception)`'
+    - 'Com `try/catch` e `System.out.println`.'
+  resposta: 1
+  explicacao: '`assertThrows` executa a lambda e falha se a exceção esperada não for lançada. Ele ainda devolve a exceção para outras verificações.'
+
+- modulo: 4
+  aula: 04-poo/21-junit-recursos.md
+  pergunta: 'Qual a diferença entre `@BeforeEach` e `@BeforeAll`?'
+  opcoes:
+    - '`@BeforeEach` roda antes de cada teste; `@BeforeAll` roda uma vez antes de todos (e deve ser `static`).'
+    - 'São iguais.'
+    - '`@BeforeAll` roda antes de cada teste.'
+    - '`@BeforeEach` roda uma vez só.'
+  resposta: 0
+  explicacao: 'Use `@BeforeEach` para preparar um estado limpo a cada teste e `@BeforeAll` para algo caro feito uma só vez.'
+
+- modulo: 4
+  aula: 04-poo/22-testes-boas-praticas.md
+  pergunta: 'Qual o ciclo do **TDD**?'
+  opcoes:
+    - 'Código → teste → deploy'
+    - 'Vermelho (teste falha) → verde (faz passar) → refatorar'
+    - 'Planejar → codificar → documentar'
+    - 'Verde → vermelho → verde'
+  resposta: 1
+  explicacao: 'No TDD, você escreve um teste que falha, escreve o mínimo de código para passar e depois melhora o código mantendo os testes verdes.'
+
+- modulo: 4
+  aula: 04-poo/22-testes-boas-praticas.md
+  pergunta: 'O que significa o padrão **Arrange → Act → Assert**?'
+  opcoes:
+    - 'Organizar os imports, executar e documentar.'
+    - 'Preparar os dados, executar a ação testada e verificar o resultado.'
+    - 'Atribuir, agir e alertar.'
+    - 'Três tipos de teste: unitário, integração e ponta a ponta.'
+  resposta: 1
+  explicacao: 'Separar o teste nessas três partes deixa claro o que está sendo testado e facilita a leitura.'
+
+# ---------------------------------------------------------------- Módulo 5
+- modulo: 5
+  aula: 05-banco-de-dados/01-sql.md
+  pergunta: 'Qual a diferença entre `WHERE` e `HAVING`?'
+  opcoes:
+    - 'São sinônimos.'
+    - '`WHERE` filtra linhas antes do agrupamento; `HAVING` filtra os grupos depois do `GROUP BY`.'
+    - '`HAVING` filtra linhas e `WHERE` filtra grupos.'
+    - '`HAVING` só funciona com `JOIN`.'
+  resposta: 1
+  explicacao: 'Exemplo: `WHERE ativo = true` filtra clientes; `HAVING COUNT(*) > 5` filtra os grupos com mais de 5 pedidos.'
+
+- modulo: 5
+  aula: 05-banco-de-dados/01-sql.md
+  pergunta: '`CREATE TABLE` e `ALTER TABLE` pertencem a qual subconjunto do SQL?'
+  opcoes:
+    - 'DML'
+    - 'DDL'
+    - 'DQL'
+    - 'DCL'
+  resposta: 1
+  explicacao: 'DDL define a estrutura; DML altera dados (`INSERT`, `UPDATE`, `DELETE`); DQL consulta (`SELECT`); DCL cuida de permissões.'
+
+- modulo: 5
+  aula: 05-banco-de-dados/01-sql.md
+  pergunta: 'O que é uma **chave estrangeira** (FK)?'
+  opcoes:
+    - 'Uma coluna que identifica unicamente cada linha.'
+    - 'Uma coluna que referencia a chave primária de outra tabela.'
+    - 'Uma senha de acesso ao banco.'
+    - 'Um índice para buscas de texto.'
+  resposta: 1
+  explicacao: 'A FK liga tabelas (por exemplo, `pedido.cliente_id` → `cliente.id`) e garante que a referência exista.'
+
+- modulo: 5
+  aula: 05-banco-de-dados/02-nosql.md
+  pergunta: 'Qual destes **não** é um modelo comum de banco NoSQL?'
+  opcoes:
+    - 'Documento'
+    - 'Chave-valor'
+    - 'Grafo'
+    - 'Planilha'
+  resposta: 3
+  explicacao: 'Os modelos NoSQL mais comuns são documento (MongoDB), chave-valor (Redis, DynamoDB), colunar (Cassandra) e grafo (Neo4j).'
+
+- modulo: 5
+  aula: 05-banco-de-dados/03-mongodb.md
+  pergunta: 'Qual campo o MongoDB cria automaticamente em todo documento?'
+  opcoes:
+    - '`id`'
+    - '`_id`'
+    - '`key`'
+    - '`pk`'
+  resposta: 1
+  explicacao: 'O `_id` é a chave primária. Se você não informar, o MongoDB gera um `ObjectId` único.'
+
+- modulo: 5
+  aula: 05-banco-de-dados/04-mongodb-modelagem.md
+  pergunta: 'Quando é melhor **embutir** (embedding) um dado em vez de referenciá-lo?'
+  opcoes:
+    - 'Quando o dado é lido junto com o documento principal e a lista é pequena.'
+    - 'Quando a relação é N:N e cresce sem limite.'
+    - 'Sempre, referências não existem no MongoDB.'
+    - 'Quando o documento passa de 16 MB.'
+  resposta: 0
+  explicacao: 'Embedding é ótimo para dados lidos juntos (como os endereços de um cliente). Para relações grandes ou N:N, use referências; lembre do limite de 16 MB por documento.'
+
+- modulo: 5
+  aula: 05-banco-de-dados/05-mongodb-comandos.md
+  pergunta: 'Qual comando aumenta em 1 o campo `estoque` de um produto no `mongosh`?'
+  opcoes:
+    - '`db.produtos.updateOne({ nome: "X" }, { estoque: +1 })`'
+    - '`db.produtos.updateOne({ nome: "X" }, { $inc: { estoque: 1 } })`'
+    - '`db.produtos.insertOne({ estoque: 1 })`'
+    - '`db.produtos.update({ nome: "X" }, { $add: 1 })`'
+  resposta: 1
+  explicacao: 'O operador `$inc` incrementa. Sem um operador (`$set`, `$inc`...), o `updateOne` recusa a operação.'
+
+- modulo: 5
+  aula: 05-banco-de-dados/06-mongodb-indices-e-agregacoes.md
+  pergunta: 'O que indica um `COLLSCAN` no resultado de `explain()`?'
+  opcoes:
+    - 'Que a consulta usou um índice.'
+    - 'Que o MongoDB percorreu a coleção inteira, documento por documento.'
+    - 'Que a coleção foi apagada.'
+    - 'Que a consulta foi feita em cache.'
+  resposta: 1
+  explicacao: 'COLLSCAN é a varredura completa. Criar um índice no campo filtrado faz a consulta usar IXSCAN, bem mais rápido.'
+
+- modulo: 5
+  aula: 05-banco-de-dados/06-mongodb-indices-e-agregacoes.md
+  pergunta: 'Num pipeline de agregação, por que colocar o `$match` o mais cedo possível?'
+  opcoes:
+    - 'Porque é obrigatório.'
+    - 'Para reduzir os documentos processados nas etapas seguintes e aproveitar índices.'
+    - 'Porque o `$group` só funciona depois do `$sort`.'
+    - 'Para ordenar o resultado.'
+  resposta: 1
+  explicacao: 'Filtrar cedo diminui o trabalho de `$group`, `$sort` e `$lookup`, e o `$match` no início pode usar índices.'
+
+- modulo: 5
+  aula: 05-banco-de-dados/07-dynamodb.md
+  pergunta: 'No DynamoDB, uma chave primária **composta** é formada por quê?'
+  opcoes:
+    - 'Partition key + sort key'
+    - 'Duas partition keys'
+    - 'ID + data de criação, obrigatoriamente'
+    - 'Partition key + GSI'
+  resposta: 0
+  explicacao: 'A chave pode ser simples (só partition key) ou composta (partition + sort). A sort key ordena os itens que têm a mesma partition key.'
+
+- modulo: 5
+  aula: 05-banco-de-dados/07-dynamodb.md
+  pergunta: 'Para que serve um **GSI** (índice secundário global) no DynamoDB?'
+  opcoes:
+    - 'Para fazer backup da tabela.'
+    - 'Para consultar a tabela por atributos que não fazem parte da chave primária.'
+    - 'Para criptografar os dados.'
+    - 'Para aumentar o limite de tamanho dos itens.'
+  resposta: 1
+  explicacao: 'Sem índice, o `query` só funciona pela chave da tabela. Um GSI define outra chave (partition e sort) para consultas diferentes.'
+
+- modulo: 5
+  aula: 05-banco-de-dados/08-dynamodb-pratica.md
+  pergunta: 'O que um `query` no DynamoDB sempre precisa informar?'
+  opcoes:
+    - 'A sort key'
+    - 'A partition key (da tabela ou do índice consultado)'
+    - 'Todos os atributos do item'
+    - 'O nome do usuário da AWS'
+  resposta: 1
+  explicacao: 'O `query` busca dentro de uma partição, então a partition key é obrigatória. Buscar sem ela exige um `scan`, que lê a tabela inteira.'
+
+# ---------------------------------------------------------------- Módulo 6
+- modulo: 6
+  aula: 06-spring/01-http.md
+  pergunta: 'O que significa dizer que o HTTP é **sem estado** (*stateless*)?'
+  opcoes:
+    - 'Que ele não usa TCP.'
+    - 'Que cada requisição é independente: o servidor não lembra das anteriores por conta própria.'
+    - 'Que ele não tem códigos de status.'
+    - 'Que não guarda dados no banco.'
+  resposta: 1
+  explicacao: 'Para "lembrar" do usuário entre requisições, usam-se cookies, sessões ou tokens (como JWT).'
+
+- modulo: 6
+  aula: 06-spring/02-mensagens-http.md
+  pergunta: 'Códigos de status da família **4xx** indicam o quê?'
+  opcoes:
+    - 'Sucesso'
+    - 'Redirecionamento'
+    - 'Erro do cliente (requisição inválida, sem permissão, não encontrado...)'
+    - 'Erro do servidor'
+  resposta: 2
+  explicacao: '2xx sucesso, 3xx redirecionamento, 4xx erro do cliente, 5xx erro do servidor.'
+
+- modulo: 6
+  aula: 06-spring/02-mensagens-http.md
+  pergunta: 'Qual destes métodos HTTP **não** é idempotente?'
+  opcoes:
+    - '`GET`'
+    - '`PUT`'
+    - '`DELETE`'
+    - '`POST`'
+  resposta: 3
+  explicacao: 'Repetir um `POST` normalmente cria um novo recurso a cada vez. `GET`, `PUT` e `DELETE` produzem o mesmo efeito se repetidos.'
+
+- modulo: 6
+  aula: 06-spring/03-cookies-cache-proxy.md
+  pergunta: 'Qual atributo de cookie impede que ele seja lido por JavaScript, protegendo contra roubo via XSS?'
+  opcoes:
+    - '`Secure`'
+    - '`HttpOnly`'
+    - '`SameSite`'
+    - '`Max-Age`'
+  resposta: 1
+  explicacao: '`HttpOnly` esconde o cookie do JavaScript; `Secure` só o envia por HTTPS; `SameSite` restringe o envio em requisições de outros sites.'
+
+- modulo: 6
+  aula: 06-spring/04-http2-e-http3.md
+  pergunta: 'Sobre qual protocolo de transporte o **HTTP/3** funciona?'
+  opcoes:
+    - 'TCP'
+    - 'QUIC, sobre UDP'
+    - 'FTP'
+    - 'WebSocket'
+  resposta: 1
+  explicacao: 'O HTTP/3 usa o QUIC, sobre UDP, com TLS 1.3 embutido. Assim, a perda de um pacote não trava as outras requisições da conexão.'
+
+- modulo: 6
+  aula: 06-spring/05-servidores-web.md
+  pergunta: 'Qual servidor vem **embutido** por padrão numa aplicação Spring Boot web?'
+  opcoes:
+    - 'Apache HTTP Server'
+    - 'NGINX'
+    - 'Tomcat'
+    - 'IIS'
+  resposta: 2
+  explicacao: 'O starter web traz o Tomcat embutido; por isso a aplicação roda com um simples `java -jar`.'
+
+- modulo: 6
+  aula: 06-spring/06-criptografia-e-certificados.md
+  pergunta: 'Na criptografia assimétrica, como funciona a **assinatura digital**?'
+  opcoes:
+    - 'Assina-se com a chave pública e confere-se com a privada.'
+    - 'Assina-se com a chave privada e qualquer um confere com a chave pública.'
+    - 'Usa-se a mesma chave para assinar e conferir.'
+    - 'Não existe assinatura na criptografia assimétrica.'
+  resposta: 1
+  explicacao: 'Só o dono tem a chave privada, então só ele assina; qualquer um com a chave pública confere a autoria e a integridade.'
+
+- modulo: 6
+  aula: 06-spring/07-tls.md
+  pergunta: 'O que o TLS garante numa conexão HTTPS?'
+  opcoes:
+    - 'Só velocidade.'
+    - 'Confidencialidade, integridade e autenticidade.'
+    - 'Que o site não tem vírus.'
+    - 'Que o servidor nunca cai.'
+  resposta: 1
+  explicacao: 'O TLS cifra os dados (confidencialidade), detecta alterações (integridade) e, com o certificado, prova a identidade do servidor (autenticidade).'
+
+- modulo: 6
+  aula: 06-spring/08-websocket.md
+  pergunta: 'Para qual cenário o **WebSocket** é mais indicado?'
+  opcoes:
+    - 'Baixar um arquivo PDF.'
+    - 'Um chat ou cotações em tempo real, com mensagens nos dois sentidos.'
+    - 'Enviar um formulário de cadastro.'
+    - 'Buscar uma página estática.'
+  resposta: 1
+  explicacao: 'O WebSocket mantém uma conexão permanente e bidirecional, ideal para tempo real. Para requisições pontuais, o HTTP comum basta.'
+
+- modulo: 6
+  aula: 06-spring/09-conceitos-de-rede.md
+  pergunta: 'O que faz o **DNS**?'
+  opcoes:
+    - 'Cifra a comunicação.'
+    - 'Traduz nomes de domínio (como `dio.me`) em endereços IP.'
+    - 'Distribui requisições entre servidores.'
+    - 'Guarda cookies.'
+  resposta: 1
+  explicacao: 'O DNS funciona como a "agenda de contatos" da internet. A distribuição de carga é papel do balanceador.'
+
+- modulo: 6
+  aula: 06-spring/10-spring-framework.md
+  pergunta: 'Ao migrar um projeto do Spring Boot 2 para o 3, qual mudança de pacotes é obrigatória?'
+  opcoes:
+    - '`java.*` → `jakarta.*`'
+    - '`javax.*` → `jakarta.*`'
+    - '`spring.*` → `boot.*`'
+    - 'Nenhuma.'
+  resposta: 1
+  explicacao: 'O Spring Boot 3 adotou o Jakarta EE: `javax.persistence` vira `jakarta.persistence`, `javax.validation` vira `jakarta.validation` etc. Ele também exige Java 17+.'
+
+- modulo: 6
+  aula: 06-spring/11-ioc-di-e-beans.md
+  pergunta: 'Qual é a forma recomendada de **injeção de dependência** no Spring?'
+  opcoes:
+    - 'Por construtor'
+    - 'Por atributo com `@Autowired`'
+    - 'Criando com `new` dentro da classe'
+    - 'Por variável estática'
+  resposta: 0
+  explicacao: 'A injeção por construtor deixa as dependências explícitas, permite campos `final` e facilita os testes. Com um único construtor, nem precisa de `@Autowired`.'
+
+- modulo: 6
+  aula: 06-spring/11-ioc-di-e-beans.md
+  pergunta: 'Qual é o **escopo padrão** de um bean no Spring?'
+  opcoes:
+    - '`prototype`'
+    - '`request`'
+    - '`singleton`'
+    - '`session`'
+  resposta: 2
+  explicacao: 'Por padrão, o Spring cria uma única instância e a compartilha. Por isso, não guarde dados de um usuário específico em atributos de um bean singleton.'
+
+- modulo: 6
+  aula: 06-spring/11-ioc-di-e-beans.md
+  pergunta: 'O Spring reclama que encontrou **dois beans** do mesmo tipo para injetar. Como resolver?'
+  opcoes:
+    - 'Apagar uma das classes.'
+    - 'Usar `@Primary` em um deles ou `@Qualifier` no ponto de injeção.'
+    - 'Trocar `@Service` por `@Component`.'
+    - 'Reiniciar a IDE.'
+  resposta: 1
+  explicacao: '`@Primary` define o bean preferido; `@Qualifier("nome")` escolhe explicitamente qual injetar.'
+
+- modulo: 6
+  aula: 06-spring/12-spring-boot.md
+  pergunta: 'Seu `@Service` não é encontrado pelo Spring Boot ("required a bean... that could not be found"). Qual causa é comum?'
+  opcoes:
+    - 'A classe está fora do pacote (ou subpacotes) da classe com `@SpringBootApplication`.'
+    - 'Falta o `public static void main` no service.'
+    - 'O service tem métodos demais.'
+    - 'O `application.properties` está vazio.'
+  resposta: 0
+  explicacao: 'O *component scan* começa no pacote da classe principal. Classes fora dele não são encontradas.'
+
+- modulo: 6
+  aula: 06-spring/13-projeto-spring-boot.md
+  pergunta: 'Qual a relação entre **JPA**, **Hibernate** e **Spring Data JPA**?'
+  opcoes:
+    - 'São três bancos de dados diferentes.'
+    - 'JPA é a especificação, Hibernate a implementação e o Spring Data JPA gera os repositórios em cima delas.'
+    - 'Hibernate é a especificação e JPA a implementação.'
+    - 'Spring Data JPA substitui o banco de dados.'
+  resposta: 1
+  explicacao: 'O Spring Data JPA usa a JPA (implementada pelo Hibernate) e cria as consultas a partir de interfaces como `JpaRepository`.'
+
+- modulo: 6
+  aula: 06-spring/14-rest.md
+  pergunta: 'Qual URL segue melhor as boas práticas REST para buscar o cliente 42?'
+  opcoes:
+    - '`GET /buscarCliente?id=42`'
+    - '`POST /clientes/buscar/42`'
+    - '`GET /clientes/42`'
+    - '`GET /cliente_buscar_42`'
+  resposta: 2
+  explicacao: 'Em REST, a URL identifica o recurso (substantivo no plural) e o verbo HTTP indica a ação.'
+
+- modulo: 6
+  aula: 06-spring/15-rest-controller.md
+  pergunta: 'Em `GET /produtos?categoria=livros`, qual anotação lê o valor `livros`?'
+  opcoes:
+    - '`@PathVariable`'
+    - '`@RequestParam`'
+    - '`@RequestBody`'
+    - '`@RequestHeader`'
+  resposta: 1
+  explicacao: '`@RequestParam` lê a *query string*; `@PathVariable` lê partes do caminho (como `/produtos/{id}`); `@RequestBody` lê o JSON do corpo.'
+
+- modulo: 6
+  aula: 06-spring/15-rest-controller.md
+  pergunta: 'Qual código de status é o mais adequado para a resposta de um `POST` que **criou** um recurso?'
+  opcoes:
+    - '`200 OK`'
+    - '`201 Created`'
+    - '`204 No Content`'
+    - '`302 Found`'
+  resposta: 1
+  explicacao: 'Com `ResponseEntity.created(uri).body(novo)`, o controller devolve `201` e o cabeçalho `Location` com o endereço do recurso criado.'
+
+- modulo: 6
+  aula: 06-spring/16-openapi-swagger.md
+  pergunta: 'Qual biblioteca usar hoje para documentar uma API Spring Boot 3+ com Swagger UI?'
+  opcoes:
+    - 'Springfox'
+    - 'springdoc-openapi'
+    - 'Swagger 1.0'
+    - 'Javadoc'
+  resposta: 1
+  explicacao: 'O Springfox foi abandonado e não funciona no Spring Boot 3. O springdoc-openapi gera a especificação em `/v3/api-docs` e a interface em `/swagger-ui/index.html`.'
+
+- modulo: 6
+  aula: 06-spring/17-tratamento-de-erros.md
+  pergunta: 'Qual combinação trata exceções de **todos** os controllers em um só lugar?'
+  opcoes:
+    - '`@Service` + `try/catch`'
+    - '`@RestControllerAdvice` + `@ExceptionHandler`'
+    - '`@Component` + `@Bean`'
+    - '`@Transactional` + `@Valid`'
+  resposta: 1
+  explicacao: 'Uma classe com `@RestControllerAdvice` e métodos `@ExceptionHandler(Tipo.class)` transforma cada exceção na resposta HTTP adequada.'
+
+- modulo: 6
+  aula: 06-spring/19-spring-security.md
+  pergunta: 'Qual a diferença entre os códigos `401` e `403`?'
+  opcoes:
+    - '`401` = não autenticado; `403` = autenticado, mas sem permissão.'
+    - '`401` = sem permissão; `403` = não autenticado.'
+    - 'São equivalentes.'
+    - '`401` = erro do servidor; `403` = recurso não encontrado.'
+  resposta: 0
+  explicacao: 'Autenticação responde "quem é você?" (falhou: 401). Autorização responde "o que você pode fazer?" (falhou: 403).'
+
+- modulo: 6
+  aula: 06-spring/20-autenticacao.md
+  pergunta: 'No Spring Security 6+, como se configura a segurança da aplicação?'
+  opcoes:
+    - 'Estendendo `WebSecurityConfigurerAdapter`.'
+    - 'Declarando um bean `SecurityFilterChain`.'
+    - 'Editando o `web.xml`.'
+    - 'Com `@EnableSwagger2`.'
+  resposta: 1
+  explicacao: 'O `WebSecurityConfigurerAdapter` foi removido. Hoje se declaram beans como `SecurityFilterChain`, `UserDetailsService` e `PasswordEncoder`.'
+
+- modulo: 6
+  aula: 06-spring/21-autenticacao-com-banco.md
+  pergunta: 'Como as senhas dos usuários devem ser guardadas no banco?'
+  opcoes:
+    - 'Em texto puro, para facilitar a recuperação.'
+    - 'Codificadas em Base64.'
+    - 'Como hash gerado por um `PasswordEncoder` (BCrypt, Argon2...).'
+    - 'Criptografadas com uma chave fixa no código.'
+  resposta: 2
+  explicacao: 'Guarda-se só o hash; no login, o `PasswordEncoder.matches` confere a senha digitada. Base64 não é criptografia.'
+
+- modulo: 6
+  aula: 06-spring/22-jwt.md
+  pergunta: 'Qual afirmação sobre o **payload** de um JWT está correta?'
+  opcoes:
+    - 'Ele é criptografado e só o servidor consegue ler.'
+    - 'Ele é só codificado em Base64URL: qualquer um consegue ler, por isso não deve conter dados sensíveis.'
+    - 'Ele guarda a senha do usuário.'
+    - 'Ele não pode ter data de expiração.'
+  resposta: 1
+  explicacao: 'A assinatura impede que o token seja **alterado**, mas não esconde o conteúdo. Nada de senhas ou dados sensíveis no payload.'
+
+- modulo: 6
+  aula: 06-spring/22-jwt.md
+  pergunta: 'Em qual cabeçalho o cliente envia o JWT a cada requisição?'
+  opcoes:
+    - '`Cookie: jwt=...`'
+    - '`Authorization: Bearer <token>`'
+    - '`X-Token: <token>`'
+    - '`Content-Type: jwt`'
+  resposta: 1
+  explicacao: 'O padrão é `Authorization: Bearer <token>`. Um filtro no servidor valida a assinatura e a expiração antes de liberar o acesso.'
+
+- modulo: 6
+  aula: 06-spring/24-amazon-rds.md
+  pergunta: 'O que é o **Amazon RDS**?'
+  opcoes:
+    - 'Um banco NoSQL da AWS.'
+    - 'Um serviço de banco relacional gerenciado (MySQL, PostgreSQL...) da AWS.'
+    - 'Um servidor de aplicações Java.'
+    - 'Uma ferramenta de testes.'
+  resposta: 1
+  explicacao: 'A AWS cuida de instalação, backups e atualizações. A API Spring só precisa apontar a `spring.datasource.url` para o endereço do RDS.'
+
+- modulo: 6
+  aula: 06-spring/25-spring-data-jpa.md
+  pergunta: 'Num repositório Spring Data, o que faz o método `List<Aluno> findByNomeContainingIgnoreCase(String nome)`?'
+  opcoes:
+    - 'Nada: precisa de `@Query`.'
+    - 'Busca alunos cujo nome contém o texto, ignorando maiúsculas e minúsculas.'
+    - 'Busca o aluno com o nome exato.'
+    - 'Apaga os alunos com aquele nome.'
+  resposta: 1
+  explicacao: 'São as *derived queries*: o Spring Data monta a consulta a partir do nome do método.'
+
+- modulo: 6
+  aula: 06-spring/25-spring-data-jpa.md
+  pergunta: 'Num relacionamento bidirecional `@OneToMany` / `@ManyToOne`, qual lado tem o `mappedBy`?'
+  opcoes:
+    - 'O lado `@ManyToOne` (o dono da chave estrangeira).'
+    - 'O lado `@OneToMany` (o lado inverso).'
+    - 'Os dois.'
+    - 'Nenhum.'
+  resposta: 1
+  explicacao: 'O dono é o lado com a FK (`@ManyToOne` + `@JoinColumn`). O outro lado só aponta para ele com `mappedBy`.'
+
+- modulo: 6
+  aula: 06-spring/26-padroes-de-projeto.md
+  pergunta: 'Qual padrão de projeto permite **trocar o algoritmo** usado em tempo de execução, por meio de uma interface?'
+  opcoes:
+    - 'Singleton'
+    - 'Facade'
+    - 'Strategy'
+    - 'Builder'
+  resposta: 2
+  explicacao: 'Strategy define uma família de algoritmos intercambiáveis. Singleton garante uma instância; Facade oferece uma interface simples para um sistema complexo.'
+
+- modulo: 6
+  aula: 06-spring/27-padroes-com-spring.md
+  pergunta: 'O que o **OpenFeign** faz no projeto de padrões com Spring?'
+  opcoes:
+    - 'Cria o banco de dados.'
+    - 'Transforma uma interface anotada num cliente HTTP, usado para consultar o ViaCEP.'
+    - 'Gera a documentação Swagger.'
+    - 'Criptografa as senhas.'
+  resposta: 1
+  explicacao: 'Com `@FeignClient`, basta declarar a interface com `@GetMapping("/{cep}/json/")` e o Spring gera a implementação que chama a API externa.'
+
+# ---------------------------------------------------------------- Módulo 7
+- modulo: 7
+  aula: 07-desafios-intermediarios/01-animal.md
+  pergunta: 'Um desafio tem muitas combinações (classe/grupo/alimentação) para descobrir um animal. Qual alternativa a vários `if` aninhados deixa o código mais fácil de estender?'
+  opcoes:
+    - 'Um `Map` com a combinação como chave e o animal como valor.'
+    - 'Vários `while`.'
+    - 'Um array de `boolean`.'
+    - 'Recursão.'
+  resposta: 0
+  explicacao: 'Com `Map.of("vertebrado/ave/carnivoro", "aguia", ...)` e `getOrDefault`, acrescentar um animal é só uma linha a mais.'
+
+- modulo: 7
+  aula: 07-desafios-intermediarios/02-quitanda.md
+  pergunta: 'Por que `6 * 2.20` pode imprimir `13.200000000000001` em Java?'
+  opcoes:
+    - 'Por um bug do `System.out.println`.'
+    - 'Porque `double` não representa exatamente alguns decimais; para dinheiro, use `BigDecimal`.'
+    - 'Porque a multiplicação de `int` por `double` é proibida.'
+    - 'Porque falta um `Locale`.'
+  resposta: 1
+  explicacao: 'Números como 2,20 não têm representação binária exata. Com `BigDecimal` e `setScale(2, RoundingMode.HALF_UP)`, o resultado sai `13.20`.'
+
+- modulo: 7
+  aula: 07-desafios-intermediarios/03-triangulo.md
+  pergunta: 'Três medidas `a`, `b` e `c` formam um triângulo quando...'
+  opcoes:
+    - '...são todas positivas.'
+    - '...cada lado é menor que a soma dos outros dois.'
+    - '...são todas iguais.'
+    - '...a soma é maior que 180.'
+  resposta: 1
+  explicacao: 'É a desigualdade triangular: `a < b + c`, `b < a + c` e `c < a + b`.'
+
+- modulo: 7
+  aula: 07-desafios-intermediarios/04-espacos-e-vogais.md
+  pergunta: 'Qual a forma correta de testar se um `char c` é vogal, sem se preocupar com maiúsculas?'
+  opcoes:
+    - '`"aeiou".indexOf(Character.toLowerCase(c)) >= 0`'
+    - '`c == "aeiou"`'
+    - '`c.equals("a")`'
+    - '`"aeiou".length() == c`'
+  resposta: 0
+  explicacao: '`indexOf` devolve -1 se o caractere não estiver na `String`. `char` é primitivo e não tem `equals`.'
+
+- modulo: 7
+  aula: 07-desafios-intermediarios/05-imposto-de-renda.md
+  pergunta: 'No cálculo **progressivo** de imposto de renda por faixas, como a alíquota é aplicada?'
+  opcoes:
+    - 'A alíquota da faixa mais alta incide sobre toda a renda.'
+    - 'Cada alíquota incide só sobre a parte da renda que está dentro da sua faixa.'
+    - 'Usa-se a média das alíquotas.'
+    - 'Só a primeira faixa é tributada.'
+  resposta: 1
+  explicacao: 'Por isso o cálculo percorre as faixas somando `valorNaFaixa * aliquota` de cada uma, até alcançar a renda informada.'
+
+# ---------------------------------------------------------------- Módulo 8
+- modulo: 8
+  aula: 08-extras/01-java-moderno.md
+  pergunta: 'O que um `record` gera automaticamente?'
+  opcoes:
+    - 'Só o construtor.'
+    - 'Construtor, métodos de acesso, `equals`, `hashCode` e `toString`, com campos imutáveis.'
+    - '*Getters* e *setters*.'
+    - 'Uma tabela no banco de dados.'
+  resposta: 1
+  explicacao: 'Um `record` é uma classe de dados imutável. Ótimo para DTOs, mas não para entidades JPA, que precisam de construtor vazio e campos alteráveis.'
+
+- modulo: 8
+  aula: 08-extras/01-java-moderno.md
+  pergunta: 'Onde `var` pode ser usado?'
+  opcoes:
+    - 'Em atributos de classe.'
+    - 'Em parâmetros de métodos.'
+    - 'Em variáveis locais, quando o tipo é inferido pelo valor atribuído.'
+    - 'Em qualquer lugar, substituindo qualquer tipo.'
+  resposta: 2
+  explicacao: '`var` só vale para variáveis locais inicializadas, e o tipo continua fixo: o compilador apenas o descobre pelo lado direito.'
+
+- modulo: 8
+  aula: 08-extras/01-java-moderno.md
+  pergunta: 'Para que servem as **virtual threads** (Java 21+)?'
+  opcoes:
+    - 'Para rodar Java no navegador.'
+    - 'Para criar muitas threads leves, ideais para aplicações que passam muito tempo esperando I/O.'
+    - 'Para deixar cálculos matemáticos mais rápidos.'
+    - 'Para substituir o Garbage Collector.'
+  resposta: 1
+  explicacao: 'Elas são gerenciadas pela JVM e custam pouquíssimo. No Spring Boot 3.2+, basta `spring.threads.virtual.enabled=true`.'
+
+- modulo: 8
+  aula: 08-extras/02-optional-e-null.md
+  pergunta: 'Qual uso de `Optional` é recomendado?'
+  opcoes:
+    - 'Como atributo de entidades.'
+    - 'Como tipo de retorno de métodos que podem não ter resultado.'
+    - 'Como parâmetro de todos os métodos.'
+    - 'Envolvendo listas: `Optional<List<T>>`.'
+  resposta: 1
+  explicacao: '`Optional` foi feito para retornos. Para coleções, devolva uma lista vazia; evite-o em atributos e parâmetros.'
+
+- modulo: 8
+  aula: 08-extras/02-optional-e-null.md
+  pergunta: 'Qual comparação **não** lança `NullPointerException` se `status` for `null`?'
+  opcoes:
+    - '`status.equals("ATIVO")`'
+    - '`"ATIVO".equals(status)`'
+    - '`status.length() > 0`'
+    - '`status.isEmpty()`'
+  resposta: 1
+  explicacao: 'Chamando o `equals` a partir do literal, que nunca é nulo, a comparação simplesmente devolve `false`.'
+
+- modulo: 8
+  aula: 08-extras/03-docker-para-java.md
+  pergunta: 'Qual a diferença entre **imagem** e **contêiner** no Docker?'
+  opcoes:
+    - 'São a mesma coisa.'
+    - 'Imagem é o molde (sistema + programa); contêiner é uma imagem em execução.'
+    - 'Contêiner é o molde e imagem é a execução.'
+    - 'Imagem é um arquivo `.png` do projeto.'
+  resposta: 1
+  explicacao: 'Da mesma imagem (como `postgres:17`) você pode criar vários contêineres isolados.'
+
+- modulo: 8
+  aula: 08-extras/03-docker-para-java.md
+  pergunta: 'Num `compose.yaml` com os serviços `api` e `banco`, qual host a API usa para acessar o banco?'
+  opcoes:
+    - '`localhost`'
+    - '`banco`'
+    - '`127.0.0.1`'
+    - 'O IP do seu computador'
+  resposta: 1
+  explicacao: 'Cada contêiner tem seu próprio `localhost`. Dentro da rede do Compose, os serviços se encontram pelo nome.'
+
+- modulo: 8
+  aula: 08-extras/04-erros-comuns.md
+  pergunta: 'A aplicação Spring Boot não sobe com "Port 8080 was already in use". O que fazer?'
+  opcoes:
+    - 'Reinstalar o Java.'
+    - 'Parar o processo que usa a porta ou mudar a porta com `server.port=8081`.'
+    - 'Apagar a pasta `.m2`.'
+    - 'Trocar `javax` por `jakarta`.'
+  resposta: 1
+  explicacao: 'Outra aplicação (ou outra instância da sua) está usando a porta 8080.'

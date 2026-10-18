@@ -1,0 +1,128 @@
+/* Imagens das aulas nunca passam da largura do texto */
+.md-typeset img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Diagramas Mermaid centralizados */
+.md-typeset .mermaid {
+  text-align: center;
+}
+
+/* Aviso que só faz sentido no GitHub (no site ele some) */
+.so-github {
+  display: none;
+}
+
+/* ------------------------------------------------------------ Simulado */
+.sim-cartao {
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 0.4rem;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+
+.sim-label {
+  display: block;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+}
+
+.sim-select {
+  width: 100%;
+  padding: 0.4rem;
+  margin-bottom: 1rem;
+  font: inherit;
+  color: var(--md-default-fg-color);
+  background: var(--md-default-bg-color);
+  border: 1px solid var(--md-default-fg-color--lighter);
+  border-radius: 0.2rem;
+}
+
+.sim-progresso {
+  position: sticky;
+  top: 3.2rem;
+  z-index: 1;
+  padding: 0.4rem 0.8rem;
+  margin: 1rem 0;
+  font-weight: 700;
+  background: var(--md-default-bg-color);
+  border-bottom: 2px solid var(--md-accent-fg-color);
+}
+
+.sim-questao {
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-left-width: 4px;
+  border-radius: 0.3rem;
+  padding: 0.6rem 1rem 0.8rem;
+  margin: 0 0 1rem;
+}
+
+.sim-questao legend {
+  font-weight: 700;
+  padding: 0 0.3rem;
+}
+
+.sim-num {
+  color: var(--md-accent-fg-color);
+}
+
+.sim-opcao {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+  padding: 0.3rem 0.4rem;
+  margin: 0.2rem 0;
+  border-radius: 0.2rem;
+  cursor: pointer;
+}
+
+.sim-opcao input {
+  margin-top: 0.3rem;
+}
+
+.sim-opcao:hover {
+  background: var(--md-default-fg-color--lightest);
+}
+
+.sim-certa { border-left-color: #16a34a; }
+.sim-errada { border-left-color: #dc2626; }
+
+.sim-opcao-correta {
+  background: rgba(22, 163, 74, 0.15);
+  font-weight: 700;
+}
+
+.sim-opcao-marcada {
+  background: rgba(220, 38, 38, 0.15);
+  text-decoration: line-through;
+}
+
+.sim-feedback {
+  margin-top: 0.6rem;
+  padding-top: 0.4rem;
+  border-top: 1px dashed var(--md-default-fg-color--lighter);
+}
+
+.sim-feedback p {
+  margin: 0.3rem 0;
+}
+
+.sim-nota {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.sim-aprovado { border-color: #16a34a; }
+.sim-reprovado { border-color: #d97706; }
+
+.sim-melhor {
+  margin: 0 0 1rem;
+}
+
+/* "Em uma frase": a primeira citação da aula ganha destaque */
+.md-typeset h1 + blockquote {
+  border-left-color: var(--md-accent-fg-color);
+  font-size: 0.9rem;
+}

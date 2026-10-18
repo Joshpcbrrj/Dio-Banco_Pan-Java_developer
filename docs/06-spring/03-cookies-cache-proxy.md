@@ -11,7 +11,7 @@ sequenceDiagram
     participant N as Navegador
     participant S as Servidor
     N->>S: POST /login (usuário e senha)
-    S-->>N: 200 OK + Set-Cookie: sessao=abc123; HttpOnly; Secure
+    S-->>N: 200 OK + Set-Cookie: sessao=abc123 (HttpOnly, Secure)
     N->>S: GET /minha-conta + Cookie: sessao=abc123
     S-->>N: 200 OK (página da conta do usuário)
 ```

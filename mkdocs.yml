@@ -1,0 +1,214 @@
+site_name: Banco Pan · Java Developer
+site_description: Resumo completo do bootcamp Banco Pan Java Developer (DIO), escrito para quem está começando em Java, Spring e bancos de dados.
+site_author: Josué B. Almeida
+site_url: https://joshpcbrrj.github.io/Dio-Banco_Pan-Java_developer/
+repo_url: https://github.com/Joshpcbrrj/Dio-Banco_Pan-Java_developer
+repo_name: Joshpcbrrj/Dio-Banco_Pan-Java_developer
+edit_uri: edit/main/docs/
+copyright: Texto sob licença CC BY 4.0 · Slides e material do bootcamp © DIO
+
+docs_dir: docs
+exclude_docs: |
+  simulado/perguntas.yml
+hooks:
+  - scripts/mkdocs_hooks.py
+
+theme:
+  name: material
+  language: pt-BR
+  icon:
+    logo: fontawesome/brands/java
+    repo: fontawesome/brands/github
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: orange
+      toggle:
+        icon: material/weather-night
+        name: Mudar para o modo escuro
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: orange
+      toggle:
+        icon: material/weather-sunny
+        name: Mudar para o modo claro
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.footer
+    - navigation.top
+    - navigation.indexes
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.action.edit
+    - toc.follow
+
+plugins:
+  - search:
+      lang: pt
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - footnotes
+  - tables
+  - toc:
+      permalink: true
+      slugify: !!python/object/apply:pymdownx.slugs.slugify
+        kwds:
+          case: lower
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+  - pymdownx.caret
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+extra_javascript:
+  - javascripts/simulado.js
+
+extra_css:
+  - stylesheets/extra.css
+
+nav:
+  - Início: index.md
+  - Guia rápido: guia-rapido.md
+  - Simulado: simulado/index.md
+  - 1 · Princípios:
+      - "1.1 Git e GitHub": 01-principios/01-git-e-github.md
+      - "1.2 Como o Git funciona por dentro": 01-principios/02-como-o-git-funciona.md
+      - "1.3 Configurando o Git e fazendo o primeiro commit": 01-principios/03-primeiro-commit.md
+      - "1.4 Ciclo de vida dos arquivos, desfazendo mudanças e conflitos": 01-principios/04-ciclo-de-vida-e-conflitos.md
+      - "1.5 O Manifesto Ágil": 01-principios/05-manifesto-agil.md
+      - "1.6 Gestão tradicional × gestão ágil": 01-principios/06-tradicional-vs-agil.md
+      - "1.7 XP (Extreme Programming)": 01-principios/07-xp.md
+      - "1.8 Scrum": 01-principios/08-scrum.md
+      - "1.9 Kanban": 01-principios/09-kanban.md
+      - "1.10 OKR (Objetivos e Resultados-Chave)": 01-principios/10-okr.md
+      - "1.11 Ferramentas para times ágeis": 01-principios/11-ferramentas-ageis.md
+  - 2 · Java:
+      - "2.1 História do Java, JVM, JRE e JDK": 02-java/01-historia-e-plataforma.md
+      - "2.2 IDEs": 02-java/02-ides.md
+      - "2.3 Anatomia de uma classe e convenções de nomes": 02-java/03-anatomia-das-classes.md
+      - "2.4 Tipos de dados, variáveis e constantes": 02-java/04-tipos-e-variaveis.md
+      - "2.5 Operadores": 02-java/05-operadores.md
+      - "2.6 Métodos": 02-java/06-metodos-introducao.md
+      - "2.7 Escopo de variáveis": 02-java/07-escopo.md
+      - "2.8 Palavras reservadas": 02-java/08-palavras-reservadas.md
+      - "2.9 Comentários, Javadoc e a documentação oficial": 02-java/09-javadoc.md
+      - "2.10 Compilando e executando pelo terminal": 02-java/10-terminal.md
+      - "2.11 Operadores relacionais e lógicos a fundo": 02-java/11-operadores-relacionais-e-logicos.md
+      - "2.12 Controle de fluxo": 02-java/12-controle-de-fluxo.md
+      - "2.13 Blocos de código": 02-java/13-blocos-de-codigo.md
+      - "2.14 Estruturas de repetição e arrays": 02-java/14-repeticao-e-arrays.md
+      - "2.15 Exercícios de estruturas de repetição": 02-java/15-exercicios-repeticao.md
+      - "2.16 Exercícios de arrays": 02-java/16-exercicios-arrays.md
+      - "2.17 Estruturas de dados": 02-java/17-estruturas-de-dados.md
+      - "2.18 Pilhas (LIFO)": 02-java/18-pilhas.md
+      - "2.19 Filas (FIFO)": 02-java/19-filas.md
+      - "2.20 Listas encadeadas": 02-java/20-listas-encadeadas.md
+      - "2.21 Listas duplamente encadeadas": 02-java/21-listas-duplamente-encadeadas.md
+      - "2.22 Listas circulares": 02-java/22-listas-circulares.md
+      - "2.23 Árvores e árvores binárias de busca": 02-java/23-arvores-binarias.md
+      - "2.24 equals() e hashCode()": 02-java/24-equals-e-hashcode.md
+      - "2.25 Pilhas prontas do Java": 02-java/25-stack-e-deque.md
+      - "2.26 Filas prontas do Java": 02-java/26-queue.md
+      - "2.27 Listas prontas": 02-java/27-list.md
+      - "2.28 Conjuntos": 02-java/28-set.md
+      - "2.29 Mapas": 02-java/29-map.md
+      - "2.30 Métodos": 02-java/30-metodos-conceitos.md
+      - "2.31 Sobrecarga × sobrescrita": 02-java/31-sobrecarga-e-sobrescrita.md
+      - "2.32 Retorno de métodos": 02-java/32-retorno-de-metodos.md
+      - "2.33 Exercícios de métodos": 02-java/33-exercicios-metodos.md
+  - 3 · Desafios básicos:
+      - "3.1 Fábrica de carros": 03-desafios-basicos/01-fabrica-de-carros.md
+      - "3.2 Positivos e média": 03-desafios-basicos/02-positivos-e-media.md
+      - "3.3 Soma de H com N termos": 03-desafios-basicos/03-soma-de-h.md
+      - "3.4 Dragão (Mais de 8000!)": 03-desafios-basicos/04-dragao.md
+      - "3.5 Fibonacci": 03-desafios-basicos/05-fibonacci.md
+  - 4 · POO:
+      - "4.1 Classes, objetos, atributos, métodos e encapsulamento": 04-poo/01-classes-e-objetos.md
+      - "4.2 Herança, upcast/downcast e polimorfismo": 04-poo/02-heranca-e-polimorfismo.md
+      - "4.3 Associação": 04-poo/03-associacao.md
+      - "4.4 Interfaces": 04-poo/04-interfaces.md
+      - "4.5 Pacotes": 04-poo/05-pacotes.md
+      - "4.6 Modificadores de acesso": 04-poo/06-modificadores-de-acesso.md
+      - "4.7 O framework Collections": 04-poo/07-collections.md
+      - "4.8 List": 04-poo/08-list.md
+      - "4.9 Set": 04-poo/09-set.md
+      - "4.10 Map": 04-poo/10-map.md
+      - "4.11 Lambdas, referências de método e Stream API": 04-poo/11-stream-api.md
+      - "4.12 Debugging": 04-poo/12-debugging.md
+      - "4.13 Tratamento de exceções": 04-poo/13-excecoes.md
+      - "4.14 O que é o Apache Maven": 04-poo/14-maven.md
+      - "4.15 Criando projetos e comandos do Maven": 04-poo/15-maven-comandos.md
+      - "4.16 Gerenciamento de dependências": 04-poo/16-maven-dependencias.md
+      - "4.17 Ciclo de vida do build (build lifecycle)": 04-poo/17-maven-ciclo-de-vida.md
+      - "4.18 Projetos multimódulos": 04-poo/18-maven-multi-modulos.md
+      - "4.19 Plugins do Maven": 04-poo/19-maven-plugins.md
+      - "4.20 Testes unitários e JUnit": 04-poo/20-testes-unitarios.md
+      - "4.21 JUnit a fundo": 04-poo/21-junit-recursos.md
+      - "4.22 Boas práticas de testes e TDD": 04-poo/22-testes-boas-praticas.md
+      - "4.23 Desafio POO": 04-poo/23-desafio-poo.md
+  - 5 · Banco de dados:
+      - "5.1 Primeiros passos com SQL e bancos relacionais": 05-banco-de-dados/01-sql.md
+      - "5.2 NoSQL": 05-banco-de-dados/02-nosql.md
+      - "5.3 Conceitos e instalação": 05-banco-de-dados/03-mongodb.md
+      - "5.4 Modelagem (embedding × referência) e boas práticas": 05-banco-de-dados/04-mongodb-modelagem.md
+      - "5.5 Comandos essenciais (CRUD)": 05-banco-de-dados/05-mongodb-comandos.md
+      - "5.6 Índices, desempenho e agregações": 05-banco-de-dados/06-mongodb-indices-e-agregacoes.md
+      - "5.7 Amazon DynamoDB": 05-banco-de-dados/07-dynamodb.md
+      - "5.8 DynamoDB pela AWS CLI": 05-banco-de-dados/08-dynamodb-pratica.md
+  - 6 · Spring:
+      - "6.1 Como funciona o protocolo HTTP": 06-spring/01-http.md
+      - "6.2 Mensagens HTTP": 06-spring/02-mensagens-http.md
+      - "6.3 Cookies, cache e proxy": 06-spring/03-cookies-cache-proxy.md
+      - "6.4 HTTP/2 e HTTP/3": 06-spring/04-http2-e-http3.md
+      - "6.5 Servidores web e de aplicação": 06-spring/05-servidores-web.md
+      - "6.6 Criptografia e certificados digitais": 06-spring/06-criptografia-e-certificados.md
+      - "6.7 SSL e TLS": 06-spring/07-tls.md
+      - "6.8 WebSocket": 06-spring/08-websocket.md
+      - "6.9 Conceitos de rede": 06-spring/09-conceitos-de-rede.md
+      - "6.10 Spring Framework": 06-spring/10-spring-framework.md
+      - "6.11 IoC, injeção de dependências, beans e escopos": 06-spring/11-ioc-di-e-beans.md
+      - "6.12 Spring Boot": 06-spring/12-spring-boot.md
+      - "6.13 Primeiros passos, beans, escopos, propriedades e JPA": 06-spring/13-projeto-spring-boot.md
+      - "6.14 REST e APIs RESTful": 06-spring/14-rest.md
+      - "6.15 @RestController": 06-spring/15-rest-controller.md
+      - "6.16 Documentando a API com OpenAPI e Swagger": 06-spring/16-openapi-swagger.md
+      - "6.17 Tratamento de erros na API": 06-spring/17-tratamento-de-erros.md
+      - "6.18 Minha primeira API REST documentada": 06-spring/18-projeto-rest-api.md
+      - "6.19 Introdução ao Spring Security": 06-spring/19-spring-security.md
+      - "6.20 Autenticação simples, usuários em memória e configuração de segurança": 06-spring/20-autenticacao.md
+      - "6.21 Autenticação com banco de dados": 06-spring/21-autenticacao-com-banco.md
+      - "6.22 JWT": 06-spring/22-jwt.md
+      - "6.23 APIs com Spring Security e JWT": 06-spring/23-projetos-seguranca.md
+      - "6.24 API REST conectada ao Amazon RDS": 06-spring/24-amazon-rds.md
+      - "6.25 Spring Data JPA na prática (Academia Digital)": 06-spring/25-spring-data-jpa.md
+      - "6.26 Padrões de projeto": 06-spring/26-padroes-de-projeto.md
+      - "6.27 Padrões de projeto com Spring (ViaCEP + Feign)": 06-spring/27-padroes-com-spring.md
+  - 7 · Desafios intermediários:
+      - "7.1 Animal": 07-desafios-intermediarios/01-animal.md
+      - "7.2 Quitanda do Seu Zé": 07-desafios-intermediarios/02-quitanda.md
+      - "7.3 Triângulo": 07-desafios-intermediarios/03-triangulo.md
+      - "7.4 Contar espaços e vogais": 07-desafios-intermediarios/04-espacos-e-vogais.md
+      - "7.5 Taxa de Imposto de Renda": 07-desafios-intermediarios/05-imposto-de-renda.md
+  - 8 · Extras:
+      - "8.1 Java moderno": 08-extras/01-java-moderno.md
+      - "8.2 Lidando com null": 08-extras/02-optional-e-null.md
+      - "8.3 Docker para quem programa em Java": 08-extras/03-docker-para-java.md
+      - "8.4 Erros comuns em Java e Spring e como resolver": 08-extras/04-erros-comuns.md

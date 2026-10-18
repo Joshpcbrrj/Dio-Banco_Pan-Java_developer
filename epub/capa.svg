@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="2400" viewBox="0 0 1600 2400">
+  <defs>
+    <linearGradient id="fundo" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1e1b4b"/>
+      <stop offset="1" stop-color="#0f172a"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="2400" fill="url(#fundo)"/>
+
+  <!-- Xícara de café decorativa -->
+  <g fill="none" stroke-linecap="round" stroke-width="24">
+    <path d="M700 520 C660 460 740 420 700 360" stroke="#fb923c"/>
+    <path d="M800 520 C760 460 840 420 800 360" stroke="#fb923c"/>
+    <path d="M900 520 C860 460 940 420 900 360" stroke="#fb923c"/>
+  </g>
+  <path d="M540 600 H1060 V780 C1060 930 950 1020 800 1020 C650 1020 540 930 540 780 Z" fill="#f97316"/>
+  <path d="M1060 660 C1180 660 1200 840 1060 860" fill="none" stroke="#f97316" stroke-width="40"/>
+  <rect x="470" y="1060" width="660" height="34" rx="17" fill="#fdba74"/>
+
+  <!-- Chaves de código -->
+  <text x="300" y="900" text-anchor="middle" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="260" fill="#818cf8">{</text>
+  <text x="1300" y="900" text-anchor="middle" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="260" fill="#818cf8">}</text>
+
+  <text x="800" y="1430" text-anchor="middle" font-family="DejaVu Sans, Segoe UI, Helvetica, Arial, sans-serif" font-size="120" font-weight="700" fill="#ffffff">Banco Pan</text>
+  <text x="800" y="1600" text-anchor="middle" font-family="DejaVu Sans, Segoe UI, Helvetica, Arial, sans-serif" font-size="150" font-weight="700" fill="#fb923c">Java Developer</text>
+  <text x="800" y="1750" text-anchor="middle" font-family="DejaVu Sans, Segoe UI, Helvetica, Arial, sans-serif" font-size="62" fill="#cbd5e1">Resumo do bootcamp para quem está começando</text>
+  <text x="800" y="1840" text-anchor="middle" font-family="DejaVu Sans, Segoe UI, Helvetica, Arial, sans-serif" font-size="50" fill="#94a3b8">Java · POO · Maven · JUnit · SQL · NoSQL · Spring</text>
+
+  <rect x="560" y="1920" width="480" height="6" rx="3" fill="#fb923c"/>
+
+  <text x="800" y="2160" text-anchor="middle" font-family="DejaVu Sans, Segoe UI, Helvetica, Arial, sans-serif" font-size="64" fill="#ffffff">Josué B. Almeida</text>
+  <text x="800" y="2250" text-anchor="middle" font-family="DejaVu Sans, Segoe UI, Helvetica, Arial, sans-serif" font-size="44" fill="#94a3b8">Baseado no bootcamp da DIO</text>
+</svg>
